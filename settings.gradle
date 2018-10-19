@@ -1,1 +1,1 @@
-include ':app', ':blecore'
+include ':app', ':blecore', ':connectionexample'
