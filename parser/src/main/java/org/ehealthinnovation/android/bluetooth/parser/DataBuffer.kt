@@ -1,8 +1,7 @@
-package org.ehealthinnovation.jdrfandroidbleparser.common
+package org.ehealthinnovation.android.bluetooth.parser
 
 import android.bluetooth.BluetoothGattCharacteristic
 import java.util.*
-import kotlin.experimental.and
 
 class DataBuffer: DataBufferInterface {
 

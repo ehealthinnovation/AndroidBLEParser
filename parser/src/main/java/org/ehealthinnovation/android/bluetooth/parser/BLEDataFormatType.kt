@@ -1,4 +1,4 @@
-package org.ehealthinnovation.jdrfandroidbleparser.common
+package org.ehealthinnovation.android.bluetooth.parser
 
 enum class BLEDataFormatType( val value:Int) {
 

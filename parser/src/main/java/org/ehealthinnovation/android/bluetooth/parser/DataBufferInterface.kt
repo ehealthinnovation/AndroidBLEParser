@@ -1,4 +1,4 @@
-package org.ehealthinnovation.jdrfandroidbleparser.common
+package org.ehealthinnovation.android.bluetooth.parser
 
 interface DataBufferInterface {
     fun getNextInt(formatType: BLEDataFormatType):Int

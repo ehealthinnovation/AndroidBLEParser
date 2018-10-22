@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/blecore/blecore.iml" filepath="$PROJECT_DIR$/blecore/blecore.iml" />
       <module fileurl="file://$PROJECT_DIR$/connectionexample/connectionexample.iml" filepath="$PROJECT_DIR$/connectionexample/connectionexample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jdrfandroidbleparser/jdrfandroidbleparser.iml" filepath="$PROJECT_DIR$/jdrfandroidbleparser/jdrfandroidbleparser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/parser/jdrfandroidbleparser.iml" filepath="$PROJECT_DIR$/parser/jdrfandroidbleparser.iml" />
     </modules>
   </component>
 </project>
