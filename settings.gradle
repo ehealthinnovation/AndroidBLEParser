@@ -1,1 +1,1 @@
-include ':app', ':blecore', ':connectionexample'
+include ':app', ':blecore', ':connectionexample', ':jdrfandroidbleparser'

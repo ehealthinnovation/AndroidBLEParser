@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/blecore" />
             <option value="$PROJECT_DIR$/connectionexample" />
+            <option value="$PROJECT_DIR$/jdrfandroidbleparser" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
