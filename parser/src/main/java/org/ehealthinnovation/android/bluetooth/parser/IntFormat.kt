@@ -1,6 +1,12 @@
 package org.ehealthinnovation.android.bluetooth.parser
 
-enum class BLEDataFormatType( val value:Int) {
+/**
+ * Format codes describing integers in Bluetooth GATT profiles.
+ * The format codes match those found in BluetootGattCharacteristic.
+ *
+ * @see android.bluetooth.BluetoothGattCharacteristic
+ */
+enum class IntFormat(val formatCode:Int) {
 
     /**
      * Characteristic value format type uint8
@@ -30,21 +36,7 @@ enum class BLEDataFormatType( val value:Int) {
     /**
      * Characteristic value format type sint32
      */
-    FORMAT_SINT32(0x24),
+    FORMAT_SINT32(0x24);
 
-    /**
-     * Characteristic value format type sfloat (16-bit float)
-     */
-    FORMAT_SFLOAT(0x32),
-
-    /**
-     * Characteristic value format type float (32-bit float)
-     */
-    FORMAT_FLOAT(0x34);
-
-    fun getFormatTypeLen(): Int{
-        return value.and(0x0F)
-    }
-
-
+    val lengthBytes: Int = getFormatByteLength(formatCode)
 }
