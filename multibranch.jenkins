@@ -1,0 +1,32 @@
+#!/usr/local/bin/groovy
+def pipeline
+node {
+    def scmVars = checkout scm
+    println scmVars
+
+    ansiColor('xterm') {
+    try {
+          env.SLACK_CHANNEL = "#jdrf-builds"
+          dir("${env.WORKSPACE}") {
+            stage('Build') {
+                sh 'sh gradlew assembleDebug'
+            }
+            stage('Tests') {
+                sh 'sh gradlew test'
+            }
+            stage('Notify') {
+              slackSend channel: "${env.SLACK_CHANNEL}", color: 'good', message: "Build ${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} successful. See results <${env.BUILD_URL}|here>."
+            }
+            stage('Clean') {
+              cleanWs()
+            }
+           }
+        } catch(exc) {
+            slackSend channel: "${env.SLACK_CHANNEL}", color: '#ff0000', message: "Build ${env.BUILD_NUMBER} for branch ${env.BRANCH_NAME} failed. See results <${env.BUILD_URL}|here>."
+            stage('Clean') {
+              cleanWs()
+            }
+            throw exc
+    }
+  }
+}
