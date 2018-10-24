@@ -17,9 +17,9 @@ data class GlucoseFeature(
 /**
  * Enumeration of supported feature flags
  *
- * @property bit The bit offset used to represent this flag.
+ * @property bitOffset The offset used to represent this flag.
  */
-enum class Feature(override val bit: Int) : FlagEnum {
+enum class Feature(override val bitOffset: Int) : FlagEnum {
 
     /**Low Battery Detection During Measurement Supported
      */

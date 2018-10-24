@@ -15,8 +15,8 @@ fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : En
 
     for (enumValue in valueSet){
         //Ignore the negative values in the flag set
-        if(enumValue.bit >= 0) {
-            val flag: Int = 0x01 shl enumValue.bit
+        if(enumValue.bitOffset >= 0) {
+            val flag: Int = 0x01 shl enumValue.bitOffset
             if ((flag and flagValue) == flag) {
                 resultSet.add(enumValue)
             }

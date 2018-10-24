@@ -113,9 +113,9 @@ enum class SampleLocation(val key: Int) {
 /**
  * Bit flags for sensor status associated with a [GlucoseMeasurement]
  *
- * @property bit The bit offset used to represent this flag.
+ * @property bitOffset The offset used to represent this flag.
  */
-enum class SensorStatus(val bit: Int) {
+enum class SensorStatus(val bitOffset: Int) {
     /**
      * Sensor malfunction or faulting at time of measurement
      */
