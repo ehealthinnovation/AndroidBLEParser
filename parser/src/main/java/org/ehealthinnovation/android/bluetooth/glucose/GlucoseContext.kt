@@ -1,5 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
+
 /**
  * A glucose measurement context reported by the meter.
  *
@@ -69,7 +71,7 @@ data class ExerciseInfo(
  * The meal information associated with the context
  * @property key the key value of the enum
  */
-enum class Meal(val key: Int) {
+enum class Meal(override val key: Int):EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     PREPRANDIAL(1),
     POSTPRANDIAL(2),
@@ -82,7 +84,7 @@ enum class Meal(val key: Int) {
  * The tester of a measurement
  * @property key the key value of the enum
  */
-enum class Tester(val key: Int) {
+enum class Tester(override val key: Int):EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     SELF(1),
     HEALTH_CARE_PROFESSIONAL(2),
@@ -94,7 +96,7 @@ enum class Tester(val key: Int) {
  * The health information of the test subject
  * @property key the key value of the enum
  */
-enum class Health(val key: Int) {
+enum class Health(override val key: Int):EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     MINOR_HEALTH_ISSUES(1),
     MAJOR_HEALTH_ISSUES(2),
@@ -109,7 +111,7 @@ enum class Health(val key: Int) {
  * The enum of the medication type
  * @property key the key value of the enum
  */
-enum class MedicationId(val key: Int) {
+enum class MedicationId(override val key: Int): EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     RAPID_ACTING_INSULIN(1),
     SHORT_ACTING_INSULIN(2),
@@ -148,6 +150,7 @@ enum class ContextFlags(override val bitOffset: Int) : FlagEnum {
 /**
  * This flag is in place for future extension for manufacturer. This field is not used in the parsing at the current version.
  * @property bitOffset The offset used to represent this flag.
+ *
  */
 enum class ExtendedFlags(override val bitOffset: Int) : FlagEnum {
     RESERVED_FOR_FUTURE_USE(-1)
@@ -157,7 +160,7 @@ enum class ExtendedFlags(override val bitOffset: Int) : FlagEnum {
  * The enum class of carbohydrate type
  * @property key the key value of the enum
  */
-enum class CarbohydrateId(val key: Int) {
+enum class CarbohydrateId(override val key: Int) : EnumerationValue {
     BREAKFAST(1),
     LUNCH(2),
     DINNER(3),
