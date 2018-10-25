@@ -25,6 +25,9 @@ import java.util.*
  *                        If null it means the device was unable to provide any sensor status.
  *                        If non-null but empty, it means no abnormal states and the sensor is reporting all ok.
  *
+ * @property hasContext If true, there is a subsequent [GlucoseContext] characteristic with a matching [sequenceNumber]
+ *                      that describes the context for this measurement.
+ *
  * @see https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.glucose_measurement.xml
  */
 class GlucoseMeasurement(
