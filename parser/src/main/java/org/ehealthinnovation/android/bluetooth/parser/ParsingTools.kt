@@ -29,6 +29,7 @@ fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : En
     return resultSet
 }
 
+
 /**
  * Retrieve an enumeration from [rawValue] of the specified [enumType].
  * Use this variant of [readEnumeration] if the enumeration type allows for an unsupported value.

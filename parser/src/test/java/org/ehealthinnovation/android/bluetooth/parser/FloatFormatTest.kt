@@ -2,6 +2,7 @@ package org.ehealthinnovation.android.bluetooth.parser
 
 import org.junit.Assert
 import org.junit.Test
+import java.util.*
 
 class FloatFormatTest {
     @Test
