@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import org.apache.commons.lang3.time.DateUtils
+import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
 import java.util.*
 
 /**
@@ -31,7 +32,8 @@ class GlucoseMeasurement(
         private val baseTime: Date,
         private val timeOffsetMinutes: Int?,
         val glucose: GlucoseSample?,
-        val sensorStatus: EnumSet<SensorStatus>?
+        val sensorStatus: EnumSet<SensorStatus>?,
+        val hasContext: Boolean
 ) {
     val timestamp: Date = offsetDate(baseTime, timeOffsetMinutes)
 }
@@ -63,18 +65,29 @@ data class GlucoseSample(
 )
 
 /**
- * The units of measurements of [GlucoseSample.glucoseConcentration]
+ * Information flags for a [GlucoseMeasurement].
+ */
+enum class MeasurementFlag(override val bitOffset: Int) : FlagEnum {
+    TIME_OFFSET_PRESENT(0),
+    GLUCOSE_CONCENTRATION_TYPE_SAMPLE_LOCATION_PRESENT(1),
+    GLUCOSE_CONCENTRATION_UNITS(2),
+    SENSOR_STATUS_ANNUNCIATION_PRESENT(3),
+    CONTEXT_INFORMATION_FOLLOWS(4)
+}
+
+/**
+ * The units of measurements of [GlucoseSample.glucoseConcentration].
  */
 enum class ConcentrationUnits {
     /**
-     * mol/L
-     */
-    MOLL,
-
-    /**
      * kg/L
      */
-    KGL
+    KGL,
+
+    /**
+     * mol/L
+     */
+    MOLL
 }
 
 /**
@@ -82,7 +95,7 @@ enum class ConcentrationUnits {
  *
  * @property key the key value of the sample type.
  */
-enum class SampleType(val key: Int) {
+enum class SampleType(override val key: Int) : EnumerationValue {
     CAPILLARY_WHOLE_BLOOD(1),
     CAPILLARY_PLASMA(2),
     VENOUS_WHOLE_BLOOD(3),
@@ -101,7 +114,7 @@ enum class SampleType(val key: Int) {
  *
  * @property key The key value of the location type.
  */
-enum class SampleLocation(val key: Int) {
+enum class SampleLocation(override val key: Int) : EnumerationValue  {
     FINGER(1),
     ALTERNATE_SITE_TEST(2),
     EARLOBE(3),
@@ -115,7 +128,7 @@ enum class SampleLocation(val key: Int) {
  *
  * @property bitOffset The offset used to represent this flag.
  */
-enum class SensorStatus(val bitOffset: Int) {
+enum class SensorStatus(override val bitOffset: Int) : FlagEnum {
     /**
      * Sensor malfunction or faulting at time of measurement
      */

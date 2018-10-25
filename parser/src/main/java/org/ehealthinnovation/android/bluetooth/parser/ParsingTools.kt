@@ -6,7 +6,7 @@ import java.util.*
 /**
  * Parse an input integer into an [EnumSet] of the given [flagType]
  *
- * @param flagValue The integer value of the flag field
+ * @param flagValue The compound integer value representing a set of flags.
  * @param flagType The enum type of the flag, which must implements the [FlagEnum] interface
  *
  * @return A [EnumSet] of the decoded flags
@@ -27,6 +27,34 @@ fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : En
         }
     }
     return resultSet
+}
+
+/**
+ * Retrieve an enumeration from [rawValue] of the specified [enumType].
+ * Use this variant of [readEnumeration] if the enumeration type allows for an unsupported value.
+ *
+ * @return One of [enumType], or [defaultValue] if no matching value is found.
+ *
+ * @see readEnumeration(rawValue: Int, enumType: Class<T>)
+ */
+fun <T> readEnumeration(rawValue: Int, enumType: Class<T>, defaultValue: T): T where T : Enum<T>, T: EnumerationValue {
+    val map = EnumSet.allOf(enumType).associate { Pair(it.key, it) }
+    return map[rawValue] ?: defaultValue
+}
+
+/**
+ * Retrieve an enumeration from [rawValue] of the specified [enumType].
+ * Use this variant of [readEnumeration] if the enumeration type does not allow for an unsupported value.
+ *
+ * @return One of [enumType].
+ *
+ * @throws Exception if [rawValue] does not correspond to an [enumType] value.
+ *
+ * @see readEnumeration(rawValue: Int, enumType: Class<T>, defaultValue: T)
+ */
+fun <T> readEnumeration(rawValue: Int, enumType: Class<T>): T where T : Enum<T>, T: EnumerationValue {
+    val map = EnumSet.allOf(enumType).associate { Pair(it.key, it) }
+    return map[rawValue] ?: throw IllegalArgumentException(rawValue.toString() + " is not an enumeration of type " + enumType.simpleName)
 }
 
 /**

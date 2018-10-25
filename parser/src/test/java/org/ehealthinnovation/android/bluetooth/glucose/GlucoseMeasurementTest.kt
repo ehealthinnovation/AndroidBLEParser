@@ -30,11 +30,11 @@ class GlucoseMeasurementTest {
     }
 
     /**
-     * Test that the glucose measure
+     * Test the glucose measure timestamp
      */
     @Test
-    fun testGlucoseMeasurementOffset() {
-        val glucose = GlucoseMeasurement(0, BASE_DATE, OFFSET_MINUTES, null, EnumSet.noneOf(SensorStatus::class.java))
+    fun testGlucoseMeasurementTimestamp() {
+        val glucose = GlucoseMeasurement(0, BASE_DATE, OFFSET_MINUTES, null, EnumSet.noneOf(SensorStatus::class.java), false)
         Assert.assertEquals(OFFSET_DATE, glucose.timestamp)
     }
 }
