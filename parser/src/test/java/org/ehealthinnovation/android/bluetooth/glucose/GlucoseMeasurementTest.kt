@@ -1,40 +1,42 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
-import org.junit.Assert
+import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
+import org.junit.Assert.*
 import org.junit.Test
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class GlucoseMeasurementTest {
 
-    private val BASE_TIME_MS: Long = 10000
-    private val OFFSET_MINUTES = 5
-
-    private val BASE_DATE = Date(BASE_TIME_MS)
-    private val OFFSET_DATE = Date(BASE_TIME_MS + TimeUnit.MINUTES.toMillis(OFFSET_MINUTES.toLong()))
-
-    /**
-     * Test that we can calculate a timestamp from a base and an offset.
-     */
     @Test
-    fun testGetTimestampOffset() {
-        Assert.assertEquals(OFFSET_DATE, offsetDate(BASE_DATE, OFFSET_MINUTES))
-    }
+    fun testSanity() {
+        val SEQUENCE = 6;
+        val BASE_DATE = BluetoothDateTime(1972, 5, 4, 17, 6, 55)
+        val OFFSET_MINUTES = 5
 
-    /**
-     * Test that we can calculate a timestamp from a base and a null offset.
-     */
-    @Test
-    fun testGetTimestampNoOffset() {
-        Assert.assertEquals(BASE_DATE, offsetDate(BASE_DATE, null))
-    }
+        val SAMPLE = GlucoseSample(
+                5.4f,
+                ConcentrationUnits.MOLL,
+                SampleType.ARTERIAL_WHOLE_BLOOD,
+                SampleLocation.EARLOBE
+        )
 
-    /**
-     * Test the glucose measure timestamp
-     */
-    @Test
-    fun testGlucoseMeasurementTimestamp() {
-        val glucose = GlucoseMeasurement(0, BASE_DATE, OFFSET_MINUTES, null, EnumSet.noneOf(SensorStatus::class.java), false)
-        Assert.assertEquals(OFFSET_DATE, glucose.timestamp)
+        val STATUS = EnumSet.of(SensorStatus.TEMPERATURE_TOO_LOW, SensorStatus.STRIP_INSERTION_ERROR)
+
+        val HAS_CONTEXT = true
+
+        val glucose = GlucoseMeasurement(
+                SEQUENCE,
+                BASE_DATE,
+                OFFSET_MINUTES,
+                SAMPLE,
+                STATUS,
+                HAS_CONTEXT)
+
+        assertEquals(SEQUENCE, glucose.sequenceNumber)
+        assertEquals(BASE_DATE, glucose.baseTime)
+        assertEquals(OFFSET_MINUTES, glucose.timeOffsetMinutes)
+        assertEquals(SAMPLE, glucose.glucose)
+        assertEquals(STATUS, glucose.sensorStatus)
+        assertEquals(HAS_CONTEXT, glucose.hasContext)
     }
 }

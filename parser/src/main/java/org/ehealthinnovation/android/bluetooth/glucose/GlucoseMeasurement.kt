@@ -1,6 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
-import org.apache.commons.lang3.time.DateUtils
+import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
 import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
 import java.util.*
 
@@ -11,11 +11,9 @@ import java.util.*
  *                          sampled prior to measurements with later values. Unknown validity duration.
  *
  * @property baseTime Combine this timestamp with [timeOffsetMinutes] to determine the originating
- *                    timestamp of this measurement.
+ *                    timestamp of this measurement. Note that baseTime may be an incomplete time.
  *
  * @property timeOffsetMinutes Optional. The offset in minutes from the [baseTime] of this measurement.
- *
- * @property timestamp The total timestamp of the measurement.
  *
  * @property glucose Optional. The sampled glucose values. Is only present if this characteristic is being
  *                  used to communicate a sample value. For example, when being used to send an explicit error status,
@@ -32,27 +30,19 @@ import java.util.*
  */
 class GlucoseMeasurement(
         val sequenceNumber: Int,
-        private val baseTime: Date,
-        private val timeOffsetMinutes: Int?,
+        val baseTime: BluetoothDateTime,
+        val timeOffsetMinutes: Int?,
         val glucose: GlucoseSample?,
         val sensorStatus: EnumSet<SensorStatus>?,
         val hasContext: Boolean
-) {
-    val timestamp: Date = offsetDate(baseTime, timeOffsetMinutes)
-}
-
-/**
- * @return the final timestamp based on the base [Date] and an optional [offsetMinutes]
- */
-fun offsetDate(base: Date, offsetMinutes: Int?) =
-    DateUtils.addMinutes(base, offsetMinutes?: 0)
+)
 
 /**
  * The sampled glucose values of a [GlucoseMeasurement].
  *
  * @property glucoseConcentration The glucose concentration value of this sample in [units].
  *
- * @property units The unit of measurement for the [concentration]. Either mol/L or kg/L.
+ * @property units The unit of measurement for the [glucoseConcentration]. Either mol/L or kg/L.
  *
  * @property sampleType The sampleType of fluid that was sampled to determine this measurement.
  *
@@ -132,6 +122,11 @@ enum class SampleLocation(override val key: Int) : EnumerationValue  {
  * @property bitOffset The offset used to represent this flag.
  */
 enum class SensorStatus(override val bitOffset: Int) : FlagEnum {
+    /**
+     * Device battery low at time of measurement
+     */
+    BATTERY_LOW(0),
+
     /**
      * Sensor malfunction or faulting at time of measurement
      */

@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.parser
 
 import org.ehealthinnovation.android.bluetooth.glucose.Feature
+import org.ehealthinnovation.android.bluetooth.glucose.SensorStatus
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
@@ -31,6 +32,13 @@ class ParsingToolsFlagParsingTest {
         val EXPECTED_OUTPUT_ALL_FLAGS = EnumSet.allOf(Feature::class.java).minus(Feature.RESERVED_FOR_FUTURE_USE)
         val output = parseFlags(TEST_INPUT_ALL_BITS, Feature::class.java)
         Assert.assertEquals(EXPECTED_OUTPUT_ALL_FLAGS, output)
+    }
+
+    @Test
+    fun testFlagSome() {
+        val TEST_INPUT = 0x5
+        val TEST_FLAGS = EnumSet.of(SensorStatus.BATTERY_LOW, SensorStatus.SAMPLE_ISSUFFICIENT)
+        Assert.assertEquals(TEST_FLAGS, parseFlags(TEST_INPUT, SensorStatus::class.java))
     }
 }
 

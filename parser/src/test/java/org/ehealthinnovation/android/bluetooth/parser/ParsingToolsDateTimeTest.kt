@@ -4,7 +4,7 @@ import org.junit.Assert
 import org.junit.Test
 
 class ParsingToolsDateTimeTest {
-    
+
     @Test
     fun testFormatRead() {
         val dateComponentFormats = arrayOf(
@@ -41,4 +41,18 @@ class ParsingToolsDateTimeTest {
         val dateTime = readDateTime(StubValueReader(1976, 11, 0, 17, 13, 14))
         Assert.assertEquals(BluetoothDateTime(1976, 11, null, 17, 13, 14), dateTime)
     }
+}
+
+/**
+ * @return the [DataReader] for the [BluetoothDateTime] returned by [getSampleDateTime]
+ */
+fun getSampleDateTimeData(): DataReader {
+    return StubValueReader(1976, 11, 24, 17, 13, 14)
+}
+
+/**
+ * @return the [BluetoothDateTime] represented in [getSampleDateTimeData]
+ */
+fun getSampleDateTime(): BluetoothDateTime {
+    return BluetoothDateTime(1976, 11, 24, 17, 13, 14)
 }
