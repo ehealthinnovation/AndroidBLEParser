@@ -2,6 +2,7 @@ package org.ehealthinnovation.android.bluetooth.glucose
 
 import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
 import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
+import org.ehealthinnovation.android.bluetooth.parser.FlagValue
 import java.util.*
 
 /**
@@ -60,7 +61,7 @@ data class GlucoseSample(
 /**
  * Information flags for a [GlucoseMeasurement].
  */
-enum class MeasurementFlag(override val bitOffset: Int) : FlagEnum {
+enum class MeasurementFlag(override val bitOffset: Int) : FlagValue {
     TIME_OFFSET_PRESENT(0),
     GLUCOSE_CONCENTRATION_TYPE_SAMPLE_LOCATION_PRESENT(1),
     GLUCOSE_CONCENTRATION_UNITS(2),
@@ -121,7 +122,7 @@ enum class SampleLocation(override val key: Int) : EnumerationValue  {
  *
  * @property bitOffset The offset used to represent this flag.
  */
-enum class SensorStatus(override val bitOffset: Int) : FlagEnum {
+enum class SensorStatus(override val bitOffset: Int) : FlagValue {
     /**
      * Device battery low at time of measurement
      */

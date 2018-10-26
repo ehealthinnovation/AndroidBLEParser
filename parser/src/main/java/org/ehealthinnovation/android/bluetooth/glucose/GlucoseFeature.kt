@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.parser.FlagValue
 import java.util.*
 
 /**
@@ -19,7 +20,7 @@ data class GlucoseFeature(
  *
  * @property bitOffset The offset used to represent this flag.
  */
-enum class Feature(override val bitOffset: Int) : FlagEnum {
+enum class Feature(override val bitOffset: Int) : FlagValue {
 
     /**Low Battery Detection During Measurement Supported
      */

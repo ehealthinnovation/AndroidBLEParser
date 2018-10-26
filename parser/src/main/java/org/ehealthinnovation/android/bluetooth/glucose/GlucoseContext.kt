@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
+import org.ehealthinnovation.android.bluetooth.parser.FlagValue
 
 /**
  * A glucose measurement context reported by the meter.
@@ -136,7 +137,7 @@ enum class Unit {
  * @property bitOffset The offset used to represent this flag.
  * @see https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.glucose_measurement_context.xml
  */
-enum class ContextFlags(override val bitOffset: Int) : FlagEnum {
+enum class ContextFlags(override val bitOffset: Int) : FlagValue {
     CARBOHYDRATE_ID_AND_CARBOHYDRATE_PRESENT(0),
     MEAL_PRESENT(1),
     TESTER_HEALTH_PRESENT(2),
@@ -152,7 +153,7 @@ enum class ContextFlags(override val bitOffset: Int) : FlagEnum {
  * @property bitOffset The offset used to represent this flag.
  *
  */
-enum class ExtendedFlags(override val bitOffset: Int) : FlagEnum {
+enum class ExtendedFlags(override val bitOffset: Int) : FlagValue {
     RESERVED_FOR_FUTURE_USE(-1)
 }
 

@@ -1,17 +1,16 @@
 package org.ehealthinnovation.android.bluetooth.parser
 
-import org.ehealthinnovation.android.bluetooth.glucose.FlagEnum
 import java.util.*
 
 /**
  * Parse an input integer into an [EnumSet] of the given [flagType]
  *
  * @param flagValue The compound integer value representing a set of flags.
- * @param flagType The enum type of the flag, which must implements the [FlagEnum] interface
+ * @param flagType The enum type of the flag, which must implements the [FlagValue] interface
  *
  * @return A [EnumSet] of the decoded flags
  */
-fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : Enum<T>, T: FlagEnum {
+fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : Enum<T>, T: FlagValue {
     val resultSet = EnumSet.noneOf(flagType)
     val valueSet =  EnumSet.allOf(flagType)
 
