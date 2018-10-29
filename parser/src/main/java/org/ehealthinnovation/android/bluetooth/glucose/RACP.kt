@@ -24,7 +24,7 @@ class RacpGetRecordNumberResponse(
 /**
  * The filter field of the RACP
  */
-enum class Filter (override val key: Int):EnumerationValue {
+enum class Filter(override val key: Int) : EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     SEQUENCE_NUMBER(1),
     USER_FACING_TIME(2);
@@ -33,7 +33,7 @@ enum class Filter (override val key: Int):EnumerationValue {
 /**
  * The operator field of an RACP command
  */
-enum class Operator (override val key: Int) : EnumerationValue {
+enum class Operator(override val key: Int) : EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     NULL(0),
     ALL_RECORDS(1),
@@ -47,7 +47,7 @@ enum class Operator (override val key: Int) : EnumerationValue {
 /**
  * The opcode of an RACP command
  */
-enum class Opcode (override val key: Int) : EnumerationValue {
+enum class Opcode(override val key: Int) : EnumerationValue {
 
     RESERVED_FOR_FUTURE_USE(-1),
     REPORT_STORED_RECORDS(1),
@@ -61,7 +61,7 @@ enum class Opcode (override val key: Int) : EnumerationValue {
 /**
  * The response code from an RACP command
  */
-enum class ResponseCode (override val key: Int) :EnumerationValue{
+enum class ResponseCode(override val key: Int) : EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     SUCCESS(1),
     OP_CODE_NOT_SUPPORTED(2),
