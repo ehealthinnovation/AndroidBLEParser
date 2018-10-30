@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
+import java.util.*
 
 
 /**
@@ -73,8 +74,6 @@ enum class ResponseCode(override val key: Int) : EnumerationValue {
     PROCEDURE_NOT_COMPLETED(8),
     OPERAND_NOT_SUPPORTED(9);
 }
-
-
 
 
 

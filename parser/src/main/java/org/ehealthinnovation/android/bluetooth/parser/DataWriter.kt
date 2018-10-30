@@ -1,5 +1,8 @@
 package org.ehealthinnovation.android.bluetooth.parser
 
+import org.ehealthinnovation.android.bluetooth.parser.FloatFormat
+import org.ehealthinnovation.android.bluetooth.parser.IntFormat
+
 /**
  * Write data buffer
  */

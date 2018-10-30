@@ -25,4 +25,12 @@ interface CharacteristicPacket {
      *
      */
     fun readData(): DataReader
+
+    /**
+     * Obtain a [DataWriter] to write the data into a characteristic.
+     *
+     * @return a new [DataWriter] instance. The write position of each instance is independent from
+     *         previous instances. Each instance begins at the beginning of the data packet.
+     */
+    fun writeData(): DataWriter
 }
