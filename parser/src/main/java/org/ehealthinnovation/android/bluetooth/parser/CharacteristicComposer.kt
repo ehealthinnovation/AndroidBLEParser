@@ -18,7 +18,8 @@ interface CharacteristicComposer<in T> {
      * Compose the provided [request] into byte arrays stored in the [dataWriter].
      * Callers should only call [compose] if [canCompose] returned true.
      *
-     * @return true if compose completes without error; false otherwise.
+     * The compose is successful unless there is an exception thrown.
+     *
      */
-    fun compose(request: T,  dataWriter: DataWriter): Boolean
+    fun compose(request: T,  dataWriter: DataWriter)
 }
