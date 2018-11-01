@@ -1,7 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
-import java.util.*
 
 
 /**

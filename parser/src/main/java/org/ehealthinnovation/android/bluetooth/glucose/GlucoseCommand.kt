@@ -101,16 +101,16 @@ abstract class CommandOperand
 /**
  * A subset of [Operator] containing only simple operations.
  */
-enum class GlucoseSimpleOperation {
-    ALL_RECORDS,
-    FIRST_RECORD,
-    LAST_RECORD;
+enum class GlucoseSimpleOperation(val key: Int) {
+    ALL_RECORDS(Operator.ALL_RECORDS.key),
+    FIRST_RECORD(Operator.FIRST_RECORD.key),
+    LAST_RECORD(Operator.LAST_RECORD.key);
 }
 
 /**
  * A subset of [Operator] that needs one argument
  */
-enum class GlucoseOperatorBound {
-    LESS_THAN_OR_EQUAL_TO,
-    GREATER_THAN_OR_EQUAL_TO;
+enum class GlucoseOperatorBound(val key: Int) {
+    LESS_THAN_OR_EQUAL_TO(Operator.LESS_THAN_OR_EQUAL_TO.key),
+    GREATER_THAN_OR_EQUAL_TO(Operator.GREATER_THAN_OR_EQUAL_TO.key);
 }

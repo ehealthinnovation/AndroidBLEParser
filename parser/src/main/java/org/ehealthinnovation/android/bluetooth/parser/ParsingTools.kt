@@ -10,15 +10,15 @@ import java.util.*
  *
  * @return A [EnumSet] of the decoded flags
  */
-fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : Enum<T>, T: FlagValue {
+fun <T> parseFlags(flagValue: Int, flagType: Class<T>): EnumSet<T> where T : Enum<T>, T : FlagValue {
     val resultSet = EnumSet.noneOf(flagType)
-    val valueSet =  EnumSet.allOf(flagType)
+    val valueSet = EnumSet.allOf(flagType)
 
-    for (enumValue in valueSet){
+    for (enumValue in valueSet) {
 
         // Ignore the negative values in the flag set. These are reserved enums that exist
         // outside of the bit space, representing unknown or reserved-for-future values.
-        if(enumValue.bitOffset >= 0) {
+        if (enumValue.bitOffset >= 0) {
             val flag: Int = 0x01 shl enumValue.bitOffset
             if ((flag and flagValue) == flag) {
                 resultSet.add(enumValue)
@@ -37,7 +37,7 @@ fun <T> parseFlags (flagValue: Int, flagType: Class<T>): EnumSet<T> where T : En
  *
  * @see readEnumeration(rawValue: Int, enumType: Class<T>)
  */
-fun <T> readEnumeration(rawValue: Int, enumType: Class<T>, defaultValue: T): T where T : Enum<T>, T: EnumerationValue {
+fun <T> readEnumeration(rawValue: Int, enumType: Class<T>, defaultValue: T): T where T : Enum<T>, T : EnumerationValue {
     val map = EnumSet.allOf(enumType).associate { Pair(it.key, it) }
     return map[rawValue] ?: defaultValue
 }
@@ -52,9 +52,10 @@ fun <T> readEnumeration(rawValue: Int, enumType: Class<T>, defaultValue: T): T w
  *
  * @see readEnumeration(rawValue: Int, enumType: Class<T>, defaultValue: T)
  */
-fun <T> readEnumeration(rawValue: Int, enumType: Class<T>): T where T : Enum<T>, T: EnumerationValue {
+fun <T> readEnumeration(rawValue: Int, enumType: Class<T>): T where T : Enum<T>, T : EnumerationValue {
     val map = EnumSet.allOf(enumType).associate { Pair(it.key, it) }
-    return map[rawValue] ?: throw IllegalArgumentException(rawValue.toString() + " is not an enumeration of type " + enumType.simpleName)
+    return map[rawValue]
+            ?: throw IllegalArgumentException(rawValue.toString() + " is not an enumeration of type " + enumType.simpleName)
 }
 
 /**
@@ -105,3 +106,9 @@ fun readDateTime(data: DataReader): BluetoothDateTime {
             seconds
     )
 }
+
+
+
+fun isIntWithinRange(input: Long, format: IntFormat): Boolean = ((input >= format.minValue) and (input <= format.maxValue))
+
+fun isIntRangeValid(lower: Int, upper: Int): Boolean = (lower < upper)

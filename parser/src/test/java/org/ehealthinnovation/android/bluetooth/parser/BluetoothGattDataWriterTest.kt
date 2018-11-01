@@ -2,12 +2,13 @@ package org.ehealthinnovation.android.bluetooth.parser
 
 import android.bluetooth.BluetoothGattCharacteristic
 import com.nhaarman.mockito_kotlin.doAnswer
+import com.nhaarman.mockito_kotlin.doCallRealMethod
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.mockito.Mockito.any
+import kotlin.Exception
 
 class BluetoothGattDataWriterTest {
     /**
@@ -81,6 +82,7 @@ class BluetoothGattDataWriterTest {
         assertEquals(1, writer.offset)
         verify(mockGatt).setValue(0x12, IntFormat.FORMAT_UINT8.formatCode, 0)
 
+
         writer.putInt(0x34, IntFormat.FORMAT_UINT16)
         assertEquals(1 + 2, writer.offset)
         verify(mockGatt).setValue(0x34, IntFormat.FORMAT_UINT16.formatCode, 1)
@@ -100,6 +102,17 @@ class BluetoothGattDataWriterTest {
         writer.putInt(-5, IntFormat.FORMAT_SINT32)
         assertEquals(1 + 2 + 4 + 1 + 2 + 4, writer.offset)
         verify(mockGatt).setValue(-5, IntFormat.FORMAT_SINT32.formatCode, 1 + 2 + 4 + 1 + 2)
+    }
+
+    /**
+     * Test if an out of range integer input is caught
+     */
+    @Test (expected = Exception::class)
+    fun putInt2(){
+        val mockGatt = mockGatt(Pair(IntFormat.FORMAT_UINT8, true))
+        val writer = BluetoothGattDataWriter(mockGatt)
+
+        writer.putInt((IntFormat.FORMAT_UINT8.maxValue+1).toInt(), IntFormat.FORMAT_UINT8)
     }
 
     /**
@@ -166,6 +179,25 @@ class BluetoothGattDataWriterTest {
     }
 
     @Test
+    fun testIntIsValid(){
+        val mockGatt = mockStringGatt(false)
+        val writer = BluetoothGattDataWriter(mockGatt)
+
+        for (format in IntFormat.values()){
+            val inputData : Int
+            if (format == IntFormat.FORMAT_SINT32 || format == IntFormat.FORMAT_UINT32){
+                //this is the max value can be held by an java signed integer
+                inputData = Int.MAX_VALUE
+                assertEquals(true, writer.intIsValid(inputData, format))
+            }else{
+                inputData = (format.maxValue+1).toInt()
+                assertEquals(false, writer.intIsValid(inputData, format))
+            }
+
+        }
+    }
+
+    @Test
     fun findMantissa() {
         //Test cases are tripple of the following format (value in float, exponent, expected output of the function)
         val testCases: List<Triple<Float, Int, Int>> = listOf(
@@ -180,6 +212,7 @@ class BluetoothGattDataWriterTest {
         }
 
     }
+
 
 
 }
