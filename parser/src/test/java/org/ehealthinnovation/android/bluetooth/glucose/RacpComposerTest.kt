@@ -1,11 +1,27 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
-import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
-import org.ehealthinnovation.android.bluetooth.parser.uint16
-import org.ehealthinnovation.android.bluetooth.parser.uint8
+import com.nhaarman.mockito_kotlin.*
+import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Test
 
 class RacpComposerTest {
+
+    @Test
+    fun composeFunctionTest(){
+
+        val reportNumberOfRecords = ReportNumberOfRecords(FilteredBySequenceNumberRange(12,34))
+        val dataWriter = StubDataWriter(
+                uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(Filter.SEQUENCE_NUMBER.key),
+                uint16(12),
+                uint16(34)
+        )
+
+        RacpComposer().compose(reportNumberOfRecords, dataWriter)
+        dataWriter.checkWriteComplete()
+    }
+
 
     @Test
     fun composeAbortOperation() {
@@ -17,30 +33,89 @@ class RacpComposerTest {
                 uint8(Operator.NULL.key)
         )
 
-        composeAbortOperation(testWriter)
+        RacpComposer().composeAbortOperation(testWriter)
         testWriter.checkWriteComplete()
     }
 
     @Test
-    fun composeReportNumberOfRecords() {
-        //todo  postpone implementation until we figure out how to verify a top level function is called
+    fun composeFunctionDispatchCorrectly() {
+        val mockRacpComposer: RacpComposer = mock()
+        whenever(mockRacpComposer.compose(any(), any())).thenCallRealMethod()
+
+        //test dispatch abort operation
+        mockRacpComposer.compose(mock<AbortOperation>(), mock())
+        verify(mockRacpComposer).composeAbortOperation(any())
+
+        //test dispatch report number of records correctly
+        val mockReportNumberOfRecords = mock<ReportNumberOfRecords>()
+        whenever(mockReportNumberOfRecords.operand).thenReturn(mock())
+        mockRacpComposer.compose(mockReportNumberOfRecords, mock())
+        verify(mockRacpComposer).composeReportNumberOfRecords(any(), any())
+    }
+
+
+    @Test(expected = Exception::class)
+    fun unsupportedCommandThrowsException() {
+        val testRacpComposer = RacpComposer()
+        testRacpComposer.compose(mock(), mock())
     }
 
     @Test
-    fun composeOperandTest() {
-        //todo  postpone implementation until we figure out how to verify a top level function is called
+    fun composeReportNumberOfRecordsUnitSingleBoundFiltering(){
+        for (operation in GlucoseOperatorBound.values()) {
+            val testWriter = StubDataWriter(
+                    uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
+                    uint8(operation.key),
+                    uint8(Filter.SEQUENCE_NUMBER.key),
+                    uint16(12)
+            )
+
+            val testRacpComposer = RacpComposer()
+            val sequenceCommandOperand = FilteredBySequenceNumber(12, operation)
+
+            testRacpComposer.composeReportNumberOfRecords(sequenceCommandOperand, testWriter)
+            testWriter.checkWriteComplete()
+        }
+    }
+
+    @Test
+    fun composeReportNumberOfRecordsUnitDoubleBoundFiltering(){
+
+        val testWriter = StubDataWriter(
+                uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(Filter.SEQUENCE_NUMBER.key),
+                uint16(12),
+                uint16(34)
+        )
+
+        val testRacpComposer = RacpComposer()
+        val sequenceCommandRange = FilteredBySequenceNumberRange(12, 34)
+        testRacpComposer.composeReportNumberOfRecords(sequenceCommandRange, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test(expected = Exception::class)
+    fun composeOperandTestUnsupportedType() {
+        //check compose operand
+        class testClass():CommandOperand()
+        val dataWriter = StubDataWriter()
+
+        RacpOperandComposer.composeOperand(testClass(), dataWriter)
     }
 
     //Sanity check of compose simple operand
     @Test
     fun composeSimpleOperandTest() {
+
         for (operation in GlucoseSimpleOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(operation.key)
             )
-            composeSimpleOperand(SimpleOperand(operation), testWriter)
+            RacpOperandComposer.composeSimpleOperand(SimpleOperand(operation), testWriter)
             testWriter.checkWriteComplete()
         }
+
     }
 
     //Sanity check of compose single bound sequence number filter
@@ -50,8 +125,9 @@ class RacpComposerTest {
         for (operation in GlucoseOperatorBound.values()) {
             val testWriter = StubDataWriter(
                     uint8(operation.key),
+                    uint8(Filter.SEQUENCE_NUMBER.key),
                     uint16(sequenceNumberBound))
-            composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, operation), testWriter)
+            RacpOperandComposer.composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, operation), testWriter)
             testWriter.checkWriteComplete()
         }
     }
@@ -64,11 +140,12 @@ class RacpComposerTest {
 
         val testWriter = StubDataWriter(
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(Filter.SEQUENCE_NUMBER.key),
                 uint16(lowerSequenceNumber),
                 uint16(higherSequenceNumber)
         )
 
-        composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        RacpOperandComposer.composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
         testWriter.checkWriteComplete()
     }
 
@@ -81,10 +158,14 @@ class RacpComposerTest {
 
         val testWriter = StubDataWriter(
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(Filter.SEQUENCE_NUMBER.key),
                 uint16(lowerSequenceNumber),
                 uint16(higherSequenceNumber)
         )
 
-        composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        RacpOperandComposer.composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        testWriter.checkWriteComplete()
     }
+
+
 }
