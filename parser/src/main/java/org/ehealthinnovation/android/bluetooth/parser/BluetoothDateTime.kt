@@ -18,11 +18,12 @@ package org.ehealthinnovation.android.bluetooth.parser
  *
  * @property seconds Number of seconds since the start of the minute, 0-59
  */
-data class BluetoothDateTime(
-    val year: Int?,
-    val month: Int?,
-    val day: Int?,
-    val hours: Int,
-    val minutes: Int,
-    val seconds: Int
+data class BluetoothDateTime internal constructor(
+        val year: Int?,
+        val month: Int?,
+        val day: Int?,
+        val hours: Int,
+        val minutes: Int,
+        val seconds: Int
 )
+

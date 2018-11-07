@@ -29,6 +29,7 @@ class StubDataWriter(vararg testValues: Any) : DataWriter {
     }
 
     override fun putInt(data: Int, formatType: IntFormat) {
+        System.out.printf("put $data into the buffer\n")
         val (format, value) = values.poll() as StubValue
         Assert.assertEquals(format as IntFormat, formatType)
         Assert.assertEquals(value as Int, data)
