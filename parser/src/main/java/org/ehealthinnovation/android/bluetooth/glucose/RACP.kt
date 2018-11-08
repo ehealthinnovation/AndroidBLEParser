@@ -3,23 +3,25 @@ package org.ehealthinnovation.android.bluetooth.glucose
 import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
 
 
+abstract class RacpResponse
+
 /**
  * A class representing the general response of an RACP request
  * @property requestOperation the request operation
  * @property response the response of the requested operation
  */
-class RacpGeneralResponse(
+data class RacpGeneralResponse(
         val requestOperation: Opcode,
         val response: ResponseCode
-)
+): RacpResponse()
 
 /**
  * A class representing the result of get record number
  * @property number the number of records found in the device
  */
-class RacpGetRecordNumberResponse(
+data class RacpGetRecordNumberResponse(
         val number: Int
-)
+): RacpResponse()
 
 /**
  * The filter field of the RACP
