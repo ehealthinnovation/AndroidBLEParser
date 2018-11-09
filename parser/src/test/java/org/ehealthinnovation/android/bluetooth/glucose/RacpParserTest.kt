@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.ehealthinnovation.android.bluetooth.parser.*
@@ -8,11 +9,24 @@ import org.junit.Test
 
 class RacpParserTest {
 
-    private fun mockResponsePacket(vararg testValues: StubValue): CharacteristicPacket {
-        val data = StubDataReader(*testValues)
-        val mockPacket = mock<CharacteristicPacket>()
-        whenever(mockPacket.readData()).thenReturn(data)
-        return mockPacket
+    @Test
+    fun parsingGenericResponseSanityCheckWithPacket() {
+        val data = StubDataReader(uint8(Operator.NULL.key), uint8(Opcode.DELETE_STORED_RECORDS.key), uint8(ResponseCode.SUCCESS.key))
+
+        val actualOutput = RacpParser().readGeneralResponse(data)
+        val expectedOutput = RacpGeneralResponse(Opcode.DELETE_STORED_RECORDS, ResponseCode.SUCCESS)
+
+        Assert.assertEquals(expectedOutput, actualOutput)
+    }
+
+    @Test
+    fun parsingMethodGenericResponseIntegrationSanityCheck() {
+        val mockDataPacket: CharacteristicPacket = mockResponsePacket(uint8(Opcode.RESPONSE_CODE.key), uint8(Operator.NULL.key), uint8(Opcode.DELETE_STORED_RECORDS.key), uint8(ResponseCode.SUCCESS.key))
+
+        val actualOutput = RacpParser().parse(mockDataPacket)
+        val expectedOutput = RacpGeneralResponse(Opcode.DELETE_STORED_RECORDS, ResponseCode.SUCCESS)
+
+        Assert.assertEquals(expectedOutput, actualOutput)
     }
 
     @Test
@@ -28,9 +42,8 @@ class RacpParserTest {
     @Test
     fun readGetRecordNumberResponseSanityCheck() {
         val dataReader = StubDataReader(uint8(Operator.NULL.key), uint16(123))
-        val parserUnderTest = RacpParser()
         val expectedOutput = RacpGetRecordNumberResponse(123)
-        val actualOutput = parserUnderTest.readGetRecordNumberResponse(dataReader)
+        val actualOutput = RacpParser().readGetRecordNumberResponse(dataReader)
 
         Assert.assertEquals(true, expectedOutput == actualOutput)
     }
@@ -45,6 +58,21 @@ class RacpParserTest {
     fun readGetRecordNumberResponseThrowExceptionWhenResponseInvalid() {
         val dataReader = StubDataReader(uint8(Operator.GREATER_THAN_OR_EQUAL_TO.key), uint16(123))
         RacpParser().readGetRecordNumberResponse(dataReader)
+    }
+
+    @Test(expected = Exception::class)
+    fun parsingGenericResponseInvalidArgument() {
+        val mockRacpParser: RacpParser = mock()
+        whenever(mockRacpParser.readGeneralResponse(any())).thenCallRealMethod()
+        whenever(mockRacpParser.genericResponseValid(any(), any(), any())).thenReturn(false)
+        mockRacpParser.readGeneralResponse(mock())
+    }
+
+    private fun mockResponsePacket(vararg testValues: StubValue): CharacteristicPacket {
+        val data = StubDataReader(*testValues)
+        val mockPacket = mock<CharacteristicPacket>()
+        whenever(mockPacket.readData()).thenReturn(data)
+        return mockPacket
     }
 
     @Test

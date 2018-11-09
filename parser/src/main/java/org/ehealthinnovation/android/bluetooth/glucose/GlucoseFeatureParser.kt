@@ -23,6 +23,7 @@ class GlucoseFeatureParser : CharacteristicParser<GlucoseFeature> {
     }
 }
 
+
 /**
  * Read and parse the support feature flags.
  * @param data the data buffer containing the raw data packet
