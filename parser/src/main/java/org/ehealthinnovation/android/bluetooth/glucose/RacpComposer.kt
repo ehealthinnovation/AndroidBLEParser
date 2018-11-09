@@ -18,6 +18,8 @@ class RacpComposer : CharacteristicComposer<GlucoseCommand> {
         when (request) {
             is AbortOperation -> composeAbortOperation(dataWriter)
             is ReportNumberOfRecords -> composeReportNumberOfRecords(request.operand, dataWriter)
+            is DeleteRecords -> composeDeleteRecords(request.operand, dataWriter)
+            is ReportRecords -> composeReportRecords(request.operand, dataWriter)
             else -> {
                 throw IllegalArgumentException("operation not recognized")
             }
@@ -47,6 +49,27 @@ class RacpComposer : CharacteristicComposer<GlucoseCommand> {
         RacpOperandComposer.composeOperand(operand, dataWriter)
     }
 
+    /**
+     * Compose the delete records into the buffer through [dataWriter]
+     *
+     * @throws RuntimeException if the underlying buffer failed to process the write operations
+     * (e.g. the buffer has insufficient space, data type miss-match etc.)
+     */
+    internal fun composeDeleteRecords(operand: CommandOperand, dataWriter: DataWriter) {
+        dataWriter.putInt(Opcode.DELETE_STORED_RECORDS.key, IntFormat.FORMAT_UINT8)
+        RacpOperandComposer.composeOperand(operand, dataWriter)
+    }
+
+    /**
+     * Compose the report records into the buffer through [dataWriter]
+     *
+     * @throws RuntimeException if the underlying buffer failed to process the write operations
+     * (e.g. the buffer has insufficient space, data type miss-match etc.)
+     */
+    internal fun composeReportRecords(operand: CommandOperand, dataWriter: DataWriter) {
+        dataWriter.putInt(Opcode.REPORT_STORED_RECORDS.key, IntFormat.FORMAT_UINT8)
+        RacpOperandComposer.composeOperand(operand, dataWriter)
+    }
 
 }
 

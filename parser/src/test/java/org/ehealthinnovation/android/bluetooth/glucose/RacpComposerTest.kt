@@ -1,13 +1,11 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Test
 
 class RacpComposerTest {
+
 
     @Test
     fun composeFunctionTest() {
@@ -25,6 +23,48 @@ class RacpComposerTest {
         dataWriter.checkWriteComplete()
     }
 
+    @Test
+    fun composeFunctionTestDeleteRecords() {
+
+        val deleteRecordsCommand = DeleteRecords(FilteredBySequenceNumberRange(12, 34))
+        val dataWriter = StubDataWriter(
+                uint8(Opcode.DELETE_STORED_RECORDS.key),
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(Filter.SEQUENCE_NUMBER.key),
+                uint16(12),
+                uint16(34)
+        )
+
+        RacpComposer().compose(deleteRecordsCommand, dataWriter)
+        dataWriter.checkWriteComplete()
+    }
+
+
+    @Test
+    fun composeFunctionTestReportRecords() {
+
+        val reportRecords = ReportRecords(
+                FilteredByBluetoothDateTime(
+                        BluetoothDateTimeUtility.createBluetoothDateTime(2018,11,12,1,2,3),
+                        GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO)
+        )
+
+
+        val dataWriter = StubDataWriter(
+                uint8(Opcode.REPORT_STORED_RECORDS.key),
+                uint8(Operator.GREATER_THAN_OR_EQUAL_TO.key),
+                uint8(Filter.USER_FACING_TIME.key),
+                uint16(2018),
+                uint8(11),
+                uint8(12),
+                uint8(1),
+                uint8(2),
+                uint8(3)
+        )
+
+        RacpComposer().compose(reportRecords, dataWriter)
+        dataWriter.checkWriteComplete()
+    }
 
     @Test
     fun composeAbortOperation() {
@@ -47,13 +87,30 @@ class RacpComposerTest {
 
         //test dispatch abort operation
         mockRacpComposer.compose(mock<AbortOperation>(), mock())
-        verify(mockRacpComposer).composeAbortOperation(any())
 
         //test dispatch report number of records correctly
         val mockReportNumberOfRecords = mock<ReportNumberOfRecords>()
         whenever(mockReportNumberOfRecords.operand).thenReturn(mock())
         mockRacpComposer.compose(mockReportNumberOfRecords, mock())
-        verify(mockRacpComposer).composeReportNumberOfRecords(any(), any())
+
+        //test dispatch delete records correctly
+        val mockDeleteRecords = mock<DeleteRecords>()
+        whenever(mockDeleteRecords.operand).thenReturn(mock())
+        mockRacpComposer.compose(mockDeleteRecords, mock())
+
+        //test dispatch reports records correctly
+        val mockReportRecords = mock<ReportRecords>()
+        whenever(mockReportRecords.operand).thenReturn(mock())
+        mockRacpComposer.compose(mockReportRecords, mock())
+
+
+        inOrder(mockRacpComposer){
+            verify(mockRacpComposer, times(1)).composeAbortOperation(any())
+            verify(mockRacpComposer, times(1)).composeReportNumberOfRecords(any(),any())
+            verify(mockRacpComposer, times(1)).composeDeleteRecords(any(), any())
+            verify(mockRacpComposer, times(1)).composeReportRecords(any(), any())
+            verifyNoMoreInteractions()
+        }
     }
 
 
