@@ -1,9 +1,5 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -22,7 +18,7 @@ class FilteredByTimeKtTest {
                 uint8(38)
         )
         val inputTIme = BluetoothDateTime(2018, 11, 1, 2, 28, 38)
-        RacpTimeComposer().composeBluetoothTime(inputTIme, testDataWriter)
+        BluetoothDateTimeUtility.composeBluetoothTime(inputTIme, testDataWriter)
         testDataWriter.checkWriteComplete()
     }
 
@@ -35,13 +31,13 @@ class FilteredByTimeKtTest {
         val testDataWriter3 = StubDataWriter(uint16(2019), uint8(11), uint8(0), uint8(1), uint8(28), uint8(38))
         val inputTIme3 = BluetoothDateTime(2019, 11, 0, 1, 28, 38)
 
-        RacpTimeComposer().composeBluetoothTime(inputTIme1, testDataWriter1)
+        BluetoothDateTimeUtility.composeBluetoothTime(inputTIme1, testDataWriter1)
         testDataWriter1.checkWriteComplete()
 
-        RacpTimeComposer().composeBluetoothTime(inputTIme2, testDataWriter2)
+        BluetoothDateTimeUtility.composeBluetoothTime(inputTIme2, testDataWriter2)
         testDataWriter2.checkWriteComplete()
 
-        RacpTimeComposer().composeBluetoothTime(inputTIme3, testDataWriter3)
+        BluetoothDateTimeUtility.composeBluetoothTime(inputTIme3, testDataWriter3)
         testDataWriter3.checkWriteComplete()
     }
 
@@ -58,7 +54,7 @@ class FilteredByTimeKtTest {
         )
 
         for (testCase in testCases) {
-            val actual = Pair(BluetoothDataTimeUtility.convertDateToBluetoothDateTime(testCase.second), testCase.second)
+            val actual = Pair(BluetoothDateTimeUtility.convertDateToBluetoothDateTime(testCase.second), testCase.second)
             assertEquals(testCase, actual)
         }
     }
@@ -67,28 +63,30 @@ class FilteredByTimeKtTest {
     fun smokeTestComposeFilterWithTime() {
         val testWriter = StubDataWriter(
                 uint8(GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO.key),
-                uint8(Filter.USER_FACING_TIME.key)
+                uint8(Filter.USER_FACING_TIME.key),
+                uint16(2018),
+                uint8(11),
+                uint8(9),
+                uint8(12),
+                uint8(13),
+                uint8(15)
         )
-        val mockFilterByTime = mock<RacpTimeComposer>()
-        whenever(mockFilterByTime.composeTimeOperand(any(), any())).thenCallRealMethod()
 
+        val mockFilterByTime = FilteredByBluetoothDateTime(
+                BluetoothDateTimeUtility.createBluetoothDateTime(2018, 11, 9, 12, 13, 15),
+                GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO
+        )
 
-        val mockOperand = mock<FilteredByBluetoothDateTime>()
-        val mockDate = mock<BluetoothDateTime>()
-        whenever(mockOperand.operation).thenReturn(GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO)
-        whenever(mockOperand.date).thenReturn(mockDate)
-
-        mockFilterByTime.composeTimeOperand(mockOperand, testWriter)
-
-        verify(mockFilterByTime).composeBluetoothTime(mockDate, testWriter)
+        RacpOperandComposer.composeTimeOperand(mockFilterByTime, testWriter)
+        testWriter.checkWriteComplete()
     }
 
     @Test
     fun smokeTestIsDateRangeValid() {
         val startDate = Date(8379191)
         val endDate = Date(8379192)
-        assertEquals(true, BluetoothDataTimeUtility.isValidDateRange(startDate, endDate))
-        assertEquals(false, BluetoothDataTimeUtility.isValidDateRange(endDate, startDate))
+        assertEquals(true, BluetoothDateTimeUtility.isValidDateRange(startDate, endDate))
+        assertEquals(false, BluetoothDateTimeUtility.isValidDateRange(endDate, startDate))
     }
 
 }

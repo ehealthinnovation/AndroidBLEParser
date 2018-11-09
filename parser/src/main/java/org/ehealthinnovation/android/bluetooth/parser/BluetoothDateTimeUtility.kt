@@ -3,7 +3,7 @@ package org.ehealthinnovation.android.bluetooth.parser
 import java.util.*
 
 
-class BluetoothDataTimeUtility {
+class BluetoothDateTimeUtility {
 
     companion object Utility {
         /**
@@ -33,6 +33,7 @@ class BluetoothDataTimeUtility {
          * Test if the date field meets the Bluetooth DateTime Specification
          */
         fun isYearValid(year: Int): Boolean = (year in 1582..9999)
+
         fun isMonthValid(month: Int): Boolean = (month in 1..12)
         fun isDayValid(day: Int): Boolean = (day in 1..31)
         fun isHourValid(hour: Int): Boolean = (hour in 0..23)
@@ -47,7 +48,7 @@ class BluetoothDataTimeUtility {
          */
         fun createBluetoothDateTime(year: Int, month: Int, day: Int, hours: Int, minutes: Int, seconds: Int): BluetoothDateTime {
 
-            BluetoothDataTimeUtility.run {
+            BluetoothDateTimeUtility.run {
                 if (isYearValid(year) &&
                         isMonthValid(month) &&
                         isDayValid(day) &&
@@ -61,6 +62,21 @@ class BluetoothDataTimeUtility {
             }
         }
 
+        /**
+         * Writes [BluetoothDateTime] into the buffer through [dataWriter]
+         *
+         * Any fields in [BluetoothDateTime] that is null will be replaced by 0. Meaning the field in unknown.
+         *
+         * @throws RuntimeException if the underlying buffer fails to process the write operation
+         */
+        fun composeBluetoothTime(time: BluetoothDateTime, dataWriter: DataWriter) {
+            dataWriter.putInt(time.year ?: 0, IntFormat.FORMAT_UINT16)
+            dataWriter.putInt(time.month ?: 0, IntFormat.FORMAT_UINT8)
+            dataWriter.putInt(time.day ?: 0, IntFormat.FORMAT_UINT8)
+            dataWriter.putInt(time.hours, IntFormat.FORMAT_UINT8)
+            dataWriter.putInt(time.minutes, IntFormat.FORMAT_UINT8)
+            dataWriter.putInt(time.seconds, IntFormat.FORMAT_UINT8)
+        }
     }
 
 

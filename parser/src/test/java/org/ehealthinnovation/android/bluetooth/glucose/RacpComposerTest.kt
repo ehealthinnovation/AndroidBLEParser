@@ -1,15 +1,18 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Test
 
 class RacpComposerTest {
 
     @Test
-    fun composeFunctionTest(){
+    fun composeFunctionTest() {
 
-        val reportNumberOfRecords = ReportNumberOfRecords(FilteredBySequenceNumberRange(12,34))
+        val reportNumberOfRecords = ReportNumberOfRecords(FilteredBySequenceNumberRange(12, 34))
         val dataWriter = StubDataWriter(
                 uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
@@ -61,7 +64,7 @@ class RacpComposerTest {
     }
 
     @Test
-    fun composeReportNumberOfRecordsUnitSingleBoundFiltering(){
+    fun composeReportNumberOfRecordsUnitSingleBoundFiltering() {
         for (operation in GlucoseOperatorBound.values()) {
             val testWriter = StubDataWriter(
                     uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
@@ -79,7 +82,7 @@ class RacpComposerTest {
     }
 
     @Test
-    fun composeReportNumberOfRecordsUnitDoubleBoundFiltering(){
+    fun composeReportNumberOfRecordsUnitDoubleBoundFiltering() {
 
         val testWriter = StubDataWriter(
                 uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
@@ -95,10 +98,50 @@ class RacpComposerTest {
         testWriter.checkWriteComplete()
     }
 
+
+    @Test
+    fun composeReportNumberOfRecordsUnitSingleBoundFilteringOnBluetoothDateTime() {
+        for (operation in GlucoseOperatorBound.values()) {
+            val testWriter = StubDataWriter(
+                    uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
+                    uint8(operation.key),
+                    uint8(Filter.USER_FACING_TIME.key),
+                    uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(3)
+            )
+
+            val testRacpComposer = RacpComposer()
+            val dateTimeCommandOperand = FilteredByBluetoothDateTime(BluetoothDateTime(2019, 11, 12, 1, 2, 3), operation)
+
+            testRacpComposer.composeReportNumberOfRecords(dateTimeCommandOperand, testWriter)
+            testWriter.checkWriteComplete()
+        }
+    }
+
+    @Test
+    fun composeReportNumberOfRecordsUnitDoubleBoundFilteringOnBluetoothDateTime() {
+
+        val testWriter = StubDataWriter(
+                uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(Filter.USER_FACING_TIME.key),
+                uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(3),
+                uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(4)
+        )
+
+        val testRacpComposer = RacpComposer()
+        val dateTimeCommandRange = FilteredByBluetoothDateTimeRange(
+                BluetoothDateTimeUtility.createBluetoothDateTime(2019, 11, 12, 1, 2, 3),
+                BluetoothDateTimeUtility.createBluetoothDateTime(2019, 11, 12, 1, 2, 4))
+        testRacpComposer.composeReportNumberOfRecords(dateTimeCommandRange, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+
     @Test(expected = Exception::class)
     fun composeOperandTestUnsupportedType() {
         //check compose operand
-        class testClass():CommandOperand()
+        class testClass() : CommandOperand()
+
         val dataWriter = StubDataWriter()
 
         RacpOperandComposer.composeOperand(testClass(), dataWriter)

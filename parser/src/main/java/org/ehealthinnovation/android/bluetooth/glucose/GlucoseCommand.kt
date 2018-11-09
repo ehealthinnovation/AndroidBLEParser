@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
 import java.util.*
 
 
@@ -92,6 +93,25 @@ class FilteredBySequenceNumber(val sequenceNumber: Int, val operation: GlucoseOp
  *
  */
 class FilteredBySequenceNumberRange(val lowerSequenceNumber: Int, val higherSequenceNumber: Int) : CommandOperand()
+
+/**
+ * The operands of filtering glucose records based on one sided criterion on Bluetooth DateTime for glucose devices
+ *
+ * @property date the Bluetooth DateTime used in filtering
+ *
+ * @property operation choose one of the operations enumerated in [GlucoseOperatorBound]
+ */
+class FilteredByBluetoothDateTime(val date: BluetoothDateTime, val operation: GlucoseOperatorBound) : CommandOperand()
+
+/**
+ * The operands of filtering records by a Bluetooth DateTime range INCLUSIVE
+ *
+ * @property startDate the starting date of the range
+ *
+ * @property higherSequenceNumber the ending date of the range
+ *
+ */
+class FilteredByBluetoothDateTimeRange(val startDate: BluetoothDateTime, val endDate: BluetoothDateTime) : CommandOperand()
 
 /**
  * The super class for command operands. Any glucose command operand should extend this class.
