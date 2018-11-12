@@ -22,7 +22,7 @@ import org.ehealthinnovation.android.bluetooth.parser.FlagValue
  * @property hbA1c the hba1c information in the unit of percentage.
  * @see https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=248026&_ga=2.213812759.2068517937.1540314258-1269508550.1529698942 section 3.2
  */
-class GlucoseContext(
+data class GlucoseContext(
         val sequenceNumber: Int,
         val carbohydrate: Carbohydrate?,
         val meal: Meal?,

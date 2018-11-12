@@ -18,13 +18,14 @@ class GlucoseContextParser : CharacteristicParser<GlucoseContext> {
         val contextFlagsConditions = readFlags(data)
         val sequenceNumber = data.getNextInt(IntFormat.FORMAT_UINT16)
         //extended flag is not present in our output, since it is up to the manufacturer to define the values and meanings in this flag.
-        val extendedFlags = readExtendedFlags(contextFlagsConditions.C1, data)
-        val carbohydrate = readCarboHydrateInfo(contextFlagsConditions.C2, data)
-        val meal = readMeal(contextFlagsConditions.C3, data)
-        val (tester, health) = readTesterAndHealth(contextFlagsConditions.C4, data)
-        val exercise = readExerciseInfo(contextFlagsConditions.C5, data)
-        val medication = readMedicationInfo(contextFlagsConditions.C6, contextFlagsConditions.C8, data)
-        val hbA1c = readHbA1c(contextFlagsConditions.C7, data)
+
+        val extendedFlags = if (contextFlagsConditions.C1) readExtendedFlags(data) else null
+        val carbohydrate = if (contextFlagsConditions.C2) readCarboHydrateInfo(data) else null
+        val meal = if (contextFlagsConditions.C3) readMeal(data) else null
+        val (tester, health) = if (contextFlagsConditions.C4) readTesterAndHealth(data) else Pair(null, null)
+        val exercise = if (contextFlagsConditions.C5) readExerciseInfo(data) else null
+        val medication = if (contextFlagsConditions.C6) readMedicationInfo(contextFlagsConditions.C8, data) else null
+        val hbA1c = if (contextFlagsConditions.C7) readHbA1c(data) else null
 
         return GlucoseContext(
                 sequenceNumber,
@@ -77,129 +78,95 @@ internal fun readFlags(data: DataReader): ContextFlagsConditions {
 
 /**
  * read in and parse the data field of the context packet
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains extended flags
- * @return An enum set of [ExtendedFlags] containing the parsed result. Null if [isPresent] is false
+ * @return An enum set of [ExtendedFlags] containing the parsed result.
  */
-internal fun readExtendedFlags(isPresent: Boolean, data: DataReader): EnumSet<ExtendedFlags>? {
-    return when (isPresent) {
-        true -> parseFlags(data.getNextInt(IntFormat.FORMAT_UINT8), ExtendedFlags::class.java)
-        false -> null
-    }
+internal fun readExtendedFlags(data: DataReader): EnumSet<ExtendedFlags> {
+    return parseFlags(data.getNextInt(IntFormat.FORMAT_UINT8), ExtendedFlags::class.java)
 }
 
 
 /**
  * read in and parse the data field of carbohydrate information
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains carbohydrate data
- * @return A data class of [Carbohydrate] containing the parsed result. [null] if [isPresent] is false
+ * @return A data class of [Carbohydrate] containing the parsed result.
  */
-internal fun readCarboHydrateInfo(isPresent: Boolean, data: DataReader): Carbohydrate? {
-    if (isPresent) {
-        return Carbohydrate(
-                type = readEnumeration(
-                        rawValue = data.getNextInt(IntFormat.FORMAT_UINT8),
-                        enumType = CarbohydrateId::class.java,
-                        defaultValue = CarbohydrateId.RESERVED_FOR_FUTURE_USE),
-                amount = data.getNextFloat(FloatFormat.FORMAT_SFLOAT),
-                unit = Unit.KG
-        )
-    } else {
-        return null
-    }
+internal fun readCarboHydrateInfo(data: DataReader): Carbohydrate {
+    return Carbohydrate(
+            type = readEnumeration(
+                    rawValue = data.getNextInt(IntFormat.FORMAT_UINT8),
+                    enumType = CarbohydrateId::class.java,
+                    defaultValue = CarbohydrateId.RESERVED_FOR_FUTURE_USE),
+            amount = data.getNextFloat(FloatFormat.FORMAT_SFLOAT),
+            unit = Unit.KG
+    )
 }
 
 /**
  * read in and parse the data field of meal information
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains meal data
- * @return A data class of [Meal] containing the parsed result. [null] if [isPresent] is false
+ * @return A data class of [Meal] containing the parsed result.
  */
-internal fun readMeal(isPresent: Boolean, data: DataReader): Meal? {
-    if (isPresent) {
-        return readEnumeration(
-                rawValue = data.getNextInt(IntFormat.FORMAT_UINT8),
-                enumType = Meal::class.java,
-                defaultValue = Meal.RESERVED_FOR_FUTURE_USE
-        )
-    } else {
-        return null
-    }
+internal fun readMeal(data: DataReader): Meal {
+    return readEnumeration(
+            rawValue = data.getNextInt(IntFormat.FORMAT_UINT8),
+            enumType = Meal::class.java,
+            defaultValue = Meal.RESERVED_FOR_FUTURE_USE
+    )
 }
 
 /**
  * read in and parse the data field of tester and health information
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains tester and health data
- * @return A [Pair] of [Meal] and [Health] containing the parsed result. [null] if [isPresent] is false
+ * @return A [Pair] of [Meal] and [Health] containing the parsed result.
  */
-internal fun readTesterAndHealth(isPresent: Boolean, data: DataReader): Pair<Tester?, Health?> {
-    if (isPresent) {
-        val (lowerNibble, upperNibble) = readNibbles(data.getNextInt(IntFormat.FORMAT_UINT8))
-        return Pair(
-                readEnumeration(lowerNibble, Tester::class.java, Tester.RESERVED_FOR_FUTURE_USE),
-                readEnumeration(upperNibble, Health::class.java, Health.RESERVED_FOR_FUTURE_USE)
-        )
-    } else {
-        return Pair(null, null)
-    }
+internal fun readTesterAndHealth(data: DataReader): Pair<Tester, Health> {
+    val (lowerNibble, upperNibble) = readNibbles(data.getNextInt(IntFormat.FORMAT_UINT8))
+    return Pair(
+            readEnumeration(lowerNibble, Tester::class.java, Tester.RESERVED_FOR_FUTURE_USE),
+            readEnumeration(upperNibble, Health::class.java, Health.RESERVED_FOR_FUTURE_USE)
+    )
 }
 
 /**
  * read in and parse the data field of
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains exercise information
- * @return A data class of [ExerciseInfo] containing the parsed result. [null] if [isPresent] is false
+ * @return A data class of [ExerciseInfo] containing the parsed result.
  */
-internal fun readExerciseInfo(isPresent: Boolean, data: DataReader): ExerciseInfo? {
-    if (isPresent) {
-        return ExerciseInfo(
-                duration = data.getNextInt(IntFormat.FORMAT_UINT16).let { durationValue ->
-                    if (durationValue >= 65536) {
-                        Int.MAX_VALUE
-                    } else {
-                        durationValue
-                    }
-                },
-                intensity = data.getNextInt(IntFormat.FORMAT_UINT8)
-        )
-    } else {
-        return null
-    }
+internal fun readExerciseInfo(data: DataReader): ExerciseInfo {
+    return ExerciseInfo(
+            duration = data.getNextInt(IntFormat.FORMAT_UINT16).let { durationValue ->
+                if (durationValue >= 65536) {
+                    Int.MAX_VALUE
+                } else {
+                    durationValue
+                }
+            },
+            intensity = data.getNextInt(IntFormat.FORMAT_UINT8)
+    )
 }
 
 /**
  * read in and parse the data field of medication information
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains medication information
- * @return A data class of [Medication] containing the parsed result. [null] if [isPresent] is false
+ * @return A data class of [Medication] containing the parsed result.
  */
-internal fun readMedicationInfo(isPresent: Boolean, C8: Boolean, data: DataReader): Medication? {
-    if (isPresent) {
-        return Medication(
-                type = readEnumeration(data.getNextInt(IntFormat.FORMAT_UINT8), MedicationId::class.java, MedicationId.RESERVED_FOR_FUTURE_USE),
-                amount = data.getNextFloat(FloatFormat.FORMAT_SFLOAT),
-                unit = when (C8) {
-                    true -> Unit.KG
-                    false -> Unit.L
-                }
-        )
-    } else {
-        return null
-    }
+internal fun readMedicationInfo(C8: Boolean, data: DataReader): Medication {
+    return Medication(
+            type = readEnumeration(data.getNextInt(IntFormat.FORMAT_UINT8), MedicationId::class.java, MedicationId.RESERVED_FOR_FUTURE_USE),
+            amount = data.getNextFloat(FloatFormat.FORMAT_SFLOAT),
+            unit = when (C8) {
+                true -> Unit.KG
+                false -> Unit.L
+            }
+    )
 }
 
 /**
  * read in and parse the data field of tester and health information
- * @param isPresent whether the field is present in the data packet. If not this function returns [null]
  * @param data the [DataReader] containing the raw data. It is assume that the immediate next byte values potentially contains HbA1c
- * @return Float representing HbA1c containing the parsed result. [null] if [isPresent] is false
+ * @return Float representing HbA1c containing the parsed result.
  */
-internal fun readHbA1c(isPresent: Boolean, data: DataReader): Float? {
-    if (isPresent) {
-        return data.getNextFloat(FloatFormat.FORMAT_SFLOAT)
-    } else {
-        return null
-    }
+internal fun readHbA1c(data: DataReader): Float {
+    return data.getNextFloat(FloatFormat.FORMAT_SFLOAT)
 }
