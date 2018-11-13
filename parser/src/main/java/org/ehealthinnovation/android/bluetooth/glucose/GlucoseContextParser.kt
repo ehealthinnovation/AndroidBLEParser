@@ -8,9 +8,9 @@ import java.util.*
  * @see https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.glucose_measurement_context.xml
  */
 class GlucoseContextParser : CharacteristicParser<GlucoseContext> {
+
     override fun canParse(packet: CharacteristicPacket): Boolean {
-        //todo  implement this function
-        return false
+        return packet.uuid == GlucoseUuid.GLUCOSE_MEASUREMENT_CONTEXT.uuid
     }
 
     override fun parse(packet: CharacteristicPacket): GlucoseContext {

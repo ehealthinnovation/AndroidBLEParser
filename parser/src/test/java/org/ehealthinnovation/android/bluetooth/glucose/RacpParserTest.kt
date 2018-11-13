@@ -6,8 +6,20 @@ import com.nhaarman.mockito_kotlin.whenever
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert
 import org.junit.Test
+import java.util.*
 
 class RacpParserTest {
+
+    @Test
+    fun canParseSmokeTest(){
+        val racpUuid = UUID.fromString("00002A52-0000-1000-8000-00805F9B34FB")
+        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(racpUuid)
+        Assert.assertTrue(RacpParser().canParse(testPacket1))
+
+        val racpCorruptedUuid = UUID.fromString("00002A55-0000-1000-8000-00805F9B34FB")
+        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(racpCorruptedUuid)
+        Assert.assertFalse(RacpParser().canParse(testPacket2))
+    }
 
     @Test
     fun parsingGenericResponseSanityCheckWithPacket() {

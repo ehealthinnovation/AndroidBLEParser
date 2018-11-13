@@ -12,7 +12,7 @@ import java.util.*
  */
 class GlucoseMeasurementParser : CharacteristicParser<GlucoseMeasurement> {
     override fun canParse(packet: CharacteristicPacket): Boolean {
-        return false
+        return packet.uuid == GlucoseUuid.GLUCOSE_MEASUREMENT.uuid
     }
 
     override fun parse(packet: CharacteristicPacket): GlucoseMeasurement {

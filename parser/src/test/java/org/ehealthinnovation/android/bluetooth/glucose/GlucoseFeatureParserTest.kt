@@ -1,11 +1,24 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.parser.MockCharacteristicPacket
 import org.ehealthinnovation.android.bluetooth.parser.StubValueReader
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
 
 class GlucoseFeatureParserTest {
+
+    @Test
+    fun canParseSmokeTest(){
+        val featureUuid = UUID.fromString("00002A51-0000-1000-8000-00805F9B34FB")
+        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(featureUuid)
+        Assert.assertTrue(GlucoseFeatureParser().canParse(testPacket1))
+
+        val featureCorruptedUuid = UUID.fromString("00002A55-0000-1000-8000-00805F9B34FB")
+        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(featureCorruptedUuid)
+        Assert.assertFalse(GlucoseFeatureParser().canParse(testPacket2))
+    }
+
 
     @Test
     fun testReadSupportedEmptyFlag() {

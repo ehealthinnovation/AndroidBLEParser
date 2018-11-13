@@ -5,7 +5,7 @@ import org.ehealthinnovation.android.bluetooth.parser.*
 class RacpParser : CharacteristicParser<RacpResponse> {
 
     override fun canParse(packet: CharacteristicPacket): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return packet.uuid == GlucoseUuid.RECORD_ACCESS_CONTROL_POINT.uuid
     }
 
     override fun parse(packet: CharacteristicPacket): RacpResponse {

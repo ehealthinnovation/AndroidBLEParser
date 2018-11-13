@@ -1,11 +1,26 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.ehealthinnovation.android.bluetooth.parser.*
+import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Test
 import java.util.*
 
 class GlucoseMeasurementParserTest {
+
+
+    @Test
+    fun canParseSmokeTest(){
+        val glucoseUuid = UUID.fromString("00002A18-0000-1000-8000-00805F9B34FB")
+        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(glucoseUuid)
+        Assert.assertTrue(GlucoseMeasurementParser().canParse(testPacket1))
+
+        val glucoseCorruptedUuid = UUID.fromString("00002A35-0000-1000-8000-00805F9B34FB")
+        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(glucoseCorruptedUuid)
+        Assert.assertFalse(GlucoseMeasurementParser().canParse(testPacket2))
+    }
 
     @Test
     fun testReadConditions() {

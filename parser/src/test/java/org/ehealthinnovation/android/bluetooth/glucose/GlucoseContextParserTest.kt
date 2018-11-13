@@ -10,6 +10,17 @@ import java.util.*
 class GlucoseContextParserTest {
 
     @Test
+    fun canParseSmokeTest(){
+        val contextUuid = UUID.fromString("00002A34-0000-1000-8000-00805F9B34FB")
+        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(contextUuid)
+        Assert.assertTrue(GlucoseContextParser().canParse(testPacket1))
+
+        val contextCorruptedUuid = UUID.fromString("00002A55-0000-1000-8000-00805F9B34FB")
+        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(contextCorruptedUuid)
+        Assert.assertFalse(GlucoseContextParser().canParse(testPacket2))
+    }
+
+    @Test
     fun testParsePacketEmpty() {
         val testPacket = StubDataReader(
                 uint8(0x0),
