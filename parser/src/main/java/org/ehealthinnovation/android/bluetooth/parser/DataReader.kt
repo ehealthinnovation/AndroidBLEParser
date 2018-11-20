@@ -35,4 +35,5 @@ interface DataReader {
      * @throws Exception if the next value can not be read (type mismatch or end of buffer)
      */
     fun getNextString(): String
+
 }

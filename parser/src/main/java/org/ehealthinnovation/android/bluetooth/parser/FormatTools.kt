@@ -7,5 +7,5 @@ package org.ehealthinnovation.android.bluetooth.parser
  * @see IntFormat.formatCode
  */
 fun getFormatByteLength(formatCode: Int): Int {
-    return formatCode.and(0x0F);
+    return formatCode.and(0x0F)
 }

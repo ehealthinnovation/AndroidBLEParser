@@ -114,6 +114,7 @@ enum class StringFormat {
 fun uint8(value:Int) = StubValue(IntFormat.FORMAT_UINT8, value and 0xFF)
 fun uint8(low:Int, high:Int) = StubValue(IntFormat.FORMAT_UINT8, ((low and 0xF) or ((high and 0xF) shl 4)))
 fun uint16(value:Int) = StubValue(IntFormat.FORMAT_UINT16, value and 0xFFFF)
+fun uint24(value:Int) = StubValue(IntFormat.FORMAT_UINT24, value and 0xFFFFFF)
 fun uint32(value:Int) = StubValue(IntFormat.FORMAT_UINT32, value)
 fun sint8(value:Int) = StubValue(IntFormat.FORMAT_SINT8, value)
 fun sint16(value:Int) = StubValue(IntFormat.FORMAT_SINT16, value)

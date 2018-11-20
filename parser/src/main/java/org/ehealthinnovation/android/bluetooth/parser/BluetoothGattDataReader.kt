@@ -15,15 +15,15 @@ class BluetoothGattDataReader(private val source: BluetoothGattCharacteristic) :
     var offset: Int = 0
 
     override fun getNextInt(formatType: IntFormat): Int =
-        getNextValue(formatType.formatCode, formatType.lengthBytes, source::getIntValue)
+            getNextValue(formatType.formatCode, formatType.lengthBytes, this::getIntValue)
 
     override fun getNextFloat(formatType: FloatFormat): Float =
-        getNextValue(formatType.formatCode, formatType.lengthBytes, source::getFloatValue)
+            getNextValue(formatType.formatCode, formatType.lengthBytes, source::getFloatValue)
 
     override fun getNextString(): String =
-        source.getStringValue(offset)?.also {
-            offset = -1 // Since getStringValue reads the remainder of the buffer, we are at the end of the buffer
-        } ?: throw NullPointerException("No string value")
+            source.getStringValue(offset)?.also {
+                offset = -1 // Since getStringValue reads the remainder of the buffer, we are at the end of the buffer
+            } ?: throw NullPointerException("No string value")
 
     /**
      * Retrieve the next [formatCode] value in the buffer of size [lengthBytes] using the [nextValue] accessor.
@@ -33,8 +33,32 @@ class BluetoothGattDataReader(private val source: BluetoothGattCharacteristic) :
      *
      * @throws Exception if no next value is available.
      */
-    private fun <T> getNextValue(formatCode: Int, lengthBytes: Int, nextValue: (Int, Int)->T): T =
-        nextValue(formatCode, offset)?.also {
-            offset += lengthBytes
-        } ?: throw NullPointerException("No next value")
+    private fun <T> getNextValue(formatCode: Int, lengthBytes: Int, nextValue: (Int, Int) -> T): T =
+            nextValue(formatCode, offset)?.also {
+                offset += lengthBytes
+            } ?: throw NullPointerException("No next value")
+
+    /**
+     * A wrapper function around the [BluetoothGattCharacteristic.getIntValue] function which handles
+     * the special case to read a 24 bit unsigned Integer
+     *
+     * @throws Exception if no next value is available
+     */
+    private fun getIntValue(formatCode: Int, offset: Int): Int =
+            when (formatCode) {
+                IntFormat.FORMAT_UINT24.formatCode -> getNextU24IntValue()
+                else -> source.getIntValue(formatCode, offset)
+            }
+
+    /**
+     * Get each byte of a Unsigned 24 bit Integer represented in Little-Endian form, and combine them
+     * into a single integer.
+     */
+    private fun getNextU24IntValue(): Int {
+        val lowerU8 = getNextInt(IntFormat.FORMAT_UINT8)
+        val middleU8 = getNextInt(IntFormat.FORMAT_UINT8)
+        val upperU8 = getNextInt(IntFormat.FORMAT_UINT8)
+        return (lowerU8 + (middleU8 shl 8) + (upperU8 shl 16))
+    }
+
 }

@@ -2,10 +2,14 @@ package org.ehealthinnovation.android.bluetooth.parser
 
 import android.bluetooth.BluetoothGattCharacteristic
 import com.nhaarman.mockito_kotlin.doAnswer
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
-import org.junit.Assert.*
+import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.ArgumentMatchers.*
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
 
 /**
  * Unit tests for gatt data reader
@@ -17,12 +21,12 @@ class BluetoothGattDataReaderTest {
      * Asserts that the requested format matches the specified format.
      * Asserts that the offset matches the accumulated offset of previous calls with the specified format length.
      */
-    fun mockGatt(vararg sampleFormats: IntFormat): BluetoothGattCharacteristic {
+    private fun mockGatt(vararg sampleFormats: IntFormat): BluetoothGattCharacteristic {
         var offset = 0
         var index = 0
         return mock {
             on { getIntValue(any(kotlin.Int::class.java), any(kotlin.Int::class.java)) } doAnswer {
-                var format = sampleFormats[index]
+                val format = sampleFormats[index]
                 ++index
                 assertEquals(format.formatCode, it.getArgument(0))
                 assertEquals(offset, it.getArgument(1))
@@ -37,12 +41,12 @@ class BluetoothGattDataReaderTest {
      * Asserts that the requested format matches the specified format.
      * Asserts that the offset matches the accumulated offset of previous calls with the specified format length.
      */
-    fun mockGatt(vararg sampleFormats: FloatFormat): BluetoothGattCharacteristic {
+    private fun mockGatt(vararg sampleFormats: FloatFormat): BluetoothGattCharacteristic {
         var offset = 0
         var index = 0
         return mock {
             on { getFloatValue(any(kotlin.Int::class.java), any(kotlin.Int::class.java)) } doAnswer {
-                var format = sampleFormats[index]
+                val format = sampleFormats[index]
                 ++index
                 assertEquals(format.formatCode, it.getArgument(0))
                 assertEquals(offset, it.getArgument(1))
@@ -55,9 +59,9 @@ class BluetoothGattDataReaderTest {
     /**
      * Creates a mocked BluetoothGattCharacteristic for querying a string
      */
-    fun mockGatt(sampleString: String) : BluetoothGattCharacteristic {
+    private fun mockGatt(sampleString: String): BluetoothGattCharacteristic {
         return mock {
-            on { getStringValue(any(kotlin.Int::class.java)) } doAnswer  {
+            on { getStringValue(any(kotlin.Int::class.java)) } doAnswer {
                 sampleString
             }
         }
@@ -70,6 +74,30 @@ class BluetoothGattDataReaderTest {
         assertEquals(1, reader.getNextInt(IntFormat.FORMAT_UINT8))
         assertEquals(1 + 2, reader.getNextInt(IntFormat.FORMAT_UINT16))
         assertEquals(1 + 2 + 4, reader.getNextInt(IntFormat.FORMAT_SINT32))
+    }
+
+    @Test
+    //This is a special case to read UINT24. It is implemented with three calls to the getInt(UINT8, offset)
+    fun testNextIntOfU24() {
+        var offset = 0
+        val returnValueList = listOf(1, 2, 3)
+        val expectedOutput = 0x030201
+
+
+        val mockGattForU24 = mock<BluetoothGattCharacteristic>()
+        whenever(mockGattForU24.getIntValue(eq(IntFormat.FORMAT_UINT8.formatCode), anyInt())).doAnswer {
+            val output = returnValueList[offset]
+            offset++
+            output
+        }
+
+        val gattDataReader = BluetoothGattDataReader(mockGattForU24)
+        val result = gattDataReader.getNextInt(IntFormat.FORMAT_UINT24)
+
+
+        Assert.assertEquals(3, offset)
+        Assert.assertEquals(expectedOutput, result)
+
     }
 
     @Test

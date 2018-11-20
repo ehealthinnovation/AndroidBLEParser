@@ -12,5 +12,12 @@ class MockCharacteristicPacket {
             whenever(mockPacket.uuid).thenReturn(uuid)
             return mockPacket
         }
+
+        internal fun mockPacketForRead(vararg values: StubValue): CharacteristicPacket{
+            val mockPacket:CharacteristicPacket = mock()
+            val dataReader= StubDataReader(*values)
+            whenever(mockPacket.readData()).thenReturn(dataReader)
+            return mockPacket
+        }
     }
 }

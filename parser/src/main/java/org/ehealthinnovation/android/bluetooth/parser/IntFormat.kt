@@ -19,6 +19,11 @@ enum class IntFormat(val formatCode:Int, val minValue: Long, val maxValue: Long)
     FORMAT_UINT16(0x12, 0, 65535),
 
     /**
+     * Characteristic value format type uint24
+     */
+    FORMAT_UINT24(0x13, 0,16777215),
+
+    /**
      * Characteristic value format type uint32
      */
     FORMAT_UINT32(0x14, 0, 4294967295),
