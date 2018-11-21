@@ -1,20 +1,21 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.common.racp.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 /**
  * Composer for the Record Access Control Point
  *
  */
-class RacpComposer : CharacteristicComposer<GlucoseCommand> {
+class RacpComposer : CharacteristicComposer<RacpCommand> {
 
-    override fun canCompose(request: GlucoseCommand): Boolean {
+    override fun canCompose(request: RacpCommand): Boolean {
         //This test if the request meets requirements
         return false
     }
 
 
-    override fun compose(request: GlucoseCommand, dataWriter: DataWriter) {
+    override fun compose(request: RacpCommand, dataWriter: DataWriter) {
         when (request) {
             is AbortOperation -> composeAbortOperation(dataWriter)
             is ReportNumberOfRecords -> composeReportNumberOfRecords(request.operand, dataWriter)
@@ -100,7 +101,7 @@ class RacpOperandComposer {
         /**
          * Compose the [operand] for simple operation into [dataWriter] buffer
          *
-         * @see [GlucoseSimpleOperation]
+         * @see [SimpleOperation]
          */
         internal fun composeSimpleOperand(operand: SimpleOperand, dataWriter: DataWriter) {
             dataWriter.putInt(operand.operation.key, IntFormat.FORMAT_UINT8)

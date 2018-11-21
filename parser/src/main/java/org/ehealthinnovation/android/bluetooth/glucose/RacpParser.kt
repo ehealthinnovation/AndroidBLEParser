@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.common.racp.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 class RacpParser : CharacteristicParser<RacpResponse> {
@@ -29,7 +30,7 @@ class RacpParser : CharacteristicParser<RacpResponse> {
         val requestOpcodeRawValue = dataReader.getNextInt(IntFormat.FORMAT_UINT8)
         val requestOpcode = readEnumeration(requestOpcodeRawValue, Opcode::class.java, Opcode.RESERVED_FOR_FUTURE_USE)
         val responseCodeRawValue = dataReader.getNextInt(IntFormat.FORMAT_UINT8)
-        val response = readEnumeration(responseCodeRawValue, ResponseCode::class.java, ResponseCode.RESERVED_FOR_FUTURE_USE)
+        val response = readEnumeration(responseCodeRawValue, RacpResponseCode::class.java, RacpResponseCode.RESERVED_FOR_FUTURE_USE)
 
         if (genericResponseValid(operation, requestOpcode, response)) {
             return RacpGeneralResponse(requestOpcode, response)
@@ -50,9 +51,9 @@ class RacpParser : CharacteristicParser<RacpResponse> {
         }
     }
 
-    internal fun genericResponseValid(operation: Operator, requestOpcode: Opcode, responseCode: ResponseCode): Boolean = (operation == Operator.NULL &&
+    internal fun genericResponseValid(operation: Operator, requestOpcode: Opcode, responseCode: RacpResponseCode): Boolean = (operation == Operator.NULL &&
             requestOpcode != Opcode.RESERVED_FOR_FUTURE_USE &&
-            responseCode != ResponseCode.RESERVED_FOR_FUTURE_USE)
+            responseCode != RacpResponseCode.RESERVED_FOR_FUTURE_USE)
 
     internal fun recordNumberResponseValid(operation: Operator, numberOfRecords: Int): Boolean =
             (operation == Operator.NULL && ((numberOfRecords >= IntFormat.FORMAT_UINT16.minValue) && (numberOfRecords <= IntFormat.FORMAT_UINT16.maxValue)))

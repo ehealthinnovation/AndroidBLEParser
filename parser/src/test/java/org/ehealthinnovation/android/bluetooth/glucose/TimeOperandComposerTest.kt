@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.common.racp.Operator
 import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
 import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
 import org.ehealthinnovation.android.bluetooth.parser.uint16

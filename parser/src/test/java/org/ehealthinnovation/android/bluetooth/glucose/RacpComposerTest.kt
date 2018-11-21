@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import com.nhaarman.mockito_kotlin.*
+import org.ehealthinnovation.android.bluetooth.common.racp.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Test
 
@@ -45,8 +46,8 @@ class RacpComposerTest {
 
         val reportRecords = ReportRecords(
                 FilteredByBluetoothDateTime(
-                        BluetoothDateTimeUtility.createBluetoothDateTime(2018,11,12,1,2,3),
-                        GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO)
+                        BluetoothDateTimeUtility.createBluetoothDateTime(2018, 11, 12, 1, 2, 3),
+                        SingleBoundOperation.GREATER_THAN_OR_EQUAL_TO)
         )
 
 
@@ -122,7 +123,7 @@ class RacpComposerTest {
 
     @Test
     fun composeReportNumberOfRecordsUnitSingleBoundFiltering() {
-        for (operation in GlucoseOperatorBound.values()) {
+        for (operation in SingleBoundOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                     uint8(operation.key),
@@ -158,7 +159,7 @@ class RacpComposerTest {
 
     @Test
     fun composeReportNumberOfRecordsUnitSingleBoundFilteringOnBluetoothDateTime() {
-        for (operation in GlucoseOperatorBound.values()) {
+        for (operation in SingleBoundOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                     uint8(operation.key),
@@ -208,7 +209,7 @@ class RacpComposerTest {
     @Test
     fun composeSimpleOperandTest() {
 
-        for (operation in GlucoseSimpleOperation.values()) {
+        for (operation in SimpleOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(operation.key)
             )
@@ -222,7 +223,7 @@ class RacpComposerTest {
     @Test
     fun composeSequenceNumberOperandTest1() {
         val sequenceNumberBound = 256
-        for (operation in GlucoseOperatorBound.values()) {
+        for (operation in SingleBoundOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(operation.key),
                     uint8(Filter.SEQUENCE_NUMBER.key),

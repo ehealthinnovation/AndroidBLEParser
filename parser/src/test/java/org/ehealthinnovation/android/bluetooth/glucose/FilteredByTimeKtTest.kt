@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.common.racp.SingleBoundOperation
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -62,7 +63,7 @@ class FilteredByTimeKtTest {
     @Test
     fun smokeTestComposeFilterWithTime() {
         val testWriter = StubDataWriter(
-                uint8(GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO.key),
+                uint8(SingleBoundOperation.GREATER_THAN_OR_EQUAL_TO.key),
                 uint8(Filter.USER_FACING_TIME.key),
                 uint16(2018),
                 uint8(11),
@@ -74,7 +75,7 @@ class FilteredByTimeKtTest {
 
         val mockFilterByTime = FilteredByBluetoothDateTime(
                 BluetoothDateTimeUtility.createBluetoothDateTime(2018, 11, 9, 12, 13, 15),
-                GlucoseOperatorBound.GREATER_THAN_OR_EQUAL_TO
+                SingleBoundOperation.GREATER_THAN_OR_EQUAL_TO
         )
 
         RacpOperandComposer.composeTimeOperand(mockFilterByTime, testWriter)

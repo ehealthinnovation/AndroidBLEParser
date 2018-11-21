@@ -3,6 +3,7 @@ package org.ehealthinnovation.android.bluetooth.glucose
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import org.ehealthinnovation.android.bluetooth.common.racp.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert
 import org.junit.Test
@@ -23,20 +24,20 @@ class RacpParserTest {
 
     @Test
     fun parsingGenericResponseSanityCheckWithPacket() {
-        val data = StubDataReader(uint8(Operator.NULL.key), uint8(Opcode.DELETE_STORED_RECORDS.key), uint8(ResponseCode.SUCCESS.key))
+        val data = StubDataReader(uint8(Operator.NULL.key), uint8(Opcode.DELETE_STORED_RECORDS.key), uint8(RacpResponseCode.SUCCESS.key))
 
         val actualOutput = RacpParser().readGeneralResponse(data)
-        val expectedOutput = RacpGeneralResponse(Opcode.DELETE_STORED_RECORDS, ResponseCode.SUCCESS)
+        val expectedOutput = RacpGeneralResponse(Opcode.DELETE_STORED_RECORDS, RacpResponseCode.SUCCESS)
 
         Assert.assertEquals(expectedOutput, actualOutput)
     }
 
     @Test
     fun parsingMethodGenericResponseIntegrationSanityCheck() {
-        val mockDataPacket: CharacteristicPacket = mockResponsePacket(uint8(Opcode.RESPONSE_CODE.key), uint8(Operator.NULL.key), uint8(Opcode.DELETE_STORED_RECORDS.key), uint8(ResponseCode.SUCCESS.key))
+        val mockDataPacket: CharacteristicPacket = mockResponsePacket(uint8(Opcode.RESPONSE_CODE.key), uint8(Operator.NULL.key), uint8(Opcode.DELETE_STORED_RECORDS.key), uint8(RacpResponseCode.SUCCESS.key))
 
         val actualOutput = RacpParser().parse(mockDataPacket)
-        val expectedOutput = RacpGeneralResponse(Opcode.DELETE_STORED_RECORDS, ResponseCode.SUCCESS)
+        val expectedOutput = RacpGeneralResponse(Opcode.DELETE_STORED_RECORDS, RacpResponseCode.SUCCESS)
 
         Assert.assertEquals(expectedOutput, actualOutput)
     }
