@@ -26,4 +26,3 @@ data class BluetoothDateTime internal constructor(
         val minutes: Int,
         val seconds: Int
 )
-
