@@ -108,7 +108,15 @@ fun readDateTime(data: DataReader): BluetoothDateTime {
 }
 
 
-
 fun isIntWithinRange(input: Long, format: IntFormat): Boolean = ((input >= format.minValue) and (input <= format.maxValue))
 
 fun isIntRangeValid(lower: Int, upper: Int): Boolean = (lower < upper)
+
+/**
+ * Combine enumsets [setA] and [setB] into one as output
+ */
+fun <T> combineEnumSet(setA : EnumSet<T>, setB : EnumSet<T>): EnumSet<T> where T:Enum<T> =
+        EnumSet.copyOf(setA.plus(setB))
+
+
+

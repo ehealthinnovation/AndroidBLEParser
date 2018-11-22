@@ -29,7 +29,7 @@ import java.util.*
  *
  * @see https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.glucose_measurement.xml
  */
-class GlucoseMeasurement(
+data class GlucoseMeasurement(
         val sequenceNumber: Int,
         val baseTime: BluetoothDateTime,
         val timeOffsetMinutes: Int?,
