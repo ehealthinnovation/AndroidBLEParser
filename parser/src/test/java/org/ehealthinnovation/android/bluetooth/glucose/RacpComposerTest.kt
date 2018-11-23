@@ -1,6 +1,9 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import com.nhaarman.mockito_kotlin.*
+import org.ehealthinnovation.android.bluetooth.cgm.CgmRacpOperandComposer
+import org.ehealthinnovation.android.bluetooth.cgm.FilteredByTimeOffset
+import org.ehealthinnovation.android.bluetooth.cgm.FilteredByTimeOffsetRange
 import org.ehealthinnovation.android.bluetooth.common.racp.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Test
@@ -20,7 +23,7 @@ class RacpComposerTest {
                 uint16(34)
         )
 
-        RacpComposer().compose(reportNumberOfRecords, dataWriter)
+        GlucoseRacpComposer().compose(reportNumberOfRecords, dataWriter)
         dataWriter.checkWriteComplete()
     }
 
@@ -36,7 +39,7 @@ class RacpComposerTest {
                 uint16(34)
         )
 
-        RacpComposer().compose(deleteRecordsCommand, dataWriter)
+        GlucoseRacpComposer().compose(deleteRecordsCommand, dataWriter)
         dataWriter.checkWriteComplete()
     }
 
@@ -63,7 +66,7 @@ class RacpComposerTest {
                 uint8(3)
         )
 
-        RacpComposer().compose(reportRecords, dataWriter)
+        GlucoseRacpComposer().compose(reportRecords, dataWriter)
         dataWriter.checkWriteComplete()
     }
 
@@ -77,7 +80,7 @@ class RacpComposerTest {
                 uint8(Operator.NULL.key)
         )
 
-        RacpComposer().composeAbortOperation(testWriter)
+        GlucoseRacpComposer().composeAbortOperation(testWriter)
         testWriter.checkWriteComplete()
     }
 
@@ -117,7 +120,7 @@ class RacpComposerTest {
 
     @Test(expected = Exception::class)
     fun unsupportedCommandThrowsException() {
-        val testRacpComposer = RacpComposer()
+        val testRacpComposer = GlucoseRacpComposer()
         testRacpComposer.compose(mock(), mock())
     }
 
@@ -131,7 +134,7 @@ class RacpComposerTest {
                     uint16(12)
             )
 
-            val testRacpComposer = RacpComposer()
+            val testRacpComposer = GlucoseRacpComposer()
             val sequenceCommandOperand = FilteredBySequenceNumber(12, operation)
 
             testRacpComposer.composeReportNumberOfRecords(sequenceCommandOperand, testWriter)
@@ -150,7 +153,7 @@ class RacpComposerTest {
                 uint16(34)
         )
 
-        val testRacpComposer = RacpComposer()
+        val testRacpComposer = GlucoseRacpComposer()
         val sequenceCommandRange = FilteredBySequenceNumberRange(12, 34)
         testRacpComposer.composeReportNumberOfRecords(sequenceCommandRange, testWriter)
         testWriter.checkWriteComplete()
@@ -167,7 +170,7 @@ class RacpComposerTest {
                     uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(3)
             )
 
-            val testRacpComposer = RacpComposer()
+            val testRacpComposer = GlucoseRacpComposer()
             val dateTimeCommandOperand = FilteredByBluetoothDateTime(BluetoothDateTime(2019, 11, 12, 1, 2, 3), operation)
 
             testRacpComposer.composeReportNumberOfRecords(dateTimeCommandOperand, testWriter)
@@ -186,7 +189,7 @@ class RacpComposerTest {
                 uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(4)
         )
 
-        val testRacpComposer = RacpComposer()
+        val testRacpComposer = GlucoseRacpComposer()
         val dateTimeCommandRange = FilteredByBluetoothDateTimeRange(
                 BluetoothDateTimeUtility.createBluetoothDateTime(2019, 11, 12, 1, 2, 3),
                 BluetoothDateTimeUtility.createBluetoothDateTime(2019, 11, 12, 1, 2, 4))
@@ -202,7 +205,7 @@ class RacpComposerTest {
 
         val dataWriter = StubDataWriter()
 
-        RacpOperandComposer.composeOperand(testClass(), dataWriter)
+        GlucoseRacpOperandComposer().compose(testClass(), dataWriter)
     }
 
     //Sanity check of compose simple operand
@@ -213,7 +216,7 @@ class RacpComposerTest {
             val testWriter = StubDataWriter(
                     uint8(operation.key)
             )
-            RacpOperandComposer.composeSimpleOperand(SimpleOperand(operation), testWriter)
+            GlucoseRacpOperandComposer().composeSimpleOperand(SimpleOperand(operation), testWriter)
             testWriter.checkWriteComplete()
         }
 
@@ -228,7 +231,7 @@ class RacpComposerTest {
                     uint8(operation.key),
                     uint8(Filter.SEQUENCE_NUMBER.key),
                     uint16(sequenceNumberBound))
-            RacpOperandComposer.composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, operation), testWriter)
+            GlucoseRacpOperandComposer().composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, operation), testWriter)
             testWriter.checkWriteComplete()
         }
     }
@@ -246,7 +249,7 @@ class RacpComposerTest {
                 uint16(higherSequenceNumber)
         )
 
-        RacpOperandComposer.composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        GlucoseRacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
         testWriter.checkWriteComplete()
     }
 
@@ -264,7 +267,56 @@ class RacpComposerTest {
                 uint16(higherSequenceNumber)
         )
 
-        RacpOperandComposer.composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        GlucoseRacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+
+    //Sanity check of compose single bound time offset filter
+    @Test
+    fun composeTimeOffsetOperandTest() {
+        val timeOffsetBound = 129
+        for (operation in SingleBoundOperation.values()) {
+            val testWriter = StubDataWriter(
+                    uint8(operation.key),
+                    uint8(org.ehealthinnovation.android.bluetooth.cgm.Filter.TIME_OFFSET.key),
+                    uint16(timeOffsetBound))
+            CgmRacpOperandComposer().composeTimeOffsetOperand(FilteredByTimeOffset(timeOffsetBound, operation), testWriter)
+            testWriter.checkWriteComplete()
+        }
+    }
+
+    //Sanity check of compose time offset range
+    @Test
+    fun composeTimeOffsetRangeOperandTest() {
+        val startTimeOffset = 5
+        val endTimeOffset = 128
+
+        val testWriter = StubDataWriter(
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(org.ehealthinnovation.android.bluetooth.cgm.Filter.TIME_OFFSET.key),
+                uint16(startTimeOffset),
+                uint16(endTimeOffset)
+        )
+
+        CgmRacpOperandComposer().composeTimeOffsetRangeOperand(FilteredByTimeOffsetRange(startTimeOffset, endTimeOffset), testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    //Check Invalid Time offset Range is caught
+    @Test(expected = Exception::class)
+    fun composeTimeOffsetRangeOperandWithInvalidOperand() {
+        val startOffset = 256
+        val endOffset = 256
+
+        val testWriter = StubDataWriter(
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(org.ehealthinnovation.android.bluetooth.cgm.Filter.TIME_OFFSET.key),
+                uint16(startOffset),
+                uint16(endOffset)
+        )
+
+        CgmRacpOperandComposer().composeTimeOffsetRangeOperand(FilteredByTimeOffsetRange(startOffset, endOffset), testWriter)
         testWriter.checkWriteComplete()
     }
 

@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
 import org.ehealthinnovation.android.bluetooth.common.racp.Operator
+import org.ehealthinnovation.android.bluetooth.common.racp.RacpOperandComposer
 import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
 import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
 import org.ehealthinnovation.android.bluetooth.parser.uint16
@@ -26,7 +27,7 @@ class TimeOperandComposerTest {
         endDateTime = BluetoothDateTime(2018, 5, 4, 3, 2, 1)
 
         val testOperand = FilteredByBluetoothDateTimeRange(startDateTime, endDateTime)
-        RacpOperandComposer.composeTimeRangeOperand(testOperand, testDataWriter)
+        GlucoseRacpOperandComposer().composeTimeRangeOperand(testOperand, testDataWriter)
         testDataWriter.checkWriteComplete()
     }
 

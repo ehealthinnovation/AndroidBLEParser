@@ -3,6 +3,7 @@ package org.ehealthinnovation.android.bluetooth.glucose
 import org.ehealthinnovation.android.bluetooth.common.racp.CommandOperand
 import org.ehealthinnovation.android.bluetooth.common.racp.SingleBoundOperation
 import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTime
+import org.ehealthinnovation.android.bluetooth.parser.isIntRangeValid
 import java.util.*
 
 /**
@@ -40,8 +41,18 @@ class FilteredBySequenceNumber(val sequenceNumber: Int, val operation: SingleBou
  *
  * @property higherSequenceNumber the ending sequence number of the number range
  *
+ * The [lowerSequenceNumber] should be smaller than the [higherSequenceNumber]
+ *
+ * @throws IllegalArgumentException if the input range is invalid
+ *
  */
-class FilteredBySequenceNumberRange(val lowerSequenceNumber: Int, val higherSequenceNumber: Int) : CommandOperand()
+class FilteredBySequenceNumberRange(val lowerSequenceNumber: Int, val higherSequenceNumber: Int) : CommandOperand() {
+    init {
+        if (!isIntRangeValid(lowerSequenceNumber, higherSequenceNumber)) {
+            throw IllegalArgumentException("Sequence number range is invalid")
+        }
+    }
+}
 
 /**
  * The operands of filtering glucose records based on one sided criterion on Bluetooth DateTime for glucose devices
@@ -57,7 +68,7 @@ class FilteredByBluetoothDateTime(val date: BluetoothDateTime, val operation: Si
  *
  * @property startDate the starting date of the range
  *
- * @property higherSequenceNumber the ending date of the range
+ * @property endDate the ending date of the range
  *
  */
 class FilteredByBluetoothDateTimeRange(val startDate: BluetoothDateTime, val endDate: BluetoothDateTime) : CommandOperand()

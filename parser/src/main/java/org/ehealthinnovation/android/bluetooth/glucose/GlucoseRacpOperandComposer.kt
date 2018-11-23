@@ -1,0 +1,84 @@
+package org.ehealthinnovation.android.bluetooth.glucose
+
+import org.ehealthinnovation.android.bluetooth.common.racp.CommandOperand
+import org.ehealthinnovation.android.bluetooth.common.racp.Operator
+import org.ehealthinnovation.android.bluetooth.common.racp.RacpOperandComposer
+import org.ehealthinnovation.android.bluetooth.common.racp.SimpleOperand
+import org.ehealthinnovation.android.bluetooth.parser.BluetoothDateTimeUtility
+import org.ehealthinnovation.android.bluetooth.parser.DataWriter
+import org.ehealthinnovation.android.bluetooth.parser.IntFormat
+
+class GlucoseRacpOperandComposer : RacpOperandComposer() {
+
+
+    /**
+     * Compose [operand] and write into buffer through [dataWriter]
+     *
+     * [operand] must be subclass of [CommandOperand]
+     *
+     * @throws IllegalAccessException if operand class is not supported
+     */
+    override fun compose(operand: CommandOperand, dataWriter: DataWriter) {
+        when (operand) {
+            is SimpleOperand -> super.composeSimpleOperand(operand, dataWriter)
+            is FilteredBySequenceNumber -> composeSequenceNumberOperand(operand, dataWriter)
+            is FilteredBySequenceNumberRange -> composeSequenceNumberRangeOperand(operand, dataWriter)
+            is FilteredByBluetoothDateTime -> composeTimeOperand(operand, dataWriter)
+            is FilteredByBluetoothDateTimeRange -> composeTimeRangeOperand(operand, dataWriter)
+            else -> {
+                throw IllegalArgumentException("Operand not supported in this function")
+            }
+        }
+    }
+
+
+    /**
+     * Compose the [operand] for filtering with single bounded sequence number into [dataWriter]
+     */
+    internal fun composeSequenceNumberOperand(operand: FilteredBySequenceNumber, dataWriter: DataWriter) {
+        dataWriter.putInt(operand.operation.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(Filter.SEQUENCE_NUMBER.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(operand.sequenceNumber, IntFormat.FORMAT_UINT16)
+    }
+
+    /**
+     * Compose the [operand] for filtering with sequence number range into [dataWriter]
+     */
+    internal fun composeSequenceNumberRangeOperand(operand: FilteredBySequenceNumberRange, dataWriter: DataWriter) {
+        dataWriter.putInt(Operator.WITHIN_RANGE_OF_INCLUSIVE.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(Filter.SEQUENCE_NUMBER.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(operand.lowerSequenceNumber, IntFormat.FORMAT_UINT16)
+        dataWriter.putInt(operand.higherSequenceNumber, IntFormat.FORMAT_UINT16)
+    }
+
+    /**
+     * Compose the [operand] for filtering with single bounded [Date] into
+     * a buffer through [dataWriter]
+     *
+     * The [BluetoothDateTime] operand in [FilteredByBluetoothDateTime] must be created by
+     * [createBluetoothDateTime] where the validity check of data takes place
+     */
+    internal fun composeTimeOperand(operand: FilteredByBluetoothDateTime, dataWriter: DataWriter) {
+        dataWriter.putInt(operand.operation.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(Filter.USER_FACING_TIME.key, IntFormat.FORMAT_UINT8)
+        BluetoothDateTimeUtility.composeBluetoothTime(operand.date, dataWriter)
+    }
+
+    /**
+     * Uses Bluetooth DateTime range defined in [FilteredByBluetoothDateTimeRange] as filtering criteria for records.
+     * And compose the range filter as operand into the buffer through [dataWriter].
+     *
+     * This function does not check the validity of the date range. The user of this function needs
+     * to make sure the [startDate] is before the [endDate]. If an invalid range is input and send to
+     * a target device, a response indicating invalid operand is likely returned.
+     *
+     * The [BluetoothDateTime] of [startDate] and [endDate] must be created by
+     * [createBluetoothDateTime] where the validity check of data takes place
+     */
+    internal fun composeTimeRangeOperand(operand: FilteredByBluetoothDateTimeRange, dataWriter: DataWriter) {
+        dataWriter.putInt(Operator.WITHIN_RANGE_OF_INCLUSIVE.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(Filter.USER_FACING_TIME.key, IntFormat.FORMAT_UINT8)
+        BluetoothDateTimeUtility.composeBluetoothTime(operand.startDate, dataWriter)
+        BluetoothDateTimeUtility.composeBluetoothTime(operand.endDate, dataWriter)
+    }
+}

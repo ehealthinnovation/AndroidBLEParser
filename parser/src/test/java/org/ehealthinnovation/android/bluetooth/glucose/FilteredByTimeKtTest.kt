@@ -1,5 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.glucose
 
+import org.ehealthinnovation.android.bluetooth.cgm.CgmRacpOperandComposer
+import org.ehealthinnovation.android.bluetooth.common.racp.RacpOperandComposer
 import org.ehealthinnovation.android.bluetooth.common.racp.SingleBoundOperation
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert.assertEquals
@@ -78,7 +80,7 @@ class FilteredByTimeKtTest {
                 SingleBoundOperation.GREATER_THAN_OR_EQUAL_TO
         )
 
-        RacpOperandComposer.composeTimeOperand(mockFilterByTime, testWriter)
+        GlucoseRacpOperandComposer().composeTimeOperand(mockFilterByTime, testWriter)
         testWriter.checkWriteComplete()
     }
 

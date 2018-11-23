@@ -1,6 +1,5 @@
-package org.ehealthinnovation.android.bluetooth.glucose
+package org.ehealthinnovation.android.bluetooth.common.racp
 
-import org.ehealthinnovation.android.bluetooth.common.racp.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 class RacpParser : CharacteristicParser<RacpResponse> {
