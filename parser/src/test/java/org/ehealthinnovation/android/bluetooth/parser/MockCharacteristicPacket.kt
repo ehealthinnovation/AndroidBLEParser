@@ -19,5 +19,13 @@ class MockCharacteristicPacket {
             whenever(mockPacket.readData()).thenReturn(dataReader)
             return mockPacket
         }
+
+        internal fun mockPacketWriter(vararg values: StubValue): CharacteristicPacket {
+            val mockPacket: CharacteristicPacket = mock()
+            val dataWriter = StubDataWriter(*values)
+            whenever(mockPacket.writeData()).thenReturn(dataWriter)
+            return mockPacket
+
+        }
     }
 }
