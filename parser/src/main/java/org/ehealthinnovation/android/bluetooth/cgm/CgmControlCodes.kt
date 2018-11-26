@@ -33,3 +33,14 @@ enum class Opcode(override val key: Int) : EnumerationValue {
     STOP_THE_SESSION(27),
     RESPONSE_CODE(28);
 }
+
+enum class ResponseCode constructor(override val key: Int) : EnumerationValue {
+    RESERVED_FOR_FUTURE_USE(-1),
+    SUCCESS(1),
+    OP_CODE_NOT_SUPPORTED(2),
+    INVALID_OPERAND(3),
+    PROCEDURE_NOT_COMPLETED(4),
+    PARAMETER_OUT_OF_RANGE(5);
+}
+
+
