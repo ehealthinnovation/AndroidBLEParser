@@ -17,16 +17,21 @@ import org.ehealthinnovation.android.bluetooth.parser.IntFormat
  *
  * @throws Exception if write operation is unsuccessful
  */
-class CgmControlComposer : CharacteristicComposer<CamControlCommand> {
-    override fun canCompose(request: CamControlCommand): Boolean {
+class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
+
+    private val operandComposer : CgmControlOperandComposer = CgmControlOperandComposer()
+
+    override fun canCompose(request: CgmControlCommand): Boolean {
         //todo  update this method
         return false
     }
 
-    override fun compose(request: CamControlCommand, dataWriter: DataWriter) {
+    override fun compose(request: CgmControlCommand, dataWriter: DataWriter) {
         when (request) {
             is StartSession -> composeStartSession(dataWriter)
             is StopSession -> composeStopSession(dataWriter)
+            is SetCommunicationInterval -> composeSetCommunicationInterval(request.operand, dataWriter)
+            is GetCommunicationInterval -> composeGetCommunicationInterval(dataWriter)
             else -> throw IllegalArgumentException("operation not recognized")
         }
     }
@@ -37,6 +42,15 @@ class CgmControlComposer : CharacteristicComposer<CamControlCommand> {
 
     internal fun composeStopSession(dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.STOP_THE_SESSION.key, IntFormat.FORMAT_UINT8)
+    }
+
+    internal fun composeSetCommunicationInterval(operand: CommunicationInterval,dataWriter: DataWriter){
+        dataWriter.putInt(Opcode.SET_CGM_COMMUNICATION_INTERVAL.key, IntFormat.FORMAT_UINT8)
+        operandComposer.composeCommunicationInterval(operand, dataWriter)
+    }
+
+    internal fun composeGetCommunicationInterval(dataWriter: DataWriter){
+        dataWriter.putInt(Opcode.GET_CGM_COMMUNICATION_INTERVAL.key, IntFormat.FORMAT_UINT8)
     }
 
 }
