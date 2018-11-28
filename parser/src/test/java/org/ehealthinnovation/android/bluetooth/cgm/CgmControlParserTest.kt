@@ -1,7 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.cgm
 
-import org.ehealthinnovation.android.bluetooth.parser.MockCharacteristicPacket
-import org.ehealthinnovation.android.bluetooth.parser.uint8
+import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
@@ -25,7 +24,7 @@ class CgmControlParserTest {
                 uint8(Opcode.RESPONSE_CODE.key),
                 uint8(Opcode.START_THE_SESSION.key),
                 uint8(ResponseCode.SUCCESS.key))
-        val expectedResult = CgmControlResponse(Opcode.START_THE_SESSION, ResponseCode.SUCCESS)
+        val expectedResult = CgmControlGenericResponse(Opcode.START_THE_SESSION, ResponseCode.SUCCESS)
         Assert.assertEquals(expectedResult, CgmControlParser().parse(mockPackage))
     }
 
@@ -38,13 +37,26 @@ class CgmControlParserTest {
         CgmControlParser().readResponseOpcode(mockPackage.readData())
     }
 
-
-    @Test(expected = Exception::class)
-    fun readResponseInvalidCase() {
-        val mockPackage = MockCharacteristicPacket.mockPacketForRead(
-                uint8(Opcode.GET_CGM_COMMUNICATION_INTERVAL.key)
+    @Test
+    fun readCalibrationRecordResponse() {
+        val testReader = StubDataReader(
+                sfloat(57f),//concentration
+                uint16(513),//calibration time
+                uint8(SampleType.INTERSTITIAL_FLUID.key, SampleLocation.ALTERNATE_SITE_TEST.key),
+                uint16(1027),//next calibration time
+                uint16(5), //calibration record number
+                uint8(4) //EnumSet of calibration pending flag
         )
-        //no return value, just need to read one byte from the buffer
-        CgmControlParser().readResponseOpcode(mockPackage.readData())
+        val expectedResponseRecord = CalibrationRecordResponse(
+                57f,
+                513,
+                SampleType.INTERSTITIAL_FLUID,
+                SampleLocation.ALTERNATE_SITE_TEST,
+                1027,
+                5,
+                EnumSet.of(CalibrationStatus.PROCESS_PENDING))
+        Assert.assertEquals(expectedResponseRecord, CgmControlParser().readCalibrationRecordResponse(testReader))
     }
+
+
 }

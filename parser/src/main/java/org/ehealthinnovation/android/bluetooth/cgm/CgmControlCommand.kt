@@ -34,3 +34,17 @@ class SetCommunicationInterval(val operand: CommunicationInterval) : CgmControlC
  */
 class GetCommunicationInterval : CgmControlCommand()
 
+/**
+ * Use this command to input calibration record. CGM needs calibration after a certain time of use.
+ * The calibration concentration can be obtained from using a traditional glucose meter and input by
+ * the user. One should fill in the data fields in [CalibrationRecord] to initiate and send it to
+ * the remote device.
+ */
+class SetGlucoseCalibrationValue(val operand: CalibrationRecord) : CgmControlCommand()
+
+/**
+ * Use this command to get a calibration record specified by the [CalibrationRecordRequest.recordNumber]
+ *
+ */
+class GetGlucoseCalibrationValue(val operand: CalibrationRecordRequest) : CgmControlCommand()
+

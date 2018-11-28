@@ -32,6 +32,8 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
             is StopSession -> composeStopSession(dataWriter)
             is SetCommunicationInterval -> composeSetCommunicationInterval(request.operand, dataWriter)
             is GetCommunicationInterval -> composeGetCommunicationInterval(dataWriter)
+            is SetGlucoseCalibrationValue -> composeSetCalibration(request.operand, dataWriter)
+            is GetGlucoseCalibrationValue -> composeGetCalibration(request.operand, dataWriter)
             else -> throw IllegalArgumentException("operation not recognized")
         }
     }
@@ -51,6 +53,16 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
 
     internal fun composeGetCommunicationInterval(dataWriter: DataWriter){
         dataWriter.putInt(Opcode.GET_CGM_COMMUNICATION_INTERVAL.key, IntFormat.FORMAT_UINT8)
+    }
+
+    internal fun composeSetCalibration(operand: CalibrationRecord, dataWriter: DataWriter){
+        dataWriter.putInt(Opcode.SET_GLUCOSE_CALIBRATION_VALUE.key, IntFormat.FORMAT_UINT8)
+        operandComposer.composeCalibrationRecord(operand, dataWriter)
+    }
+
+    internal fun composeGetCalibration(operand: CalibrationRecordRequest, dataWriter: DataWriter){
+        dataWriter.putInt(Opcode.GET_GLUCOSE_CALIBRATION_VALUE.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(operand.recordNumber, IntFormat.FORMAT_UINT16)
     }
 
 }

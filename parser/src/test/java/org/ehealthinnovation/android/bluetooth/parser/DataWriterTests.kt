@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.parser
 
+import android.provider.ContactsContract
 import org.junit.Assert
 import org.junit.Test
 import java.lang.ClassCastException
@@ -19,10 +20,10 @@ import java.util.*
  *
  * @see [uint8], [uint16], [uint32], [sint8], [sint16], [sint32], [floate], [sfloate], [string]
  */
-class StubDataWriter(vararg testValues: Any) : DataWriter {
+class StubDataWriter(vararg testValues: StubData) : DataWriter {
 
 
-    private val values = LinkedList<Any>()
+    private val values = LinkedList<StubData>()
 
     init {
         values.addAll(Arrays.asList(*testValues))
@@ -60,7 +61,7 @@ class StubDataWriter(vararg testValues: Any) : DataWriter {
 
 
 
-data class StubFloatValue(val format: FloatFormat, val value: Float, val exponent: Int)
+data class StubFloatValue(val format: FloatFormat, val value: Float, val exponent: Int) : StubData()
 /**
  * Creating short float or long float stub value with exponents. Used in testing with [DataWriter.putFloat]
  */

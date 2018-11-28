@@ -97,10 +97,12 @@ class StubDataReader(vararg testValues: StubValue) : DataReader {
     }
 }
 
+abstract class StubData
+
 /**
  * A typed value for the [StubDataReader]
  */
-data class StubValue(val format: Any, val value: Any)
+data class StubValue(val format: Any,val value: Any) : StubData()
 
 /**
  * Stub format class for string classes in [DataReader]
