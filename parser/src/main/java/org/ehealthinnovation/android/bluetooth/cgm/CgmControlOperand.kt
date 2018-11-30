@@ -26,7 +26,7 @@ data class CommunicationInterval(val intervalMinute: Int) : CgmControlOperand() 
  */
 data class CalibrationRecordRequest(
         val recordNumber: Int
-):CgmControlOperand()
+) : CgmControlOperand()
 
 /**
  * This class is used as operand to set a Calibration Record through [SetGlucoseCalibrationValue]
@@ -65,5 +65,17 @@ enum class CalibrationStatus constructor(override val bitOffset: Int) : FlagValu
     DATA_OUT_OF_RANGE(1),
     PROCESS_PENDING(2);
 }
+
+class GlucoseAlertLevel(val alertType: GlucoseAlertType, val concentration: Float) : CgmControlOperand()
+
+enum class GlucoseAlertType(val getCommandOpcode: Opcode, val setCommandOpcode: Opcode){
+    PATIENT_LOW_ALERT(Opcode.GET_PATIENT_LOW_ALERT_LEVEL, Opcode.SET_PATIENT_LOW_ALERT_LEVEL),
+    PATIENT_HIGH_ALERT(Opcode.GET_PATIENT_HIGH_ALERT_LEVEL, Opcode.SET_PATIENT_HIGH_ALERT_LEVEL),
+    HYPO_ALERT(Opcode.GET_HYPO_ALERT_LEVEL, Opcode.SET_HYPO_ALERT_LEVEL),
+    HYPER_ALERT(Opcode.GET_HYPER_ALERT_LEVEL, Opcode.SET_HYPER_ALERT_LEVEL),
+    RATE_OF_INCREASE(Opcode.GET_RATE_OF_INCREASE_ALERT_LEVEL, Opcode.SET_RATE_OF_INCREASE_ALERT_LEVEL),
+    RATE_OF_DECREASE(Opcode.GET_RATE_OF_DECREASE_ALERT_LEVEL, Opcode.SET_RATE_OF_DECREASE_ALERT_LEVEL);
+}
+
 
 

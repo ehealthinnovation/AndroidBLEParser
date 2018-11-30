@@ -16,7 +16,7 @@ abstract class CgmControlResponse
 data class CgmControlGenericResponse(
         val requestOperation: Opcode,
         val response: ResponseCode
-): CgmControlResponse()
+) : CgmControlResponse()
 
 /**
  * Data structure to hold the response from [GetGlucoseCalibrationValue]
@@ -47,4 +47,19 @@ data class CalibrationRecordResponse(
         val recordNumber: Int,
         val status: EnumSet<CalibrationStatus>
 ) : CgmControlResponse()
+
+/**
+ * Super class to store glucose alert response levels
+ *
+ * @property concentration the alert glucose level in mg/dL
+ */
+abstract class AlertGlucoseLevelResponse(
+        open val concentration: Float
+) : CgmControlResponse()
+
+/**
+ * The response to [GetPatientHighAlertLevel]
+ */
+data class PatientHighAlertResponse(override val concentration: Float) : AlertGlucoseLevelResponse(concentration)
+data class PatientLowAlertResponse(override val concentration: Float) : AlertGlucoseLevelResponse(concentration)
 

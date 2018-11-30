@@ -48,3 +48,13 @@ class SetGlucoseCalibrationValue(val operand: CalibrationRecord) : CgmControlCom
  */
 class GetGlucoseCalibrationValue(val operand: CalibrationRecordRequest) : CgmControlCommand()
 
+/**
+ * A parent class for all commands which takes in a single concentration parameter, and set a
+ * alert threshold to that parameter.
+ */
+class SetGlucoseAlertLevel(val operand: GlucoseAlertLevel) : CgmControlCommand()
+
+/**
+ * A parent class for all commands which get an alert threshold from the CGM
+ */
+class GetGlucoseAlertLevel(val alertType: GlucoseAlertType) : CgmControlCommand()

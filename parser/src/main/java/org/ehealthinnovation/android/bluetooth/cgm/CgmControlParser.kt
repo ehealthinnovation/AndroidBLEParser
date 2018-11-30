@@ -18,6 +18,8 @@ class CgmControlParser : CharacteristicParser<CgmControlResponse> {
         val response = when (opcode) {
             Opcode.RESPONSE_CODE -> readGenericResponse(data)
             Opcode.GLUCOSE_CALIBRATION_VALUE_RESPONSE -> readCalibrationRecordResponse(data)
+            Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE,
+            Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE-> readGetGlucoseAlertLevelResponse(opcode, data)
             else -> {
                 throw IllegalArgumentException("Unsupported response opcode")
             }
@@ -59,6 +61,15 @@ class CgmControlParser : CharacteristicParser<CgmControlResponse> {
         return CgmControlGenericResponse(
                 requestOpcode,
                 responseCode)
+    }
+
+    internal fun readGetGlucoseAlertLevelResponse(opcode: Opcode, data: DataReader): CgmControlResponse {
+        val glucoseAlertLevel = data.getNextFloat(FloatFormat.FORMAT_SFLOAT)
+        return when (opcode) {
+            Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE -> PatientHighAlertResponse(glucoseAlertLevel)
+            Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE -> PatientLowAlertResponse(glucoseAlertLevel)
+            else -> throw IllegalArgumentException("opcode $opcode not support the function")
+        }
     }
 
     /**
