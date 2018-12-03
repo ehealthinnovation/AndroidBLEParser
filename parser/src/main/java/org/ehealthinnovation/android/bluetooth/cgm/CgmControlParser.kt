@@ -19,7 +19,11 @@ class CgmControlParser : CharacteristicParser<CgmControlResponse> {
             Opcode.RESPONSE_CODE -> readGenericResponse(data)
             Opcode.GLUCOSE_CALIBRATION_VALUE_RESPONSE -> readCalibrationRecordResponse(data)
             Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE,
-            Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE-> readGetGlucoseAlertLevelResponse(opcode, data)
+            Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE,
+            Opcode.HYPO_ALERT_LEVEL_RESPONSE,
+            Opcode.HYPER_ALERT_LEVEL_RESPONSE-> readGetGlucoseAlertLevelResponse(opcode, data)
+            Opcode.RATE_OF_INCREASE_ALERT_LEVEL_RESPONSE,
+            Opcode.RATE_OF_DECREASE_ALERT_LEVEL_RESPONSE-> readRateOfChangeAlertLevelResponse(opcode, data)
             else -> {
                 throw IllegalArgumentException("Unsupported response opcode")
             }
@@ -68,6 +72,17 @@ class CgmControlParser : CharacteristicParser<CgmControlResponse> {
         return when (opcode) {
             Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE -> PatientHighAlertResponse(glucoseAlertLevel)
             Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE -> PatientLowAlertResponse(glucoseAlertLevel)
+            Opcode.HYPO_ALERT_LEVEL_RESPONSE -> HypoAlertResponse(glucoseAlertLevel)
+            Opcode.HYPER_ALERT_LEVEL_RESPONSE -> HyperAlertResponse(glucoseAlertLevel)
+            else -> throw IllegalArgumentException("opcode $opcode not support the function")
+        }
+    }
+
+    internal fun readRateOfChangeAlertLevelResponse(opcode: Opcode, data: DataReader): RateOfChangeAlertResponse {
+        val rateOfChange = data.getNextFloat(FloatFormat.FORMAT_SFLOAT)
+        return when (opcode) {
+            Opcode.RATE_OF_DECREASE_ALERT_LEVEL_RESPONSE -> RateOfDecreaseAlertResponse(rateOfChange)
+            Opcode.RATE_OF_INCREASE_ALERT_LEVEL_RESPONSE -> RateOfIncreaseAlertResponse(rateOfChange)
             else -> throw IllegalArgumentException("opcode $opcode not support the function")
         }
     }

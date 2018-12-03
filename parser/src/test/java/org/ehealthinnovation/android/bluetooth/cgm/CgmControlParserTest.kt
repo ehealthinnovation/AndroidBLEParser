@@ -60,21 +60,41 @@ class CgmControlParserTest {
 
     @Test
     fun readGetGlucoseAlertLevelResponse() {
-        val testOpcode1 = Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE
-        val testReader1 = StubDataReader(
-                sfloat(56f)
-        )
-        val expectedOutput = PatientHighAlertResponse(56f)
-        Assert.assertEquals(expectedOutput, CgmControlParser().readGetGlucoseAlertLevelResponse(testOpcode1, testReader1))
 
-        val testOpcode2 = Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE
-        val testReader2 = StubDataReader(
-                sfloat(51f)
+        val testVectors = listOf<Pair<Opcode, AlertGlucoseLevelResponse>>(
+                Pair(Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE, PatientHighAlertResponse(54f)),
+                Pair(Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE, PatientLowAlertResponse(51f)),
+                Pair(Opcode.HYPO_ALERT_LEVEL_RESPONSE, HypoAlertResponse(50f)),
+                Pair(Opcode.HYPER_ALERT_LEVEL_RESPONSE, HyperAlertResponse(49f))
         )
-        val expectedOutput2 = PatientLowAlertResponse(51f)
-        Assert.assertEquals(expectedOutput2, CgmControlParser().readGetGlucoseAlertLevelResponse(testOpcode2, testReader2))
-
+        for (testVector in testVectors) {
+            val testOpcode = testVector.first
+            val testReader = StubDataReader(
+                    sfloat(testVector.second.concentration)
+            )
+            val expectedOutput = testVector.second
+            Assert.assertEquals(expectedOutput, CgmControlParser().readGetGlucoseAlertLevelResponse(testOpcode, testReader))
+        }
     }
+
+
+    @Test
+    fun readGetRateOfChangeAlertLevelResponse() {
+
+        val testVectors = listOf<Pair<Opcode, RateOfChangeAlertResponse>>(
+                Pair(Opcode.RATE_OF_DECREASE_ALERT_LEVEL_RESPONSE, RateOfDecreaseAlertResponse(54f)),
+                Pair(Opcode.RATE_OF_INCREASE_ALERT_LEVEL_RESPONSE, RateOfIncreaseAlertResponse(58f))
+        )
+        for (testVector in testVectors) {
+            val testOpcode = testVector.first
+            val testReader = StubDataReader(
+                    sfloat(testVector.second.rateOfChange)
+            )
+            val expectedOutput = testVector.second
+            Assert.assertEquals(expectedOutput, CgmControlParser().readRateOfChangeAlertLevelResponse(testOpcode, testReader))
+        }
+    }
+
 
 
 }

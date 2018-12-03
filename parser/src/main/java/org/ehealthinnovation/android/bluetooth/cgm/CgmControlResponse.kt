@@ -58,8 +58,24 @@ abstract class AlertGlucoseLevelResponse(
 ) : CgmControlResponse()
 
 /**
- * The response to [GetPatientHighAlertLevel]
+ * The responses to [GetGlucoseAlertLevel] for corresponding [GlucoseAlertType]
  */
 data class PatientHighAlertResponse(override val concentration: Float) : AlertGlucoseLevelResponse(concentration)
 data class PatientLowAlertResponse(override val concentration: Float) : AlertGlucoseLevelResponse(concentration)
+data class HypoAlertResponse(override val concentration: Float) : AlertGlucoseLevelResponse(concentration)
+data class HyperAlertResponse(override val concentration: Float) : AlertGlucoseLevelResponse(concentration)
 
+/**
+ * Super class to store get rate of change alert level response
+ *
+ * @property rateOfChange the alert glucose level in mg/dL/min
+ */
+abstract class RateOfChangeAlertResponse(
+        open val rateOfChange: Float
+) : CgmControlResponse()
+
+/**
+ * The responses to [GetGlucoseAlertLevel] for corresponding [GlucoseAlertType]
+ */
+data class RateOfDecreaseAlertResponse(override val rateOfChange: Float) : RateOfChangeAlertResponse(rateOfChange)
+data class RateOfIncreaseAlertResponse(override val rateOfChange: Float) : RateOfChangeAlertResponse(rateOfChange)

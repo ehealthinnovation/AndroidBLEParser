@@ -84,5 +84,4 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
     internal fun composeResetDeviceSpecificAlert(dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.RESET_DEVICE_SPECIFIC_ALERT.key, IntFormat.FORMAT_UINT8)
     }
-
 }
