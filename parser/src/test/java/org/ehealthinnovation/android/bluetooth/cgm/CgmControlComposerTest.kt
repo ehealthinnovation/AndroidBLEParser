@@ -7,17 +7,21 @@ import java.util.*
 class CgmControlComposerTest {
 
     @Test
-    fun composeStartSession() {
-        val testWriterPacket = MockCharacteristicPacket.mockPacketWriter(uint8(Opcode.START_THE_SESSION.key))
-        CgmControlComposer().composeStartSession(testWriterPacket.writeData())
-        (testWriterPacket.writeData() as StubDataWriter).checkWriteComplete()
-    }
+    fun composeSimpleCommandIntegrationTest() {
 
-    @Test
-    fun composeStopSession() {
-        val testWriterPacket = MockCharacteristicPacket.mockPacketWriter(uint8(Opcode.STOP_THE_SESSION.key))
-        CgmControlComposer().composeStopSession(testWriterPacket.writeData())
-        (testWriterPacket.writeData() as StubDataWriter).checkWriteComplete()
+        val testVectors = listOf<Pair<Opcode, CgmControlCommand>>(
+                Pair(Opcode.GET_CGM_COMMUNICATION_INTERVAL, GetCommunicationInterval()),
+                Pair(Opcode.STOP_THE_SESSION, StopSession()),
+                Pair(Opcode.START_THE_SESSION, StartSession()),
+                Pair(Opcode.RESET_DEVICE_SPECIFIC_ALERT, ResetDeviceSpecificAlert())
+        )
+
+        for (testVector in testVectors) {
+            val testWriter = StubDataWriter(uint8(testVector.first.key))
+            val inputRequest = testVector.second
+            CgmControlComposer().compose(inputRequest, testWriter)
+            testWriter.checkWriteComplete()
+        }
     }
 
     @Test(expected = Exception::class)
@@ -37,14 +41,6 @@ class CgmControlComposerTest {
                 uint8(Opcode.SET_CGM_COMMUNICATION_INTERVAL.key),
                 uint8(123))
         CgmControlComposer().composeSetCommunicationInterval(CommunicationInterval(123), testWriterPacket.writeData())
-        (testWriterPacket.writeData() as StubDataWriter).checkWriteComplete()
-    }
-
-    @Test
-    fun composeGetCommunicationIntervalTest() {
-        val testWriterPacket = MockCharacteristicPacket.mockPacketWriter(
-                uint8(Opcode.GET_CGM_COMMUNICATION_INTERVAL.key))
-        CgmControlComposer().composeGetCommunicationInterval(testWriterPacket.writeData())
         (testWriterPacket.writeData() as StubDataWriter).checkWriteComplete()
     }
 
@@ -118,12 +114,4 @@ class CgmControlComposerTest {
         (testWriterPacket.writeData() as StubDataWriter).checkWriteComplete()
 
     }
-
-    @Test
-    fun composeDeviceSpecificAlertReset(){
-        val testWriter = StubDataWriter(uint8(Opcode.RESET_DEVICE_SPECIFIC_ALERT.key))
-        CgmControlComposer().composeResetDeviceSpecificAlert(testWriter)
-        testWriter.checkWriteComplete()
-    }
-
 }

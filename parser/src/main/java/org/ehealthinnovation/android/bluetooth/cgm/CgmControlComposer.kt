@@ -23,40 +23,45 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
     private val operandComposer: CgmControlOperandComposer = CgmControlOperandComposer()
 
     override fun canCompose(request: CgmControlCommand): Boolean {
-        //todo  update this method
-        return false
+        return when (request) {
+            is StartSession,
+            is StopSession,
+            is SetCommunicationInterval,
+            is GetCommunicationInterval,
+            is SetGlucoseCalibrationValue,
+            is GetGlucoseCalibrationValue,
+            is SetGlucoseAlertLevel,
+            is GetGlucoseAlertLevel,
+            is ResetDeviceSpecificAlert -> true
+            else -> false
+        }
     }
 
     override fun compose(request: CgmControlCommand, dataWriter: DataWriter) {
         when (request) {
-            is StartSession -> composeStartSession(dataWriter)
-            is StopSession -> composeStopSession(dataWriter)
+            is StartSession -> composeSimpleCommand(Opcode.START_THE_SESSION, dataWriter)
+            is StopSession -> composeSimpleCommand(Opcode.STOP_THE_SESSION, dataWriter)
             is SetCommunicationInterval -> composeSetCommunicationInterval(request.operand, dataWriter)
-            is GetCommunicationInterval -> composeGetCommunicationInterval(dataWriter)
+            is GetCommunicationInterval -> composeSimpleCommand(Opcode.GET_CGM_COMMUNICATION_INTERVAL, dataWriter)
             is SetGlucoseCalibrationValue -> composeSetCalibration(request.operand, dataWriter)
             is GetGlucoseCalibrationValue -> composeGetCalibration(request.operand, dataWriter)
             is SetGlucoseAlertLevel -> composeSetGlucoseAlertLevel(request, dataWriter)
             is GetGlucoseAlertLevel -> composeGetGlucoseAlertLevel(request, dataWriter)
-            is ResetDeviceSpecificAlert -> composeResetDeviceSpecificAlert(dataWriter)
+            is ResetDeviceSpecificAlert -> composeSimpleCommand(Opcode.RESET_DEVICE_SPECIFIC_ALERT, dataWriter)
             else -> throw IllegalArgumentException("operation not recognized")
         }
     }
 
-    internal fun composeStartSession(dataWriter: DataWriter) {
-        dataWriter.putInt(Opcode.START_THE_SESSION.key, IntFormat.FORMAT_UINT8)
-    }
-
-    internal fun composeStopSession(dataWriter: DataWriter) {
-        dataWriter.putInt(Opcode.STOP_THE_SESSION.key, IntFormat.FORMAT_UINT8)
+    /**
+     * Use this compose function when the control command has only an opcode as argument.
+     */
+    internal fun composeSimpleCommand(opcode: Opcode, dataWriter: DataWriter) {
+        dataWriter.putInt(opcode.key, IntFormat.FORMAT_UINT8)
     }
 
     internal fun composeSetCommunicationInterval(operand: CommunicationInterval, dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.SET_CGM_COMMUNICATION_INTERVAL.key, IntFormat.FORMAT_UINT8)
         operandComposer.composeCommunicationInterval(operand, dataWriter)
-    }
-
-    internal fun composeGetCommunicationInterval(dataWriter: DataWriter) {
-        dataWriter.putInt(Opcode.GET_CGM_COMMUNICATION_INTERVAL.key, IntFormat.FORMAT_UINT8)
     }
 
     internal fun composeSetCalibration(operand: CalibrationRecord, dataWriter: DataWriter) {
@@ -79,9 +84,5 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
     internal fun composeGetGlucoseAlertLevel(request: GetGlucoseAlertLevel, dataWriter: DataWriter) {
         val opcode = request.alertType.getCommandOpcode
         dataWriter.putInt(opcode.key, IntFormat.FORMAT_UINT8)
-    }
-
-    internal fun composeResetDeviceSpecificAlert(dataWriter: DataWriter) {
-        dataWriter.putInt(Opcode.RESET_DEVICE_SPECIFIC_ALERT.key, IntFormat.FORMAT_UINT8)
     }
 }
