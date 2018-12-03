@@ -95,6 +95,16 @@ class CgmControlParserTest {
         }
     }
 
+     @Test
+    fun readGetCommunicationIntervalResponse() {
+        val testReader1 = StubDataReader(
+                uint16(13)
+        )
+        val expectedOutput = CommunicationIntervalResponse(13)
+        Assert.assertEquals(expectedOutput, CgmControlParser().readCommunicationIntervalResponse (testReader1))
+    }
+
+
 
 
 }

@@ -79,3 +79,8 @@ abstract class RateOfChangeAlertResponse(
  */
 data class RateOfDecreaseAlertResponse(override val rateOfChange: Float) : RateOfChangeAlertResponse(rateOfChange)
 data class RateOfIncreaseAlertResponse(override val rateOfChange: Float) : RateOfChangeAlertResponse(rateOfChange)
+
+/**
+ * The response to [GetCommunicationInterval]
+ */
+data class CommunicationIntervalResponse(val communicationIntervalMinute: Int) : CgmControlResponse()

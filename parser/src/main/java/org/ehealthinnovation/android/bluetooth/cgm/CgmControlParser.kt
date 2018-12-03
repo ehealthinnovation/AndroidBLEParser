@@ -21,9 +21,10 @@ class CgmControlParser : CharacteristicParser<CgmControlResponse> {
             Opcode.PATIENT_HIGH_ALERT_LEVEL_RESPONSE,
             Opcode.PATIENT_LOW_ALERT_LEVEL_RESPONSE,
             Opcode.HYPO_ALERT_LEVEL_RESPONSE,
-            Opcode.HYPER_ALERT_LEVEL_RESPONSE-> readGetGlucoseAlertLevelResponse(opcode, data)
+            Opcode.HYPER_ALERT_LEVEL_RESPONSE -> readGetGlucoseAlertLevelResponse(opcode, data)
             Opcode.RATE_OF_INCREASE_ALERT_LEVEL_RESPONSE,
-            Opcode.RATE_OF_DECREASE_ALERT_LEVEL_RESPONSE-> readRateOfChangeAlertLevelResponse(opcode, data)
+            Opcode.RATE_OF_DECREASE_ALERT_LEVEL_RESPONSE -> readRateOfChangeAlertLevelResponse(opcode, data)
+            Opcode.CGM_COMMUNICATION_INTERVAL_RESPONSE -> readCommunicationIntervalResponse(data)
             else -> {
                 throw IllegalArgumentException("Unsupported response opcode")
             }
@@ -85,6 +86,10 @@ class CgmControlParser : CharacteristicParser<CgmControlResponse> {
             Opcode.RATE_OF_INCREASE_ALERT_LEVEL_RESPONSE -> RateOfIncreaseAlertResponse(rateOfChange)
             else -> throw IllegalArgumentException("opcode $opcode not support the function")
         }
+    }
+
+    internal fun readCommunicationIntervalResponse(data: DataReader): CommunicationIntervalResponse {
+        return CommunicationIntervalResponse(data.getNextInt(IntFormat.FORMAT_UINT16))
     }
 
     /**
