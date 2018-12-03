@@ -109,4 +109,12 @@ class CgmControlComposerTest {
 
     }
 
+    @Test
+    fun composeDeviceSpecificAlertReset(){
+        val testWriter = StubDataWriter(uint8(Opcode.RESET_DEVICE_SPECIFIC_ALERT.key))
+        CgmControlComposer().composeResetDeviceSpecificAlert(testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+
 }

@@ -58,3 +58,8 @@ class SetGlucoseAlertLevel(val operand: GlucoseAlertLevel) : CgmControlCommand()
  * A parent class for all commands which get an alert threshold from the CGM
  */
 class GetGlucoseAlertLevel(val alertType: GlucoseAlertType) : CgmControlCommand()
+
+/**
+ * A command to reset the Device Specific Alert. It clears the flags in the [CgmStatus.status]
+ */
+class ResetDeviceSpecificAlert : CgmControlCommand()

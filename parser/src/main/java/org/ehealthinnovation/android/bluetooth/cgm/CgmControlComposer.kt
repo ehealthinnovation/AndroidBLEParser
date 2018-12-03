@@ -37,7 +37,7 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
             is GetGlucoseCalibrationValue -> composeGetCalibration(request.operand, dataWriter)
             is SetGlucoseAlertLevel -> composeSetGlucoseAlertLevel(request, dataWriter)
             is GetGlucoseAlertLevel -> composeGetGlucoseAlertLevel(request, dataWriter)
-
+            is ResetDeviceSpecificAlert -> composeResetDeviceSpecificAlert(dataWriter)
             else -> throw IllegalArgumentException("operation not recognized")
         }
     }
@@ -79,6 +79,10 @@ class CgmControlComposer : CharacteristicComposer<CgmControlCommand> {
     internal fun composeGetGlucoseAlertLevel(request: GetGlucoseAlertLevel, dataWriter: DataWriter) {
         val opcode = request.alertType.getCommandOpcode
         dataWriter.putInt(opcode.key, IntFormat.FORMAT_UINT8)
+    }
+
+    internal fun composeResetDeviceSpecificAlert(dataWriter: DataWriter) {
+        dataWriter.putInt(Opcode.RESET_DEVICE_SPECIFIC_ALERT.key, IntFormat.FORMAT_UINT8)
     }
 
 }
