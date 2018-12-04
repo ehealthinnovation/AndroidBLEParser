@@ -9,14 +9,8 @@ class CgmControlParserTest {
 
     @Test
     fun canParse() {
-        val uuid = UUID.fromString("00002AAC-0000-1000-8000-00805F9B34FB")
-        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(uuid)
-        Assert.assertTrue(CgmControlParser().canParse(testPacket1))
-
-        val contextCorruptedUuid = UUID.fromString("00002AAD-0000-1000-8000-00805F9B34FB")
-        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(contextCorruptedUuid)
-        Assert.assertFalse(CgmControlParser().canParse(testPacket2))
-    }
+        testMatcherForSpecificBluetoothUuid("00002AAC-0000-1000-8000-00805F9B34FB", CgmControlParser()::canParse)
+      }
 
     @Test
     fun parseSmokeTest() {

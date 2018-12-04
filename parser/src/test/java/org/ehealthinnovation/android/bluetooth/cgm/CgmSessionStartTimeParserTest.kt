@@ -10,13 +10,7 @@ class CgmSessionStartTimeParserTest {
 
     @Test
     fun canParse() {
-        val uuid = UUID.fromString("00002AAA-0000-1000-8000-00805F9B34FB")
-        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(uuid)
-        Assert.assertTrue(CgmSessionStartTimeParser().canParse(testPacket1))
-
-        val corruptedUuid = UUID.fromString("00002AAB-0000-1000-8000-00805F9B34FB")
-        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(corruptedUuid)
-        Assert.assertFalse(CgmSessionStartTimeParser().canParse(testPacket2))
+        testMatcherForSpecificBluetoothUuid("00002AAA-0000-1000-8000-00805F9B34FB", CgmSessionStartTimeParser()::canParse)
     }
 
     @Test

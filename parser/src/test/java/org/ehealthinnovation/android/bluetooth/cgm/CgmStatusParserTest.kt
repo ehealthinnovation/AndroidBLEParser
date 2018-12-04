@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.cgm
 
 import org.ehealthinnovation.android.bluetooth.parser.MockCharacteristicPacket
+import org.ehealthinnovation.android.bluetooth.parser.testMatcherForSpecificBluetoothUuid
 import org.ehealthinnovation.android.bluetooth.parser.uint16
 import org.ehealthinnovation.android.bluetooth.parser.uint24
 import org.junit.Assert
@@ -12,13 +13,7 @@ class CgmStatusParserTest {
 
     @Test
     fun canParse() {
-        val uuid = UUID.fromString("00002AA9-0000-1000-8000-00805F9B34FB")
-        val testPacket1 = MockCharacteristicPacket.mockPacketWithUuid(uuid)
-        Assert.assertTrue(CgmStatusParser().canParse(testPacket1))
-
-        val featureCorruptedUuid = UUID.fromString("00002AA7-0000-1000-8000-00805F9B34FB")
-        val testPacket2 = MockCharacteristicPacket.mockPacketWithUuid(featureCorruptedUuid)
-        Assert.assertFalse(CgmStatusParser().canParse(testPacket2))
+        testMatcherForSpecificBluetoothUuid("00002AA9-0000-1000-8000-00805F9B34FB", CgmStatusParser()::canParse)
     }
 
     @Test
