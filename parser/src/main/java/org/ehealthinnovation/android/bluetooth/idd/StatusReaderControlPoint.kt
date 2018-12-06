@@ -135,3 +135,14 @@ enum class BasalDeliveryContext(override val key: Int) : EnumerationValue {
     ARTIFICIAL_PANCREAS_CONTROLLER(0x55);
 }
 
+/**
+ * This structure holds the response from [GetTotalInsulinDelivered] command.
+ * @property bolus the total daily insulin sum of bolus delivered in IU. Value set to 0 if a pump does not support bolus
+ * @property basal the total daily insulin sum of basal delivered in IU. Value set to 0 if a pump does not support basal
+ * @property bolusAndBasal the sum of [bolus] and [basal]
+ */
+data class TotalInsulinDeliveredResponse(
+        val bolus: Float,
+        val basal: Float,
+        val bolusAndBasal: Float
+) : StatusReaderControlResponse()
