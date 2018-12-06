@@ -84,5 +84,54 @@ enum class StatusReaderControlOpcode(override val key: Int) : EnumerationValue {
     /**This is the normal response to procedure Get Insulin On Board.  */
     GET_INSULIN_ON_BOARD_RESPONSE(0x03FC);
 
-
 }
+
+/**
+ * The response to [GetActiveBasalRateDelivery] command.
+ * @property activeBasalRateProfileTemplateNumber the basal rate template number. Any active basal rate must be activated from some profile temple.
+ * @property activeBasalRateCurrentConfigValue the current basal rate value in IU/h. This is the current basal rate without the TBR adjustment.
+ * @property tbrConfig If not null, the object carries the current active TBR configuration.
+ * @property tbrTemplateNumber If not null, this is the template number [tbrConfig] is enacted from.
+ * @property basalDeliveryContext If not null, this is the delivery context for the current basal rate.
+ */
+data class ActiveBasalRateDeliveryResponse(
+        val activeBasalRateProfileTemplateNumber: Int,
+        val activeBasalRateCurrentConfigValue: Float,
+        val tbrConfig: TbrConfig?,
+        val tbrTemplateNumber: Int?,
+        val basalDeliveryContext: BasalDeliveryContext?
+)
+
+/**
+ * A general data type for TBR configuration
+ * @property type the type of TBR
+ * @property adjustmentValue the TBR adjustment value. If [type] is [TbrType.ABSOLUTE], the value unit is IU/h, if[type] is [TbrType.RELATIVE] the value is a percentage without unit.
+ * @property durationProgrammedMinute the total duration of TBR programmed. Unit in minutes.
+ * @property durationRemainingMinute the remaining duration of TBR. Unit in minutes.
+ */
+data class TbrConfig(
+        val type: TbrType,
+        val adjustmentValue: Float,
+        val durationProgrammedMinute: Int,
+        val durationRemainingMinute: Int
+)
+
+enum class TbrType(override val key: Int) : EnumerationValue {
+    RESERVED_FOR_FUTURE_USE(-1),
+    UNDETERMINED(0x0F),
+    ABSOLUTE(0x33),
+    RELATIVE(0x3C);
+}
+
+enum class BasalDeliveryContext(override val key: Int) : EnumerationValue {
+    RESERVED_FOR_FUTURE_USE(-1),
+    /**The basal delivery context is undetermined. */
+    UNDETERMINED(0x0F),
+    /**The current basal rate was set directly on the Insulin Delivery Device (e.g., an active basal rate reached a new time block, the user changed the active basal rate profile or triggered a TBR directly on the device). */
+    DEVICE_BASED(0x33),
+    /**The current basal rate was set via a remote control (i.e., an external device). For example, the user changed the active basal rate profile or triggered a TBR via a remote control. */
+    REMOTE_CONTROL(0x3C),
+    /**The current basal rate was set by an AP Controller (i.e., an external automated device) as part of an Artificial Pancreas Device System (APDS)*/
+    ARTIFICIAL_PANCREAS_CONTROLLER(0x55);
+}
+
