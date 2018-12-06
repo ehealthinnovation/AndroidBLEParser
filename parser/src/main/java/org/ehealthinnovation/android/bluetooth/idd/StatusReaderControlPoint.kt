@@ -83,8 +83,38 @@ enum class StatusReaderControlOpcode(override val key: Int) : EnumerationValue {
     GET_INSULIN_ON_BOARD(0x03F3),
     /**This is the normal response to procedure Get Insulin On Board.  */
     GET_INSULIN_ON_BOARD_RESPONSE(0x03FC);
-
 }
+
+/**
+ * Hold the response to [GetCounter] command, it is return by [GetCounterResponseParser.parseResponse]
+ * @property type the counter type queried
+ * @property valueSelection the value type of the counter queried.
+ * @property valueMinute the value of the counter in minutes
+ */
+data class CounterResponse(
+        val type: CounterType,
+        val valueSelection: CounterValueSelection,
+        val valueMinute: Int
+) : StatusReaderControlResponse()
+
+enum class CounterType(override val key: Int) : EnumerationValue {
+    RESERVED_FOR_FUTURE_USE(-1),
+    /**This counter provides the lifetime of the Insulin Delivery Device. It can be used if the device shall have a limited lifetime for operation. */
+    IDD_LIFETIME(0x0F),
+    /**This counter provides the warranty time of the Insulin Delivery Device. It can be used if the device shall have a limited warranty time. */
+    IDD_WARRANTY_TIME(0x33),
+    /**This counter provides the loaner time of the Insulin Delivery Device. It can be used if the device is loaned for a limited time. */
+    IDD_LOANER_TIME(0x3C),
+    /**This counter provides the operation time of the insulin in the reservoir. It can be used to warn the user when the insulin in the reservoir gets too old.*/
+    RESERVOIR_INSULIN_OPERATION_TIME(0x55);
+}
+
+enum class CounterValueSelection(override val key: Int) : EnumerationValue {
+    RESERVED_FOR_FUTURE_USE(-1),
+    REMAINING(0x0F),
+    ELAPSED(0x33);
+}
+
 
 /**
  * The response to [GetActiveBasalRateDelivery] command.
