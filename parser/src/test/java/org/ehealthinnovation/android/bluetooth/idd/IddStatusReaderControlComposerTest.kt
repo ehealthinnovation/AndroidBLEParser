@@ -1,5 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
+import com.nhaarman.mockito_kotlin.*
+import org.ehealthinnovation.android.bluetooth.parser.DataWriter
 import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
 import org.ehealthinnovation.android.bluetooth.parser.uint16
 import org.ehealthinnovation.android.bluetooth.parser.uint8
@@ -35,6 +37,26 @@ class IddStatusReaderControlComposerTest {
         testWriter3.checkWriteComplete()
     }
 
+    @Test
+    fun composeSimpleCommand() {
+        val testWriter = StubDataWriter(
+                uint16(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS.key)
+        )
+        IddStatusReaderControlComposer().composeSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composerWhiteBoxTests(){
+        val mockComposer = mock<IddStatusReaderControlComposer>()
+        val mockWriter = mock<DataWriter>()
+        whenever(mockComposer.compose(any(), any())).thenCallRealMethod()
+        mockComposer.compose(GetActiveBolusIds(), mockWriter)
+
+        inOrder(mockComposer){
+            verify(mockComposer, times(1)).composeSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS, mockWriter)
+        }
+        
      @Test
     fun composeGetCounterCommand() {
         val testWriter1 = StubDataWriter(

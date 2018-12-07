@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
+import com.nhaarman.mockito_kotlin.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert
 import org.junit.Test
@@ -12,7 +13,7 @@ class IddStatusReaderControlPointParserTest {
     }
 
     @Test
-    fun parse() {
+    fun parseIntegrationTest() {
         val testPacket = MockCharacteristicPacket.mockPacketForRead(
                 uint16(StatusReaderControlOpcode.RESPONSE_CODE.key),
                 uint16(StatusReaderControlOpcode.RESET_STATUS.key),
@@ -20,6 +21,23 @@ class IddStatusReaderControlPointParserTest {
         )
         val expectedOutput = StatusReaderControlGeneralResponse(StatusReaderControlOpcode.RESET_STATUS, StatusReaderControlResponseCode.INVALID_OPERAND)
         Assert.assertEquals(expectedOutput, IddStatusReaderControlPointParser().parse(testPacket))
+    }
+
+    @Test
+    fun parseWriteBoxTest(){
+        val mockParser = mock<IddStatusReaderControlPointParser>()
+        val mockPacketGeneralResponse = MockCharacteristicPacket.mockPacketForRead(uint16(StatusReaderControlOpcode.RESPONSE_CODE.key))
+        whenever(mockParser.parse(any())).thenCallRealMethod()
+
+        mockParser.parse(mockPacketGeneralResponse)
+
+        val mockPacketGetActiveBolusIds = MockCharacteristicPacket.mockPacketForRead(uint16(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS_RESPONSE.key))
+        mockParser.parse(mockPacketGetActiveBolusIds)
+
+        inOrder(mockParser) {
+            verify(mockParser, times(1)).readGeneralResponse(mockPacketGeneralResponse.readData())
+            verify(mockParser, times(1)).readActiveBolusIdsResponse(mockPacketGetActiveBolusIds.readData())
+        }
     }
 
     @Test
@@ -31,5 +49,16 @@ class IddStatusReaderControlPointParserTest {
         val expectedOutputResponse = StatusReaderControlGeneralResponse(StatusReaderControlOpcode.RESET_STATUS, StatusReaderControlResponseCode.SUCCESS)
         val actualOutput = IddStatusReaderControlPointParser().readGeneralResponse(testReader)
         Assert.assertEquals(actualOutput, expectedOutputResponse)
+    }
+
+    @Test
+    fun readActiveBolusIdsResponse() {
+        val testReader = StubDataReader(
+                uint8(4),
+                uint16(1), uint16(2), uint16(3), uint16(4)
+        )
+        val expectedOutput = ActiveBolusIds(arrayListOf(1,2,3,4))
+        val actualOUtput = IddStatusReaderControlPointParser().readActiveBolusIdsResponse(testReader)
+        Assert.assertEquals(expectedOutput, actualOUtput)
     }
 }

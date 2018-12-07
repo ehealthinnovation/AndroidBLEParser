@@ -13,12 +13,13 @@ class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderContr
         val opcode = readEnumeration(data.getNextInt(IntFormat.FORMAT_UINT16), StatusReaderControlOpcode::class.java, StatusReaderControlOpcode.RESERVED_FOR_FUTURE_USE)
         return when (opcode) {
             StatusReaderControlOpcode.RESPONSE_CODE -> readGeneralResponse(data)
+            StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS_RESPONSE -> readActiveBolusIdsResponse(data)
             StatusReaderControlOpcode.GET_COUNTER_RESPONSE -> readGetCounterResponse(data)
             else -> throw IllegalArgumentException("Opcode $opcode not supported by this parser")
         }
     }
 
-    internal fun readGeneralResponse(data: DataReader): StatusReaderControlResponse {
+    internal fun readGeneralResponse(data: DataReader): StatusReaderControlGeneralResponse {
         val requestOpcode = readEnumeration(
                 data.getNextInt(IntFormat.FORMAT_UINT16),
                 StatusReaderControlOpcode::class.java,
@@ -34,6 +35,15 @@ class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderContr
         return StatusReaderControlGeneralResponse(requestOpcode, responseCode)
     }
 
+    internal fun readActiveBolusIdsResponse(data: DataReader): ActiveBolusIds {
+        val numberOfActiveBolusIds = data.getNextInt(IntFormat.FORMAT_UINT8)
+        val outputIds = arrayListOf<Int>()
+        for (i in 1..numberOfActiveBolusIds) {
+            outputIds.add(data.getNextInt(IntFormat.FORMAT_UINT16))
+        }
+        return ActiveBolusIds(outputIds)
+    }
+    
     internal fun readGetCounterResponse(data: DataReader): CounterResponse = GetCounterResponseParser().parseResponse(data)
 
 }

@@ -18,6 +18,17 @@ abstract class StatusReaderControlCommand {
 data class ResetStatus(val operand: StatusFlagToReset) : StatusReaderControlCommand()
 
 /**
+ * Extend this class if the command to IDD Status Reader Control Point does not needs an operand.
+ * Fill in [opcode] of the command during contruction.
+ */
+abstract class StatusReaderControlSimpleCommand(val opcode: StatusReaderControlOpcode) : StatusReaderControlCommand()
+
+/**
+ * Command for getting the current active bolus ID.
+ */
+class GetActiveBolusIds : StatusReaderControlSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS)
+
+/**
  * A parent class for all response from IDD status Reader Control point. Any response from the
  * [IddStatusReaderControlPointParser] must be a subclass of it.
  */

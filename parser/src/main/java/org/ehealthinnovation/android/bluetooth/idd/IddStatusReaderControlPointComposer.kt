@@ -14,6 +14,7 @@ class IddStatusReaderControlComposer : CharacteristicComposer<StatusReaderContro
     override fun compose(request: StatusReaderControlCommand, dataWriter: DataWriter) {
         when (request) {
             is ResetStatus -> composeResetStatusCommand(request.operand, dataWriter)
+            is StatusReaderControlSimpleCommand -> composeSimpleCommand(request.opcode, dataWriter)
             is GetCounter -> composeGetCounterCommand(request.operand, dataWriter)
             else -> IllegalAccessException("The command $request is not supported")
         }
@@ -27,6 +28,10 @@ class IddStatusReaderControlComposer : CharacteristicComposer<StatusReaderContro
     internal fun composeGetCounterCommand(counterSelection: GetCounterOperand, writer: DataWriter){
         writer.putInt(StatusReaderControlOpcode.GET_COUNTER.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeGetCounter(counterSelection,writer)
+    }
+
+    internal fun composeSimpleCommand(opcode: StatusReaderControlOpcode, writer: DataWriter){
+        writer.putInt(opcode.key, IntFormat.FORMAT_UINT16)
     }
 
 }
