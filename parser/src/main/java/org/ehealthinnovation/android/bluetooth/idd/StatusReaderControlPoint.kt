@@ -176,3 +176,14 @@ data class TotalInsulinDeliveredResponse(
         val basal: Float,
         val bolusAndBasal: Float
 ) : StatusReaderControlResponse()
+
+
+/**
+ * Holds the response from [GetInsulinOnBoard] commnad
+ * @property insulinOnBoard the amount of insulin previously delivered  but is still active in the body. Unit is IU
+ * @property remainingDurationMinutes if not null, represents the remaining time until the Insulin On Board is not active in the body anymore
+ */
+data class InsulinOnBoardResponse(
+        val insulinOnBoard: Float,
+        val remainingDurationMinutes: Int?
+) : StatusReaderControlResponse()
