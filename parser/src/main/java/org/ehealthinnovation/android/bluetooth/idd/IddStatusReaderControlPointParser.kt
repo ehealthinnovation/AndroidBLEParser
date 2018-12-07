@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
+import org.ehealthinnovation.android.bluetooth.idd.statusreadercontrolpoint.GetCounterResponseParser
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderControlResponse> {
@@ -12,6 +13,7 @@ class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderContr
         val opcode = readEnumeration(data.getNextInt(IntFormat.FORMAT_UINT16), StatusReaderControlOpcode::class.java, StatusReaderControlOpcode.RESERVED_FOR_FUTURE_USE)
         return when (opcode) {
             StatusReaderControlOpcode.RESPONSE_CODE -> readGeneralResponse(data)
+            StatusReaderControlOpcode.GET_COUNTER_RESPONSE -> readGetCounterResponse(data)
             else -> throw IllegalArgumentException("Opcode $opcode not supported by this parser")
         }
     }
@@ -31,5 +33,7 @@ class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderContr
 
         return StatusReaderControlGeneralResponse(requestOpcode, responseCode)
     }
+
+    internal fun readGetCounterResponse(data: DataReader): CounterResponse = GetCounterResponseParser().parseResponse(data)
 
 }

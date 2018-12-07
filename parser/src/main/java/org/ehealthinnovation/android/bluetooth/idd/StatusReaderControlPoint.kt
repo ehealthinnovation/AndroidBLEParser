@@ -85,6 +85,8 @@ enum class StatusReaderControlOpcode(override val key: Int) : EnumerationValue {
     GET_INSULIN_ON_BOARD_RESPONSE(0x03FC);
 }
 
+class GetCounter(val operand: GetCounterOperand) : StatusReaderControlCommand()
+
 /**
  * Hold the response to [GetCounter] command, it is return by [GetCounterResponseParser.parseResponse]
  * @property type the counter type queried

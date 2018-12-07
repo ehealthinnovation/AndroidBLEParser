@@ -2,6 +2,7 @@ package org.ehealthinnovation.android.bluetooth.idd
 
 import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
 import org.ehealthinnovation.android.bluetooth.parser.uint16
+import org.ehealthinnovation.android.bluetooth.parser.uint8
 import org.junit.Test
 import java.util.*
 
@@ -32,5 +33,17 @@ class IddStatusReaderControlComposerTest {
         val inputCommandAllStatusFlag = ResetStatus(StatusFlagToReset(EnumSet.allOf(Status::class.java)))
         IddStatusReaderControlComposer().compose(inputCommandAllStatusFlag, testWriter3)
         testWriter3.checkWriteComplete()
+    }
+
+     @Test
+    fun composeGetCounterCommand() {
+        val testWriter1 = StubDataWriter(
+                uint16(StatusReaderControlOpcode.GET_COUNTER.key),
+                uint8(CounterType.IDD_LIFETIME.key),
+                uint8(CounterValueSelection.REMAINING.key)
+        )
+        val inputCommand = GetCounter(GetCounterOperand(CounterType.IDD_LIFETIME, CounterValueSelection.REMAINING))
+        IddStatusReaderControlComposer().compose(inputCommand, testWriter1)
+        testWriter1.checkWriteComplete()
     }
 }

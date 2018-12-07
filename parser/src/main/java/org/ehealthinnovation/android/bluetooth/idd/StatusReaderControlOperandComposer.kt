@@ -12,4 +12,9 @@ class StatusReaderControlOperandComposer {
     internal fun composeStatusFlagToReset(resetStatus: StatusFlagToReset, writer: DataWriter) {
         writeEnumFlags(resetStatus.flagsToReset, IntFormat.FORMAT_UINT16, writer)
     }
+
+    internal fun composeGetCounter(counterConfig: GetCounterOperand, writer: DataWriter) {
+        writer.putInt(counterConfig.type.key, IntFormat.FORMAT_UINT8)
+        writer.putInt(counterConfig.valueSelection.key, IntFormat.FORMAT_UINT8)
+    }
 }
