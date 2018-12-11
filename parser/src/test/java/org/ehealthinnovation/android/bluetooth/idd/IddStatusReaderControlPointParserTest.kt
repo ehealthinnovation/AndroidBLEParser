@@ -34,9 +34,13 @@ class IddStatusReaderControlPointParserTest {
         val mockPacketGetActiveBolusIds = MockCharacteristicPacket.mockPacketForRead(uint16(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS_RESPONSE.key))
         mockParser.parse(mockPacketGetActiveBolusIds)
 
+        val mockPacketGetTotalDailyInsulinStatus = MockCharacteristicPacket.mockPacketForRead(uint16(StatusReaderControlOpcode.GET_TOTAL_DAILY_INSULIN_STATUS_RESPONSE.key))
+        mockParser.parse(mockPacketGetTotalDailyInsulinStatus)
+
         inOrder(mockParser) {
             verify(mockParser, times(1)).readGeneralResponse(mockPacketGeneralResponse.readData())
             verify(mockParser, times(1)).readActiveBolusIdsResponse(mockPacketGetActiveBolusIds.readData())
+            verify(mockParser, times(1)).readGetTotalDailyInsuinStatusResponse(mockPacketGetTotalDailyInsulinStatus.readData())
         }
     }
 

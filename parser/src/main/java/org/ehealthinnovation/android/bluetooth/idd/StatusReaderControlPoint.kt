@@ -181,12 +181,16 @@ enum class BasalDeliveryContext(override val key: Int) : EnumerationValue {
 }
 
 /**
- * This structure holds the response from [GetTotalInsulinDelivered] command.
+ * Gets the total daily delivered bolus and basal insulin from midnight until now.
+ */
+class GetTotalDailyInsulinStatus : StatusReaderControlSimpleCommand(StatusReaderControlOpcode.GET_TOTAL_DAILY_INSULIN_STATUS)
+/**
+ * This structure holds the response from [GetTotalDailyInsulinStatus] command.
  * @property bolus the total daily insulin sum of bolus delivered in IU. Value set to 0 if a pump does not support bolus
  * @property basal the total daily insulin sum of basal delivered in IU. Value set to 0 if a pump does not support basal
  * @property bolusAndBasal the sum of [bolus] and [basal]
  */
-data class TotalInsulinDeliveredResponse(
+data class TotalDailyInsulinStatusResponse(
         val bolus: Float,
         val basal: Float,
         val bolusAndBasal: Float
