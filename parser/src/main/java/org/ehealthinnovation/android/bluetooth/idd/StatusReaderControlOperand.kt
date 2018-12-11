@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
+import org.ehealthinnovation.android.bluetooth.parser.EnumerationValue
 import java.util.*
 
 /**
@@ -24,3 +25,18 @@ data class GetCounterOperand(
         val type: CounterType,
         val valueSelection: CounterValueSelection
 )
+/**
+ * Operand for [GetActiveBolusDelivery] command
+ * @property id The Bolus ID field represents a unique identifier as a uint16 data type created by the Server Application for a programmed bolus.
+ * @property valueType A type of possible bolus delivery value
+ */
+class ActiveBolusDelivery(
+        val id: Int,
+        val valueType: BolusValueSelection
+) : StatusReaderControlOperand()
+
+enum class BolusValueSelection(override val key: Int) : EnumerationValue {
+    PROGRAMMED(0x0F),
+    REMAINING(0x33),
+    DELIVERED(0x3C);
+}

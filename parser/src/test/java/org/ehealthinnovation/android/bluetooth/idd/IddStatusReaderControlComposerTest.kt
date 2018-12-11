@@ -47,17 +47,20 @@ class IddStatusReaderControlComposerTest {
     }
 
     @Test
-    fun composerWhiteBoxTests(){
+    fun composerWhiteBoxTests() {
         val mockComposer = mock<IddStatusReaderControlComposer>()
         val mockWriter = mock<DataWriter>()
         whenever(mockComposer.compose(any(), any())).thenCallRealMethod()
         mockComposer.compose(GetActiveBolusIds(), mockWriter)
+        mockComposer.compose(GetActiveBolusDelivery(mock()), mockWriter)
 
-        inOrder(mockComposer){
+        inOrder(mockComposer) {
             verify(mockComposer, times(1)).composeSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS, mockWriter)
+            verify(mockComposer, times(1)).composeGetActiveBolusDeliveryCommand(any(), any())
         }
+    }
         
-     @Test
+    @Test
     fun composeGetCounterCommand() {
         val testWriter1 = StubDataWriter(
                 uint16(StatusReaderControlOpcode.GET_COUNTER.key),
@@ -67,5 +70,13 @@ class IddStatusReaderControlComposerTest {
         val inputCommand = GetCounter(GetCounterOperand(CounterType.IDD_LIFETIME, CounterValueSelection.REMAINING))
         IddStatusReaderControlComposer().compose(inputCommand, testWriter1)
         testWriter1.checkWriteComplete()
+    }
+
+    @Test
+    fun composeGetActiveBolusDeliveryCommandTest(){
+        val testWriter = StubDataWriter(uint16(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_DELIVERY.key), uint16(12), uint8(BolusValueSelection.DELIVERED.key))
+        val command = ActiveBolusDelivery(12, BolusValueSelection.DELIVERED)
+        IddStatusReaderControlComposer().composeGetActiveBolusDeliveryCommand(command, testWriter)
+        testWriter.checkWriteComplete()
     }
 }

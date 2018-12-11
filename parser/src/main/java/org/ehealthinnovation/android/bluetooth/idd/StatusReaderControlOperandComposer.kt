@@ -17,4 +17,9 @@ class StatusReaderControlOperandComposer {
         writer.putInt(counterConfig.type.key, IntFormat.FORMAT_UINT8)
         writer.putInt(counterConfig.valueSelection.key, IntFormat.FORMAT_UINT8)
     }
+
+    internal fun composeGetActiveBolusDelivery(operand: ActiveBolusDelivery, writer: DataWriter) {
+        writer.putInt(operand.id, IntFormat.FORMAT_UINT16)
+        writer.putInt(operand.valueType.key, IntFormat.FORMAT_UINT8)
+    }
 }

@@ -16,6 +16,7 @@ class IddStatusReaderControlComposer : CharacteristicComposer<StatusReaderContro
             is ResetStatus -> composeResetStatusCommand(request.operand, dataWriter)
             is StatusReaderControlSimpleCommand -> composeSimpleCommand(request.opcode, dataWriter)
             is GetCounter -> composeGetCounterCommand(request.operand, dataWriter)
+            is GetActiveBolusDelivery -> composeGetActiveBolusDeliveryCommand(request.operand, dataWriter)
             else -> IllegalAccessException("The command $request is not supported")
         }
     }
@@ -28,6 +29,11 @@ class IddStatusReaderControlComposer : CharacteristicComposer<StatusReaderContro
     internal fun composeGetCounterCommand(counterSelection: GetCounterOperand, writer: DataWriter){
         writer.putInt(StatusReaderControlOpcode.GET_COUNTER.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeGetCounter(counterSelection,writer)
+    }
+
+    internal fun composeGetActiveBolusDeliveryCommand(activeBolusDelivery: ActiveBolusDelivery, writer: DataWriter){
+        writer.putInt(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_DELIVERY.key, IntFormat.FORMAT_UINT16)
+        StatusReaderControlOperandComposer().composeGetActiveBolusDelivery(activeBolusDelivery, writer)
     }
 
     internal fun composeSimpleCommand(opcode: StatusReaderControlOpcode, writer: DataWriter){

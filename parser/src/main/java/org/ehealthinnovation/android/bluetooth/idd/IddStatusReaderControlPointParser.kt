@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
 import org.ehealthinnovation.android.bluetooth.idd.statusreadercontrolpoint.GetCounterResponseParser
+import org.ehealthinnovation.android.bluetooth.idd.statusreadercontrolpoint.ActiveBolusDeliveryResponseParser
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderControlResponse> {
@@ -15,6 +16,7 @@ class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderContr
             StatusReaderControlOpcode.RESPONSE_CODE -> readGeneralResponse(data)
             StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS_RESPONSE -> readActiveBolusIdsResponse(data)
             StatusReaderControlOpcode.GET_COUNTER_RESPONSE -> readGetCounterResponse(data)
+            StatusReaderControlOpcode.GET_ACTIVE_BOLUS_DELIVERY_RESPONSE -> readActiveBolusDeliveryResponse(data)
             else -> throw IllegalArgumentException("Opcode $opcode not supported by this parser")
         }
     }
@@ -45,5 +47,9 @@ class IddStatusReaderControlPointParser : CharacteristicParser<StatusReaderContr
     }
     
     internal fun readGetCounterResponse(data: DataReader): CounterResponse = GetCounterResponseParser().parseResponse(data)
+
+    internal fun readActiveBolusDeliveryResponse(data: DataReader): ActiveBolusDeliveryResponse =
+            ActiveBolusDeliveryResponseParser().readGetActiveBolusDeliveryResponse(data)
+
 
 }

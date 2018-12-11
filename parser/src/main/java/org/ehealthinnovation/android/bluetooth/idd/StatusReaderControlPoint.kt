@@ -28,6 +28,8 @@ abstract class StatusReaderControlSimpleCommand(val opcode: StatusReaderControlO
  */
 class GetActiveBolusIds : StatusReaderControlSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS)
 
+class GetActiveBolusDelivery(val operand: ActiveBolusDelivery) : StatusReaderControlCommand()
+
 /**
  * A parent class for all response from IDD status Reader Control point. Any response from the
  * [IddStatusReaderControlPointParser] must be a subclass of it.
