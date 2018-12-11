@@ -52,11 +52,13 @@ class IddStatusReaderControlComposerTest {
         val mockWriter = mock<DataWriter>()
         whenever(mockComposer.compose(any(), any())).thenCallRealMethod()
         mockComposer.compose(GetActiveBolusIds(), mockWriter)
+        mockComposer.compose(GetActiveBasalRateDelivery(), mockWriter)
         mockComposer.compose(GetTotalDailyInsulinStatus(), mockWriter)
         mockComposer.compose(GetActiveBolusDelivery(mock()), mockWriter)
 
         inOrder(mockComposer) {
             verify(mockComposer, times(1)).composeSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BOLUS_IDS, mockWriter)
+            verify(mockComposer, times(1)).composeSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BASAL_RATE_DELIVERY, mockWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(StatusReaderControlOpcode.GET_TOTAL_DAILY_INSULIN_STATUS, mockWriter)
             verify(mockComposer, times(1)).composeGetActiveBolusDeliveryCommand(any(), any())
         }

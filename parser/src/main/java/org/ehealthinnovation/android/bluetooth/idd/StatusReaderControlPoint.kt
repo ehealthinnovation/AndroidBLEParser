@@ -31,6 +31,12 @@ class GetActiveBolusIds : StatusReaderControlSimpleCommand(StatusReaderControlOp
 class GetActiveBolusDelivery(val operand: ActiveBolusDelivery) : StatusReaderControlCommand()
 
 /**
+ * Command for getting the active basal rate delivery.
+ */
+class GetActiveBasalRateDelivery : StatusReaderControlSimpleCommand(StatusReaderControlOpcode.GET_ACTIVE_BASAL_RATE_DELIVERY)
+
+
+/**
  * A parent class for all response from IDD status Reader Control point. Any response from the
  * [IddStatusReaderControlPointParser] must be a subclass of it.
  */
@@ -145,7 +151,7 @@ data class ActiveBasalRateDeliveryResponse(
         val tbrConfig: TbrConfig?,
         val tbrTemplateNumber: Int?,
         val basalDeliveryContext: BasalDeliveryContext?
-)
+) : StatusReaderControlResponse()
 
 /**
  * A general data type for TBR configuration
