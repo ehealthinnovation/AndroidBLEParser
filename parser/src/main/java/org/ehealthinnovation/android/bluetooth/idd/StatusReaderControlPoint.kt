@@ -212,3 +212,18 @@ data class InsulinOnBoardResponse(
         val insulinOnBoard: Float,
         val remainingDurationMinutes: Int?
 ) : StatusReaderControlResponse()
+
+/**
+ * Gets the delivered amount of bolus and basal insulin since the last rollover of these amounts.
+ */
+class GetDeliveredInsulin : StatusReaderControlSimpleCommand(StatusReaderControlOpcode.GET_DELIVERED_INSULIN)
+
+/**
+ * Data structure to hold a response from [GetDeliveredInsulin] command.
+ * @property bolus expresses the total amount of insulin delivered through bolus injection since the internal counter is reset. Unit in IU
+ * @property basal expresses the total amount of insulin delivered through basal since the internal counter is reset. Unit in IU
+ */
+data class DeliveredInsulinResponse(
+        val bolus: Float,
+        val basal: Float
+): StatusReaderControlResponse()

@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd.statusreadercontrolpoint
 
+import org.ehealthinnovation.android.bluetooth.idd.DeliveredInsulinResponse
 import org.ehealthinnovation.android.bluetooth.idd.StatusReaderControlOpcode
 import org.ehealthinnovation.android.bluetooth.parser.DataReader
 import org.ehealthinnovation.android.bluetooth.parser.FloatFormat
@@ -23,12 +24,3 @@ class GetDeliveredInsulinResponseParser {
 
 }
 
-/**
- * Data structure to hold a response from [GetDeliveredInsulin] command.
- * @property bolus expresses the total amount of insulin delivered through bolus injection since the internal counter is reset. Unit in IU
- * @property basal expresses the total amount of insulin delivered through basal since the internal counter is reset. Unit in IU
- */
-data class DeliveredInsulinResponse(
-        val bolus: Float,
-        val basal: Float
-)

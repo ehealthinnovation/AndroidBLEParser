@@ -1,11 +1,10 @@
 package org.ehealthinnovation.android.bluetooth.idd.statusreadercontrolpoint
 
+import org.ehealthinnovation.android.bluetooth.idd.DeliveredInsulinResponse
 import org.ehealthinnovation.android.bluetooth.parser.StubDataReader
 import org.ehealthinnovation.android.bluetooth.parser.float
 import org.junit.Assert
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class GetDeliveredInsulinResponseParserTest {
 
