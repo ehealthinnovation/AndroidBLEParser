@@ -190,6 +190,7 @@ enum class BasalDeliveryContext(override val key: Int) : EnumerationValue {
  * Gets the total daily delivered bolus and basal insulin from midnight until now.
  */
 class GetTotalDailyInsulinStatus : StatusReaderControlSimpleCommand(StatusReaderControlOpcode.GET_TOTAL_DAILY_INSULIN_STATUS)
+
 /**
  * This structure holds the response from [GetTotalDailyInsulinStatus] command.
  * @property bolus the total daily insulin sum of bolus delivered in IU. Value set to 0 if a pump does not support bolus
@@ -206,7 +207,10 @@ data class TotalDailyInsulinStatusResponse(
 /**
  * Holds the response from [GetInsulinOnBoard] commnad
  * @property insulinOnBoard the amount of insulin previously delivered  but is still active in the body. Unit is IU
- * @property remainingDurationMinutes if not null, represents the remaining time until the Insulin On Board is not active in the body anymore
+ * @property remainingDurationMinutes if not null, represents the remaining time until the Insulin On Board is not active in the body anymore.
+ * If the field is null, the [remainingDurationMinutes] information is not included in the packet, due to  insulin pump capability constraint
+ * or setting. Depending on how dependent the application is on this value, the consumer of this response may throw an exception in case of a
+ * null [remainingDurationMinutes], or just display an informative message to the user.
  */
 data class InsulinOnBoardResponse(
         val insulinOnBoard: Float,
@@ -226,4 +230,4 @@ class GetDeliveredInsulin : StatusReaderControlSimpleCommand(StatusReaderControl
 data class DeliveredInsulinResponse(
         val bolus: Float,
         val basal: Float
-): StatusReaderControlResponse()
+) : StatusReaderControlResponse()
