@@ -15,6 +15,10 @@ class SimpleResponseParser {
     internal fun readSnoozeAnnunciationResponse(data: DataReader): SnoozeAnnunciationResponse =
             SnoozeAnnunciationResponse(data.getNextInt(IntFormat.FORMAT_UINT16))
 
+    /** Parse the response of a [ConfirmAnnunciation] command*/
+    internal fun parseConfirmAnnunciationResponse(data: DataReader): ConfirmAnnunciationResponse =
+            ConfirmAnnunciationResponse(data.getNextInt(IntFormat.FORMAT_UINT16))
+
     /** Parse a general response indicating error or successful execution of a command*/
     internal fun readGeneralResponse(data: DataReader): GeneralResponse {
         val request = readEnumeration(
@@ -31,6 +35,5 @@ class SimpleResponseParser {
 
         return GeneralResponse(request, result)
     }
-
 
 }

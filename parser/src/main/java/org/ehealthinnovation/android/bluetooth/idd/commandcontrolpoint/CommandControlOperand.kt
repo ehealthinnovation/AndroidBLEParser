@@ -7,10 +7,22 @@ package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 abstract class CommandControlOperand
 
 /**
- * The operand for [SnoozeAnnunciation] command
- * @property id the id of the annunciation to be snoozed
+ * The base operand for annunciation operation.
+ * @property id the id of the annunciation to be operated on
  */
-class SnoozeAnnunciationOperand(val id: Int) : CommandControlOperand()
+abstract class AnnunciationOperand(val id: Int) : CommandControlOperand()
+
+/**
+ * The operand for [SnoozeAnnunciation] command
+ * @param id the id of the annunciation to be operated on
+ */
+class SnoozeAnnunciationOperand(id: Int) : AnnunciationOperand(id)
+
+/**
+ * The operand for [ConfirmAnnunciation] command
+ * @param id the id of the annunciation to be operated on
+ */
+class ConfirmAnnunciationOperand(id: Int) : AnnunciationOperand(id)
 
 /**
  * The operand containing a profile template number.

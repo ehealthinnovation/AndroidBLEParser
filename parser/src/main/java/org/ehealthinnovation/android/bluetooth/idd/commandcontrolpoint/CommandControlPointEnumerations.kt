@@ -21,7 +21,7 @@ enum class Opcode(override val key: Int) : EnumerationValue {
     /**Confirms an annunciation on the Server Application and removes this specific annunciation from the list of currently active annunciations on the Server Application. The normal response to this control point is Confirm Annunciation Response. For error conditions, the response is Response Code. */
     CONFIRM_ANNUNCIATION(0x0F99),
     /**This is the normal response to Confirm Annunciation. */
-    CONFIRM_ANNUNCIATIONRESPONSE(0x0FA5),
+    CONFIRM_ANNUNCIATION_RESPONSE(0x0FA5),
     /**Reads a specific Basal Rate Profile Template. The response to this control point is Response Code. */
     READ_BASAL_RATE_PROFILE_TEMPLATE(0x0FAA),
     /**This response is used to report one or more time blocks of a Basal Rate Profile Template. */

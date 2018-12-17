@@ -17,6 +17,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
         return when(opcode){
             Opcode.RESPONSE_CODE -> readGeneralResponse(data)
             Opcode.SNOOZE_ANNUNCIATION_RESPONSE -> readSnoozeAnnunciationResponse(data)
+            Opcode.CONFIRM_ANNUNCIATION_RESPONSE -> readConfirmAnnunciationResponse(data)
             else->throw IllegalArgumentException("response opcode not supported")
         }
     }
@@ -32,6 +33,9 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
 
     internal fun readSnoozeAnnunciationResponse(dataReader: DataReader): SnoozeAnnunciationResponse =
             SimpleResponseParser().readSnoozeAnnunciationResponse(dataReader)
+
+    internal fun readConfirmAnnunciationResponse(dataReader: DataReader): ConfirmAnnunciationResponse =
+            SimpleResponseParser().parseConfirmAnnunciationResponse(dataReader)
 
     internal fun readGeneralResponse(dataReader: DataReader): GeneralResponse =
             SimpleResponseParser().readGeneralResponse(dataReader)

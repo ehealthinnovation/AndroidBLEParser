@@ -8,9 +8,14 @@ import org.ehealthinnovation.android.bluetooth.idd.*
 abstract class IddCommandControlResponse
 
 /** Response to the [SnoozeAnnunciation] command, if it was executed successfully.
- * @property id the annunciation id that was snoozed.
+ * @param id the annunciation id that was snoozed.
  */
 data class SnoozeAnnunciationResponse(val id: Int) : IddCommandControlResponse()
+
+/** Response to the [ConfirmAnnunciation] command, if it was executed successfully.
+ * @param id the annunciation id that was confirmed.
+ */
+data class ConfirmAnnunciationResponse(val id: Int) : IddCommandControlResponse()
 
 /**
  * General response to commands. This form of response is returned when a command fails or a command

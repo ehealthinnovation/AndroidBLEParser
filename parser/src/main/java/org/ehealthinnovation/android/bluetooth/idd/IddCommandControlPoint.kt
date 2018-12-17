@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ConfirmAnnunciationOperand
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ProfileTemplateNumber
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationOperand
@@ -15,6 +16,12 @@ abstract class CommandControlCommand(val opcode: Opcode)
  * @property operand an operand containing the id of an annunciation to snooze
  */
 class SnoozeAnnunciation(val operand: SnoozeAnnunciationOperand) : CommandControlCommand(Opcode.SNOOZE_ANNUNCIATION)
+
+/**
+ * A command to confirm an annunciation
+ * @property operand an operand containing the id of an annunciation to confirm
+ */
+class ConfirmAnnunciation(val operand: ConfirmAnnunciationOperand) : CommandControlCommand()
 
 /**
  * Base class for read profile template series of commands.

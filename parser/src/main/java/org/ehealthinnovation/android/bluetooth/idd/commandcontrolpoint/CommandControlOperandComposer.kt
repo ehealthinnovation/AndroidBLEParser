@@ -8,7 +8,7 @@ import org.ehealthinnovation.android.bluetooth.parser.IntFormat
  */
 class CommandControlOperandComposer {
 
-    internal fun composeSnoozeAnnunciationOperand(operand: SnoozeAnnunciationOperand, dataWriter: DataWriter) {
+    internal fun composeAnnunciationOperand(operand: AnnunciationOperand, dataWriter: DataWriter) {
         dataWriter.putInt(operand.id, IntFormat.FORMAT_UINT16)
     }
 

@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
 import com.nhaarman.mockito_kotlin.*
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ConfirmAnnunciationResponse
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationResponse
 import org.ehealthinnovation.android.bluetooth.parser.*
@@ -24,15 +25,21 @@ class IddCommandControlParserTest {
     @Test
     fun parseWhiteBoxTest() {
         val mockParser = mock<IddCommandControlParser>()
-        val mockPacketSnoozeResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.SNOOZE_ANNUNCIATION_RESPONSE.key))
         whenever(mockParser.parse(any())).thenCallRealMethod()
         whenever(mockParser.readOpcode(any())).thenCallRealMethod()
+
+        val mockPacketSnoozeResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.SNOOZE_ANNUNCIATION_RESPONSE.key))
         mockParser.parse(mockPacketSnoozeResponse)
+
+        val mockPacketConfirmResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.CONFIRM_ANNUNCIATION_RESPONSE.key))
+        mockParser.parse(mockPacketConfirmResponse)
 
         val mockPacketGeneralResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.RESPONSE_CODE.key))
         mockParser.parse(mockPacketGeneralResponse)
 
-        inOrder(mockParser) {
+        inOrder(mockParser){
+            verify(mockParser,times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
+            verify(mockParser,times(1)).readConfirmAnnunciationResponse(mockPacketConfirmResponse.readData())
             verify(mockParser, times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
             verify(mockParser, times(1)).readGeneralResponse(mockPacketGeneralResponse.readData())
         }
@@ -50,5 +57,12 @@ class IddCommandControlParserTest {
         val testData = StubDataReader(uint16(1))
         val expected = SnoozeAnnunciationResponse(1)
         Assert.assertEquals(expected, IddCommandControlParser().readSnoozeAnnunciationResponse(testData))
+    }
+
+    @Test
+    fun readConfirmAnnunciationResponse() {
+        val testData = StubDataReader(uint16(1))
+        val expected = ConfirmAnnunciationResponse(1)
+        Assert.assertEquals(expected, IddCommandControlParser().readConfirmAnnunciationResponse(testData))
     }
 }
