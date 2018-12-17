@@ -1,9 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.IddCommandControlResponse
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SimpleResponseParser
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationResponse
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 /**
@@ -18,6 +15,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
         val data = packet.readData()
         val opcode = readOpcode(data)
         return when(opcode){
+            Opcode.RESPONSE_CODE -> readGeneralResponse(data)
             Opcode.SNOOZE_ANNUNCIATION_RESPONSE -> readSnoozeAnnunciationResponse(data)
             else->throw IllegalArgumentException("response opcode not supported")
         }
@@ -33,5 +31,8 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
     )
 
     internal fun readSnoozeAnnunciationResponse(dataReader: DataReader): SnoozeAnnunciationResponse =
-            SimpleResponseParser().parseSnoozeAnnunciationResponse(dataReader)
+            SimpleResponseParser().readSnoozeAnnunciationResponse(dataReader)
+
+    internal fun readGeneralResponse(dataReader: DataReader): GeneralResponse =
+            SimpleResponseParser().readGeneralResponse(dataReader)
 }

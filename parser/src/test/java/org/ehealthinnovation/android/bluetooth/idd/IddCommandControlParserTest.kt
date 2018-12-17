@@ -15,10 +15,10 @@ class IddCommandControlParserTest {
     }
 
     @Test
-    fun parseIntegrationTest(){
+    fun parseIntegrationTest() {
         val mockPacket = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.SNOOZE_ANNUNCIATION_RESPONSE.key), uint16((1)))
         val expeceted = SnoozeAnnunciationResponse(1)
-        Assert.assertEquals(expeceted, IddCommandControlParser().parse(mockPacket) )
+        Assert.assertEquals(expeceted, IddCommandControlParser().parse(mockPacket))
     }
 
     @Test
@@ -27,11 +27,14 @@ class IddCommandControlParserTest {
         val mockPacketSnoozeResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.SNOOZE_ANNUNCIATION_RESPONSE.key))
         whenever(mockParser.parse(any())).thenCallRealMethod()
         whenever(mockParser.readOpcode(any())).thenCallRealMethod()
-
         mockParser.parse(mockPacketSnoozeResponse)
 
-        inOrder(mockParser){
-            verify(mockParser,times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
+        val mockPacketGeneralResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.RESPONSE_CODE.key))
+        mockParser.parse(mockPacketGeneralResponse)
+
+        inOrder(mockParser) {
+            verify(mockParser, times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
+            verify(mockParser, times(1)).readGeneralResponse(mockPacketGeneralResponse.readData())
         }
     }
 
