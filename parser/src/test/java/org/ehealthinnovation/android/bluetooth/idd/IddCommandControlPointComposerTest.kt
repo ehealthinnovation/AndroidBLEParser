@@ -22,11 +22,15 @@ class IddCommandControlPointComposerTest {
 
         mockComposer.compose(mockSnoozeRequest, mockDataWriter)
 
+        val mockCancelTbr = mock<CancelTbrAdjustment>()
+        mockComposer.compose(mockCancelTbr, mockDataWriter)
+
         val mockSetTbrAjustment = mock<SetTbrAdjustment>()
         mockComposer.compose(mockSetTbrAjustment, mockDataWriter)
 
         inOrder(mockComposer){
             verify(mockComposer, times(1)).composeSnoozeAnnunciation(mockSnoozeRequest.operand, mockDataWriter)
+            verify(mockComposer, times(1)).composeSimpleCommand(mockCancelTbr, mockDataWriter)
             verify(mockComposer, times(1)).composeSetTbrAdjustment(mockSetTbrAjustment.operand, mockDataWriter)
         }
     }
@@ -36,6 +40,14 @@ class IddCommandControlPointComposerTest {
         val testWriter = StubDataWriter(uint16(Opcode.SNOOZE_ANNUNCIATION.key), uint16(1))
         val operand = SnoozeAnnunciationOperand(1)
         IddCommandControlPointComposer().composeSnoozeAnnunciation(operand, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeSimpleCommandTest() {
+        val testWriter = StubDataWriter(uint16(Opcode.CANCEL_TBR_ADJUSTMENT.key))
+        val command = CancelTbrAdjustment()
+        IddCommandControlPointComposer().composeSimpleCommand(command, testWriter)
         testWriter.checkWriteComplete()
     }
 }
