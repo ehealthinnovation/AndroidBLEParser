@@ -1,6 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.CommandControlOperandComposer
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.*
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationOperand
 import org.ehealthinnovation.android.bluetooth.parser.CharacteristicComposer
@@ -22,6 +22,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     override fun compose(request: CommandControlCommand, dataWriter: DataWriter) {
         when (request) {
             is SnoozeAnnunciation -> composeSnoozeAnnunciation(request.operand, dataWriter)
+            is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -29,5 +30,10 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeSnoozeAnnunciation(operand: SnoozeAnnunciationOperand, dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.SNOOZE_ANNUNCIATION.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeSnoozeAnnunciationOperand(operand, dataWriter)
+    }
+
+    internal fun composeSetTbrAdjustment(operand: TbrAdjustmentOperand, dataWriter: DataWriter) {
+        dataWriter.putInt(Opcode.SET_TBR_ADJUSTMENT.key, IntFormat.FORMAT_UINT16)
+        SetTbrAdjustmentOperandComposer().composeOperand(operand, dataWriter)
     }
 }
