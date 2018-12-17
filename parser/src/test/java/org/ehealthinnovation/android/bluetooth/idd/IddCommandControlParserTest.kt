@@ -40,7 +40,6 @@ class IddCommandControlParserTest {
         inOrder(mockParser){
             verify(mockParser,times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
             verify(mockParser,times(1)).readConfirmAnnunciationResponse(mockPacketConfirmResponse.readData())
-            verify(mockParser, times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
             verify(mockParser, times(1)).readGeneralResponse(mockPacketGeneralResponse.readData())
         }
     }
