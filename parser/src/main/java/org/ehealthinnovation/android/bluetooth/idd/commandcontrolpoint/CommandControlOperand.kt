@@ -8,7 +8,12 @@ abstract class CommandControlOperand
 
 /**
  * The operand for [SnoozeAnnunciation] command
- * @property id the is of the annunciation to be snoozed
+ * @property id the id of the annunciation to be snoozed
  */
 class SnoozeAnnunciationOperand(val id: Int) : CommandControlOperand()
 
+/**
+ * The operand containing a profile template number.
+ * @property number a profile template number
+ */
+class ProfileTemplateNumber(val number: Int) : CommandControlOperand()

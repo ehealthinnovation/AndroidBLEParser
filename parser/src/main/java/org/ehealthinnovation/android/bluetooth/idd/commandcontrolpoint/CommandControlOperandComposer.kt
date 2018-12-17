@@ -11,4 +11,9 @@ class CommandControlOperandComposer {
     internal fun composeSnoozeAnnunciationOperand(operand: SnoozeAnnunciationOperand, dataWriter: DataWriter) {
         dataWriter.putInt(operand.id, IntFormat.FORMAT_UINT16)
     }
+
+    internal fun composeProfileTemplateNumberOperand(operand: ProfileTemplateNumber, dataWriter: DataWriter) {
+        dataWriter.putInt(operand.number, IntFormat.FORMAT_UINT8)
+    }
+
 }

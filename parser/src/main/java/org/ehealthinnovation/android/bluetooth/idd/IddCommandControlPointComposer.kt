@@ -2,6 +2,7 @@ package org.ehealthinnovation.android.bluetooth.idd
 
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.*
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ProfileTemplateNumber
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationOperand
 import org.ehealthinnovation.android.bluetooth.parser.CharacteristicComposer
 import org.ehealthinnovation.android.bluetooth.parser.DataReader
@@ -22,7 +23,8 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
 
     override fun compose(request: CommandControlCommand, dataWriter: DataWriter) {
         when (request) {
-            is SnoozeAnnunciation -> composeSnoozeAnnunciation(request.operand, dataWriter)\
+            is SnoozeAnnunciation -> composeSnoozeAnnunciation(request.operand, dataWriter)
+            is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
             is CancelTbrAdjustment -> composeSimpleCommand(request, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             else -> IllegalArgumentException("request not supported")
@@ -32,6 +34,11 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeSnoozeAnnunciation(operand: SnoozeAnnunciationOperand, dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.SNOOZE_ANNUNCIATION.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeSnoozeAnnunciationOperand(operand, dataWriter)
+    }
+
+    internal fun composeReadProfileTemplate(opcode: Opcode, operand: ProfileTemplateNumber, dataWriter: DataWriter) {
+        dataWriter.putInt(opcode.key, IntFormat.FORMAT_UINT16)
+        operandComposer.composeProfileTemplateNumberOperand(operand, dataWriter)
     }
 
     internal fun composeSimpleCommand(request: SimpleControlCommand, dataWriter: DataWriter){
