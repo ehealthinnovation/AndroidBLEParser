@@ -5,7 +5,6 @@ import org.ehealthinnovation.android.bluetooth.parser.CharacteristicComposer
 import org.ehealthinnovation.android.bluetooth.parser.DataReader
 import org.ehealthinnovation.android.bluetooth.parser.DataWriter
 import org.ehealthinnovation.android.bluetooth.parser.IntFormat
-import java.lang.IllegalArgumentException
 
 /**
  * Composer helps to serialize a Idd Command Control Point Command into a buffer
@@ -21,6 +20,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     override fun compose(request: CommandControlCommand, dataWriter: DataWriter) {
         when (request) {
             is SnoozeAnnunciation -> composeSnoozeAnnunciation(request.operand, dataWriter)
+            is WriteProfileTemplate -> composeWriteProfileTemplate(request, dataWriter)
             is ConfirmAnnunciation -> composeConfirmAnnunciation(request.operand, dataWriter)
             is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
             is GetAvailableBolus,
@@ -54,6 +54,11 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeSetTbrAdjustment(operand: TbrAdjustmentOperand, dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.SET_TBR_ADJUSTMENT.key, IntFormat.FORMAT_UINT16)
         SetTbrAdjustmentOperandComposer().composeOperand(operand, dataWriter)
+    }
+
+    internal fun composeWriteProfileTemplate(request: WriteProfileTemplate, dataWriter: DataWriter) {
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        WriteProfileTemplateOperandComposer().composeOperand(request.operand, dataWriter)
     }
 
     internal fun composeCancelBolus(request: CancelBolus, dataWriter: DataWriter) {

@@ -12,6 +12,12 @@ abstract class IddCommandControlResponse
  */
 data class SnoozeAnnunciationResponse(val id: Int) : IddCommandControlResponse()
 
+data class WriteBasalRateProfileTemplateResponse(
+        val isTransactionCompleted: Boolean,
+        val basalRateProfileTemplate: Int,
+        val firstTimeBlockNumber: Int
+): IddCommandControlResponse()
+
 /** Response to the [ConfirmAnnunciation] command, if it was executed successfully.
  * @param id the annunciation id that was confirmed.
  */

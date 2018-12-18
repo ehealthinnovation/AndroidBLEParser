@@ -17,6 +17,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
         return when(opcode){
             Opcode.RESPONSE_CODE -> readGeneralResponse(data)
             Opcode.SNOOZE_ANNUNCIATION_RESPONSE -> readSnoozeAnnunciationResponse(data)
+            Opcode.WRITE_BASAL_RATE_PROFILE_TEMPLATE_RESPONSE -> readWriteBasalProfileTemplateResponse(data)
             Opcode.CONFIRM_ANNUNCIATION_RESPONSE -> readConfirmAnnunciationResponse(data)
             Opcode.SET_TBR_TEMPLATE_RESPONSE -> readSetTbrTemplateResponse(data)
             Opcode.SET_BOLUS_RESPONSE -> readSetBolusResponse(data)
@@ -37,6 +38,9 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
 
     internal fun readSnoozeAnnunciationResponse(dataReader: DataReader): SnoozeAnnunciationResponse =
             SimpleResponseParser().readSnoozeAnnunciationResponse(dataReader)
+
+    internal fun readWriteBasalProfileTemplateResponse(dataReader: DataReader): WriteBasalRateProfileTemplateResponse =
+            WriteBasalRateProfileTemplateResponseParser().parseWriteBasalRateProfileTemplateResponse(dataReader)
 
     internal fun readConfirmAnnunciationResponse(dataReader: DataReader): ConfirmAnnunciationResponse =
             SimpleResponseParser().parseConfirmAnnunciationResponse(dataReader)

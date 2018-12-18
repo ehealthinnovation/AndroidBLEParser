@@ -14,6 +14,30 @@ abstract class CommandControlCommand(val opcode: Opcode)
 class SnoozeAnnunciation(val operand: SnoozeAnnunciationOperand) : CommandControlCommand(Opcode.SNOOZE_ANNUNCIATION)
 
 /**
+ * A base class for write profile template command. Any command that write a profile template should extend this class.
+ * @property opcode The opcode of the write profile template command.
+ */
+abstract class WriteProfileTemplate(opcode: Opcode, val operand: WriteProfileTemplateOperand) : CommandControlCommand(opcode)
+
+/**
+ * Write basal rate profile template command.
+ * @property operand an operand containing [BasalRateProfileTemplateTimeBlock] configuration for a single command transaction.
+ */
+class WriteBasalRateProfileTemplate(operand: WriteProfileTemplateOperand) : WriteProfileTemplate(Opcode.WRITE_BASAL_RATE_PROFILE_TEMPLATE, operand)
+
+/**
+ * Write ISF profile template command.
+ * @property operand an operand containing [IsfProfileTemplateTimeBlock] configuration for a single command transaction.
+ */
+class WriteIsfProfileTemplate(operand: WriteProfileTemplateOperand) : WriteProfileTemplate(Opcode.WRITE_ISF_PROFILE_TEMPLATE, operand)
+
+/**
+ * Write I2CHO ratio profile template command.
+ * @property operand an operand containing [I2CHOProfileTemplateTimeBlock] configuration for a single command transaction.
+ */
+class WriteI2CHORatioProfileTemplate(operand: WriteProfileTemplateOperand) : WriteProfileTemplate(Opcode.WRITE_I2CHO_RATIO_PROFILE_TEMPLATE, operand)
+
+/**
  * A command to confirm an annunciation
  * @property operand an operand containing the id of an annunciation to confirm
  */
@@ -29,7 +53,7 @@ abstract class ReadProfileTemplate(opcode: Opcode, val operand: ProfileTemplateN
 /**
  * Read the Basal Rate Profile Template of number specified in [operand]
  */
-class ReadBasalRateProfileTemplate(opcode: Opcode, operand: ProfileTemplateNumber) : ReadProfileTemplate(opcode, operand)
+class ReadBasalRateProfileTemplate(operand: ProfileTemplateNumber) : ReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, operand)
 
 /**
  * Base class for commands that don't need an operand
