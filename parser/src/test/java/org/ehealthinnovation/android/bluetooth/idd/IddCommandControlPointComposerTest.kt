@@ -34,11 +34,15 @@ class IddCommandControlPointComposerTest {
         val mockSetTbrAjustment = mock<SetTbrAdjustment>()
         mockComposer.compose(mockSetTbrAjustment, mockDataWriter)
 
+        val mockSetBolus = mock<SetBolus>()
+        mockComposer.compose(mockSetBolus, mockDataWriter)
+
         inOrder(mockComposer){
             verify(mockComposer, times(1)).composeSnoozeAnnunciation(mockSnoozeRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeConfirmAnnunciation(mockConfirmRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(mockCancelTbr, mockDataWriter)
             verify(mockComposer, times(1)).composeSetTbrAdjustment(mockSetTbrAjustment.operand, mockDataWriter)
+            verify(mockComposer, times(1)).composeSetBolus(mockSetBolus, mockDataWriter)
         }
     }
 

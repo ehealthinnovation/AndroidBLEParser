@@ -29,7 +29,7 @@ abstract class ReadProfileTemplate(opcode: Opcode, val operand: ProfileTemplateN
 /**
  * Read the Basal Rate Profile Template of number specified in [operand]
  */
-class ReadBasalRateProfileTemplate(opcode:Opcode, operand: ProfileTemplateNumber) : ReadProfileTemplate(opcode, operand)
+class ReadBasalRateProfileTemplate(opcode: Opcode, operand: ProfileTemplateNumber) : ReadProfileTemplate(opcode, operand)
 
 /**
  * Base class for commands that don't need an operand
@@ -47,3 +47,9 @@ class CancelTbrAdjustment : SimpleControlCommand(Opcode.CANCEL_TBR_ADJUSTMENT)
  * @property operand contains the configuration of the TBR
  */
 class SetTbrAdjustment(val operand: TbrAdjustmentOperand) : CommandControlCommand(Opcode.SET_TBR_ADJUSTMENT)
+
+/**
+ * A command to set a Bolus
+ * @property operand contains the configuration of the bolus
+ */
+class SetBolus(val operand: BolusConfig) : CommandControlCommand(Opcode.SET_BOLUS)
