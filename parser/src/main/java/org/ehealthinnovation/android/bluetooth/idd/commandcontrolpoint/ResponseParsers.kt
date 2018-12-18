@@ -1,8 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 
-import org.ehealthinnovation.android.bluetooth.parser.DataReader
-import org.ehealthinnovation.android.bluetooth.parser.IntFormat
-import org.ehealthinnovation.android.bluetooth.parser.readEnumeration
+import org.ehealthinnovation.android.bluetooth.idd.TbrType
+import org.ehealthinnovation.android.bluetooth.parser.*
 
 /**
  * This class contains a set of Command control point response parsing functions that are structurally
@@ -34,6 +33,15 @@ class SimpleResponseParser {
         )
 
         return GeneralResponse(request, result)
+    }
+
+    /** Parse the response of a [GetTbrTemplate] command */
+    internal fun readGetTbrTemplateResponse(data: DataReader): GetTbrTemplateResponse {
+        val templateNumber = data.getNextInt(IntFormat.FORMAT_UINT8)
+        val type = readEnumeration(data.getNextInt(IntFormat.FORMAT_UINT8), TbrType::class.java, TbrType.RESERVED_FOR_FUTURE_USE)
+        val value = data.getNextFloat(FloatFormat.FORMAT_SFLOAT)
+        val duration = data.getNextInt(IntFormat.FORMAT_UINT16)
+        return GetTbrTemplateResponse(templateNumber, type, value, duration)
     }
 
 }

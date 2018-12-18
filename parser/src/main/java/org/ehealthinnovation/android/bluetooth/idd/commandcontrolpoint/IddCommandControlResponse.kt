@@ -24,3 +24,17 @@ data class ConfirmAnnunciationResponse(val id: Int) : IddCommandControlResponse(
  * @property result the result of the command operation
  */
 data class GeneralResponse(val request: Opcode, val result: ResponseCode): IddCommandControlResponse()
+
+/**
+ * The response to [GetTbrTemplate] command.
+ * @property templateNumber the template number of TBR template
+ * @property type the tbr type
+ * @property value the value of the tbr. Depends on the TBR type, it has unit IU/h if it is [TbrType.ABSOLUTE] or has no unit if it is [TbrType.RELATIVE]
+ * @property duration the duration of the TBR duration in minute
+ */
+data class GetTbrTemplateResponse (
+        val templateNumber: Int,
+        val type: TbrType,
+        val value: Float,
+        val duration: Int
+): IddCommandControlResponse()
