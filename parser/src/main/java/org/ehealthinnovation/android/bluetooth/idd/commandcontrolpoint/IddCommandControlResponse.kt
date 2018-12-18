@@ -38,3 +38,11 @@ data class GetTbrTemplateResponse (
         val value: Float,
         val duration: Int
 ): IddCommandControlResponse()
+
+/**
+ * The reponse to [CancelBolus]
+ * @property id the id of bolus that get cancelled
+ */
+data class CancelBolusResponse(
+        val id: Int
+): IddCommandControlResponse()

@@ -44,4 +44,10 @@ class SimpleResponseParser {
         return GetTbrTemplateResponse(templateNumber, type, value, duration)
     }
 
+    /** Parse the response of a [CancelBolus] command */
+    internal fun readCancelBolusResponse(data: DataReader): CancelBolusResponse{
+        val id = data.getNextInt(IntFormat.FORMAT_UINT16)
+        return CancelBolusResponse(id)
+    }
+
 }

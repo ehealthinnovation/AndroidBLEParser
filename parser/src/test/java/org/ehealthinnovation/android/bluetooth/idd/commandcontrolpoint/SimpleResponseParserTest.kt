@@ -28,4 +28,13 @@ class SimpleResponseParserTest {
         val expected = GetTbrTemplateResponse(1, TbrType.RELATIVE, 0.9f, 2)
         Assert.assertEquals(expected, SimpleResponseParser().readGetTbrTemplateResponse(testData))
     }
+
+    @Test
+    fun readCancelBolusResponseTest() {
+        val testData = StubDataReader(
+                uint16(1)
+        )
+        val expected = CancelBolusResponse(1)
+        Assert.assertEquals(expected, SimpleResponseParser().readCancelBolusResponse(testData))
+    }
 }

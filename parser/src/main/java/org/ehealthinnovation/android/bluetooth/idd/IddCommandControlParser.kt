@@ -19,6 +19,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
             Opcode.SNOOZE_ANNUNCIATION_RESPONSE -> readSnoozeAnnunciationResponse(data)
             Opcode.CONFIRM_ANNUNCIATION_RESPONSE -> readConfirmAnnunciationResponse(data)
             Opcode.GET_TBR_TEMPLATE_RESPONSE -> readTbrTemplateResponse(data)
+            Opcode.CANCEL_BOLUS_RESPONSE -> readCancelBolusResponse(data)
             else->throw IllegalArgumentException("response opcode not supported")
         }
     }
@@ -43,4 +44,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
 
     internal fun readTbrTemplateResponse(dataReader: DataReader): GetTbrTemplateResponse =
             SimpleResponseParser().readGetTbrTemplateResponse(dataReader)
+
+    internal fun readCancelBolusResponse(dataReader: DataReader): CancelBolusResponse =
+            SimpleResponseParser().readCancelBolusResponse(dataReader)
 }

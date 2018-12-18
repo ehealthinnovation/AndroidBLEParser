@@ -40,11 +40,16 @@ class IddCommandControlParserTest {
         val mockPacketGetTbrTemplateResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.GET_TBR_TEMPLATE_RESPONSE.key))
         mockParser.parse(mockPacketGetTbrTemplateResponse)
 
+
+        val mockPacketCancelBolusResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.CANCEL_BOLUS_RESPONSE.key))
+        mockParser.parse(mockPacketCancelBolusResponse)
+
         inOrder(mockParser){
             verify(mockParser,times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
             verify(mockParser,times(1)).readConfirmAnnunciationResponse(mockPacketConfirmResponse.readData())
             verify(mockParser, times(1)).readGeneralResponse(mockPacketGeneralResponse.readData())
             verify(mockParser, times(1)).readTbrTemplateResponse(mockPacketGetTbrTemplateResponse.readData())
+            verify(mockParser, times(1)).readCancelBolusResponse(mockPacketCancelBolusResponse.readData())
         }
     }
 
