@@ -35,6 +35,11 @@ class SimpleResponseParser {
         return GeneralResponse(request, result)
     }
 
+    /** Parse a [SetBolusResponse] */
+    internal fun readSetBolusResponse(data: DataReader): SetBolusResponse {
+        val id = data.getNextInt(IntFormat.FORMAT_UINT16)
+        return SetBolusResponse(id)
+
     /** Parse the response of a [GetTbrTemplate] command */
     internal fun readGetTbrTemplateResponse(data: DataReader): GetTbrTemplateResponse {
         val templateNumber = data.getNextInt(IntFormat.FORMAT_UINT8)

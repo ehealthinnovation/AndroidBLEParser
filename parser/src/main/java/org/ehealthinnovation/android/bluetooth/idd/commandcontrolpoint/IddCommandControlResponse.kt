@@ -26,6 +26,12 @@ data class ConfirmAnnunciationResponse(val id: Int) : IddCommandControlResponse(
 data class GeneralResponse(val request: Opcode, val result: ResponseCode): IddCommandControlResponse()
 
 /**
+ * The response to command [SetBolus]. The server will response with an assigned bolus ID
+ * @property id the unique identifier created by the server in response to a set bolus command
+ */
+data class SetBolusResponse(val id: Int): IddCommandControlResponse()
+
+/**
  * The response to [GetTbrTemplate] command.
  * @property templateNumber the template number of TBR template
  * @property type the tbr type

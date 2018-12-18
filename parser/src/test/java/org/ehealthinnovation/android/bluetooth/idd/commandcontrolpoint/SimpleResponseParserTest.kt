@@ -18,6 +18,12 @@ class SimpleResponseParserTest {
     }
 
     @Test
+    fun readSetBolusResponse() {
+        val testData = StubDataReader(uint16(3))
+        val expected = SetBolusResponse(3)
+        Assert.assertEquals(expected, SimpleResponseParser().readSetBolusResponse(testData))
+    
+    @Test
     fun readGetTbrTemplateResponseTest() {
         val testData = StubDataReader(
                 uint8(1),
