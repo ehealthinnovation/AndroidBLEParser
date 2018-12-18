@@ -1,10 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
 import com.nhaarman.mockito_kotlin.*
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ConfirmAnnunciationOperand
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ProfileTemplateNumber
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationOperand
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.*
 import org.ehealthinnovation.android.bluetooth.parser.DataWriter
 import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
 import org.ehealthinnovation.android.bluetooth.parser.uint16
@@ -34,15 +31,22 @@ class IddCommandControlPointComposerTest {
         val mockSetTbrAjustment = mock<SetTbrAdjustment>()
         mockComposer.compose(mockSetTbrAjustment, mockDataWriter)
 
+
+        val mockCancelBolus = mock<CancelBolus>()
+        mockComposer.compose(mockCancelBolus, mockDataWriter)
+
         val mockSetBolus = mock<SetBolus>()
         mockComposer.compose(mockSetBolus, mockDataWriter)
+
 
         inOrder(mockComposer){
             verify(mockComposer, times(1)).composeSnoozeAnnunciation(mockSnoozeRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeConfirmAnnunciation(mockConfirmRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(mockCancelTbr, mockDataWriter)
             verify(mockComposer, times(1)).composeSetTbrAdjustment(mockSetTbrAjustment.operand, mockDataWriter)
+            verify(mockComposer, times(1)).composeCancelBolus(mockCancelBolus, mockDataWriter)
             verify(mockComposer, times(1)).composeSetBolus(mockSetBolus, mockDataWriter)
+
         }
     }
 
@@ -74,6 +78,14 @@ class IddCommandControlPointComposerTest {
         val testWriter = StubDataWriter(uint16(Opcode.CANCEL_TBR_ADJUSTMENT.key))
         val command = CancelTbrAdjustment()
         IddCommandControlPointComposer().composeSimpleCommand(command, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeCancelBolusTest() {
+        val testWriter = StubDataWriter(uint16(Opcode.CANCEL_BOLUS.key), uint16(2))
+        val command = CancelBolus(BolusId(2))
+        IddCommandControlPointComposer().composeCancelBolus(command, testWriter)
         testWriter.checkWriteComplete()
     }
 }

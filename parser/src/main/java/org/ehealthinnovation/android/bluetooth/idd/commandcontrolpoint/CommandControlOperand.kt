@@ -29,3 +29,9 @@ class ConfirmAnnunciationOperand(id: Int) : AnnunciationOperand(id)
  * @property number a profile template number
  */
 class ProfileTemplateNumber(val number: Int) : CommandControlOperand()
+
+/**
+ * The operand containing a bolus ID. Used in [CancelBolus]
+ * @property id a unique identifier for a bolus created by the server application for a programmed bolus
+ */
+class BolusId(val id: Int): CommandControlOperand()
