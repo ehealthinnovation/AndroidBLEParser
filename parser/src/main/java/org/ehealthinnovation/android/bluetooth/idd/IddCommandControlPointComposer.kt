@@ -23,7 +23,8 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is SnoozeAnnunciation -> composeSnoozeAnnunciation(request.operand, dataWriter)
             is ConfirmAnnunciation -> composeConfirmAnnunciation(request.operand, dataWriter)
             is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
-            is CancelTbrAdjustment -> composeSimpleCommand(request, dataWriter)
+            is GetAvailableBolus,
+            is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             is CancelBolus -> composeCancelBolus(request, dataWriter)
             is SetBolus -> composeSetBolus(request, dataWriter)

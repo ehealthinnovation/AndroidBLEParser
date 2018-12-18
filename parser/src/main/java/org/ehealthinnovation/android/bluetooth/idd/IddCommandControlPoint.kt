@@ -49,6 +49,11 @@ class CancelTbrAdjustment : SimpleControlCommand(Opcode.CANCEL_TBR_ADJUSTMENT)
 class SetTbrAdjustment(val operand: TbrAdjustmentOperand) : CommandControlCommand(Opcode.SET_TBR_ADJUSTMENT)
 
 /**
+ * Get Available Boluses
+ */
+class GetAvailableBolus : SimpleControlCommand(Opcode.GET_AVAILABLE_BOLUSES)
+
+/**
  * A command to cancel a bolus
  * @property operand contains the bolus id
  */
