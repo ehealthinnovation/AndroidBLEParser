@@ -31,7 +31,14 @@ class ConfirmAnnunciationOperand(id: Int) : AnnunciationOperand(id)
 class ProfileTemplateNumber(val number: Int) : CommandControlOperand()
 
 /**
+ * The operand containing a TBR template number.
+ * @property number a TBR template number
+ */
+class TbrTemplateNumber(val number: Int) : CommandControlOperand()
+
+/**
  * The operand containing a bolus ID. Used in [CancelBolus]
  * @property id a unique identifier for a bolus created by the server application for a programmed bolus
  */
 class BolusId(val id: Int): CommandControlOperand()
+

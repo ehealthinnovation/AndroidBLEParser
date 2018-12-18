@@ -26,6 +26,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is GetAvailableBolus,
             is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
+            is GetTbrTemplate -> composeGetTbrTemplate(request, dataWriter)
             is CancelBolus -> composeCancelBolus(request, dataWriter)
             is SetBolus -> composeSetBolus(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
@@ -54,6 +55,11 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeSetTbrAdjustment(operand: TbrAdjustmentOperand, dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.SET_TBR_ADJUSTMENT.key, IntFormat.FORMAT_UINT16)
         SetTbrAdjustmentOperandComposer().composeOperand(operand, dataWriter)
+    }
+
+    internal fun composeGetTbrTemplate(request: GetTbrTemplate, dataWriter: DataWriter) {
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        operandComposer.composeTbrTemplateOperand(request.operand, dataWriter)
     }
 
     internal fun composeWriteProfileTemplate(request: WriteProfileTemplate, dataWriter: DataWriter) {
