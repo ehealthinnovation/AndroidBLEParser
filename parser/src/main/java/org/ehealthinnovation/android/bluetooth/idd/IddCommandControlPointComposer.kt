@@ -23,6 +23,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is ConfirmAnnunciation -> composeConfirmAnnunciation(request.operand, dataWriter)
             is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
             is GetAvailableBolus,
+            is GetTemplateStatusAndDetails,
             is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             is GetBolusTemplate,
@@ -49,10 +50,10 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         operandComposer.composeProfileTemplateNumberOperand(operand, dataWriter)
     }
 
-    internal fun composeSimpleCommand(request: SimpleControlCommand, dataWriter: DataWriter){
+    internal fun composeSimpleCommand(request: SimpleControlCommand, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
     }
-    
+
     internal fun composeSetTbrAdjustment(operand: TbrAdjustmentOperand, dataWriter: DataWriter) {
         dataWriter.putInt(Opcode.SET_TBR_ADJUSTMENT.key, IntFormat.FORMAT_UINT16)
         SetTbrAdjustmentOperandComposer().composeOperand(operand, dataWriter)
@@ -73,12 +74,12 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         operandComposer.composeBolusIdOperand(request.operand, dataWriter)
     }
 
-    internal fun composeSetBolus(request: SetBolus, dataWriter: DataWriter){
-       dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+    internal fun composeSetBolus(request: SetBolus, dataWriter: DataWriter) {
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         SetBolusComposer().compose(request.operand, dataWriter)
     }
 
-    internal fun composeSetBolusTemplate(request: SetBolusTemplate, dataWriter: DataWriter){
+    internal fun composeSetBolusTemplate(request: SetBolusTemplate, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         SetBolusTemplateComposer().composeOperand(request.operand, dataWriter)
     }

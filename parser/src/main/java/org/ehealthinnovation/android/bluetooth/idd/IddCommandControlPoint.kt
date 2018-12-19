@@ -113,3 +113,8 @@ class SetBolusTemplate(val operand: SetBolusTemplateOperand) : CommandControlCom
  * @property operand contains a bolus template number to query
  */
 class GetBolusTemplate(operand: TemplateNumber) : GetTemplate(Opcode.GET_BOLUS_TEMPLATE, operand)
+
+/**
+ * A command to get template status and details
+ */
+class GetTemplateStatusAndDetails : SimpleControlCommand(Opcode.GET_TEMPLATE_STATUS_AND_DETAILS)
