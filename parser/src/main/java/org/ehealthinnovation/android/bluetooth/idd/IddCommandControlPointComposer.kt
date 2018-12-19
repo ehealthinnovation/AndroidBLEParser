@@ -2,7 +2,6 @@ package org.ehealthinnovation.android.bluetooth.idd
 
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.*
 import org.ehealthinnovation.android.bluetooth.parser.CharacteristicComposer
-import org.ehealthinnovation.android.bluetooth.parser.DataReader
 import org.ehealthinnovation.android.bluetooth.parser.DataWriter
 import org.ehealthinnovation.android.bluetooth.parser.IntFormat
 
@@ -26,7 +25,8 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is GetAvailableBolus,
             is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
-            is GetTbrTemplate -> composeGetTbrTemplate(request, dataWriter)
+            is GetBolusTemplate,
+            is GetTemplate -> composeGetTemplate(request as GetTemplate, dataWriter)
             is CancelBolus -> composeCancelBolus(request, dataWriter)
             is SetBolus -> composeSetBolus(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
@@ -57,9 +57,9 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         SetTbrAdjustmentOperandComposer().composeOperand(operand, dataWriter)
     }
 
-    internal fun composeGetTbrTemplate(request: GetTbrTemplate, dataWriter: DataWriter) {
+    internal fun composeGetTemplate(request: GetTemplate, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
-        operandComposer.composeTbrTemplateOperand(request.operand, dataWriter)
+        operandComposer.composeTemplateNumberOperand(request.operand, dataWriter)
     }
 
     internal fun composeWriteProfileTemplate(request: WriteProfileTemplate, dataWriter: DataWriter) {

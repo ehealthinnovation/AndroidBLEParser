@@ -35,7 +35,7 @@ class IddCommandControlPointComposerTest {
         val mockSetTbrAjustment = mock<SetTbrAdjustment>()
         mockComposer.compose(mockSetTbrAjustment, mockDataWriter)
 
-        val mockGetTbrTemplate = mock<GetTbrTemplate>()
+        val mockGetTbrTemplate = mock<GetTemplate>()
         mockComposer.compose(mockGetTbrTemplate, mockDataWriter)
 
         val mockGetAvailableBolus = mock<GetAvailableBolus>()
@@ -46,7 +46,10 @@ class IddCommandControlPointComposerTest {
 
         val mockSetBolus = mock<SetBolus>()
         mockComposer.compose(mockSetBolus, mockDataWriter)
-        
+
+        val mockGetBolusTemplate = mock<GetBolusTemplate>()
+        mockComposer.compose(mockGetBolusTemplate, mockDataWriter)
+
         inOrder(mockComposer) {
             verify(mockComposer, times(1)).composeSnoozeAnnunciation(mockSnoozeRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeWriteProfileTemplate(mockWriteBasalRateProfileTemplate, mockDataWriter)
@@ -55,10 +58,12 @@ class IddCommandControlPointComposerTest {
             verify(mockComposer, times(1)).composeConfirmAnnunciation(mockConfirmRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(mockCancelTbr, mockDataWriter)
             verify(mockComposer, times(1)).composeSetTbrAdjustment(mockSetTbrAjustment.operand, mockDataWriter)
-            verify(mockComposer, times(1)).composeGetTbrTemplate(mockGetTbrTemplate, mockDataWriter)
+            verify(mockComposer, times(1)).composeGetTemplate(mockGetTbrTemplate, mockDataWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(mockGetAvailableBolus, mockDataWriter)
             verify(mockComposer, times(1)).composeCancelBolus(mockCancelBolus, mockDataWriter)
             verify(mockComposer, times(1)).composeSetBolus(mockSetBolus, mockDataWriter)
+            verify(mockComposer, times(1)).composeGetTemplate(mockGetBolusTemplate, mockDataWriter)
+
         }
     }
 
@@ -129,7 +134,7 @@ class IddCommandControlPointComposerTest {
 
     @Test fun composeGetTbrTemplateIntegrationTest(){
         val testWriter = StubDataWriter(uint16(Opcode.GET_TBR_TEMPLATE.key), uint8(2))
-        val command = GetTbrTemplate(TbrTemplateNumber(2))
+        val command = GetTbrTemplate(TemplateNumber(2))
         IddCommandControlPointComposer().compose(command, testWriter)
     }
     

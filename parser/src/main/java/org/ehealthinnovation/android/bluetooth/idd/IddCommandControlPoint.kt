@@ -73,10 +73,17 @@ class CancelTbrAdjustment : SimpleControlCommand(Opcode.CANCEL_TBR_ADJUSTMENT)
 class SetTbrAdjustment(val operand: TbrAdjustmentOperand) : CommandControlCommand(Opcode.SET_TBR_ADJUSTMENT)
 
 /**
+ * A base class for getting template
+ * @param opcode the opcode for getting template
+ * @property operand the template number to query
+ */
+abstract class GetTemplate(opcode:Opcode, val operand: TemplateNumber): CommandControlCommand(opcode)
+
+/**
  * A command to get TBR template
  * @property operand contains the tbr template number to query
  */
-class GetTbrTemplate(val operand: TbrTemplateNumber) : CommandControlCommand(Opcode.GET_TBR_TEMPLATE)
+class GetTbrTemplate(operand: TemplateNumber) : GetTemplate(Opcode.GET_TBR_TEMPLATE, operand)
 
 /**
  * Get Available Boluses
@@ -94,3 +101,9 @@ class CancelBolus(val operand: BolusId) : CommandControlCommand(Opcode.CANCEL_BO
  * @property operand contains the configuration of the bolus
  */
 class SetBolus(val operand: BolusConfig) : CommandControlCommand(Opcode.SET_BOLUS)
+
+/**
+ * A command to get Bolus template
+ * @property operand contains a bolus template number to query
+ */
+class GetBolusTemplate(operand: TemplateNumber) : GetTemplate(Opcode.GET_BOLUS_TEMPLATE, operand)

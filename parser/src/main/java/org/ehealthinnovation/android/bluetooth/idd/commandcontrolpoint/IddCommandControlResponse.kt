@@ -44,7 +44,7 @@ data class SetTbrTemplateResponse(val templateNumber: Int): IddCommandControlRes
 data class SetBolusResponse(val id: Int): IddCommandControlResponse()
 
 /**
- * The response to [GetTbrTemplate] command.
+ * The response to [GetTemplate] command.
  * @property templateNumber the template number of TBR template
  * @property type the tbr type
  * @property value the value of the tbr. Depends on the TBR type, it has unit IU/h if it is [TbrType.ABSOLUTE] or has no unit if it is [TbrType.RELATIVE]

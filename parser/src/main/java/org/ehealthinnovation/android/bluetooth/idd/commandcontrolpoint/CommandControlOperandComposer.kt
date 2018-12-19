@@ -16,7 +16,7 @@ class CommandControlOperandComposer {
         dataWriter.putInt(operand.number, IntFormat.FORMAT_UINT8)
     }
 
-    internal fun composeTbrTemplateOperand(operand: TbrTemplateNumber, dataWriter: DataWriter) {
+    internal fun composeTemplateNumberOperand(operand: TemplateNumber, dataWriter: DataWriter) {
         dataWriter.putInt(operand.number, IntFormat.FORMAT_UINT8)
     }
 
