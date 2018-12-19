@@ -29,6 +29,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is GetTemplate -> composeGetTemplate(request as GetTemplate, dataWriter)
             is CancelBolus -> composeCancelBolus(request, dataWriter)
             is SetBolus -> composeSetBolus(request, dataWriter)
+            is SetBolusTemplate -> composeSetBolusTemplate(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -75,6 +76,11 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeSetBolus(request: SetBolus, dataWriter: DataWriter){
        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         SetBolusComposer().compose(request.operand, dataWriter)
+    }
+
+    internal fun composeSetBolusTemplate(request: SetBolusTemplate, dataWriter: DataWriter){
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        SetBolusTemplateComposer().composeOperand(request.operand, dataWriter)
     }
 
 }

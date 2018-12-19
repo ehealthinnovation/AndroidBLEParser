@@ -35,7 +35,7 @@ data class BolusConfig(
         val delayMinute: Int? = null,
         val templateNumber: Int? = null,
         val activationType: BolusActivationType? = null
-): CommandControlOperand()
+) : CommandControlOperand()
 
 /**
  * Use this composer to write an operand for [SetBolus] command into the [DataWriter] buffer
@@ -72,13 +72,6 @@ class SetBolusComposer {
         return output
     }
 
-    internal fun writeBolus(bolus: Bolus, dataWriter: DataWriter) {
-        dataWriter.putInt(bolus.type.key, IntFormat.FORMAT_UINT8)
-        dataWriter.putFloat(bolus.fastAmountIU, -1, FloatFormat.FORMAT_SFLOAT)
-        dataWriter.putFloat(bolus.extendedAmountIU, -1, FloatFormat.FORMAT_SFLOAT)
-        dataWriter.putInt(bolus.durationMinute, IntFormat.FORMAT_UINT16)
-    }
-
     enum class Flag(override val bitOffset: Int) : FlagValue {
         /**If this bit is set, the Bolus Delay Time field is present. */
         BOLUS_DELAY_TIME_PRESENT(0),
@@ -92,3 +85,11 @@ class SetBolusComposer {
         BOLUS_DELIVERY_REASON_MEAL(4);
     }
 }
+
+internal fun writeBolus(bolus: Bolus, dataWriter: DataWriter) {
+    dataWriter.putInt(bolus.type.key, IntFormat.FORMAT_UINT8)
+    dataWriter.putFloat(bolus.fastAmountIU, -1, FloatFormat.FORMAT_SFLOAT)
+    dataWriter.putFloat(bolus.extendedAmountIU, -1, FloatFormat.FORMAT_SFLOAT)
+    dataWriter.putInt(bolus.durationMinute, IntFormat.FORMAT_UINT16)
+}
+

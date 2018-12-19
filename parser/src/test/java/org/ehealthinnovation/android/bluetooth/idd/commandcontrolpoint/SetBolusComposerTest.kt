@@ -51,7 +51,7 @@ class SetBolusComposerTest {
     fun writeBolusTest() {
         val bolusTestCase = Bolus(BolusType.MULTIWAVE, 1f, 2f, 3)
         val testWriter = StubDataWriter(uint8(BolusType.MULTIWAVE.key), sfloate(1f, -1), sfloate(2f, -1), uint16(3))
-        SetBolusComposer().writeBolus(bolusTestCase, testWriter)
+        writeBolus(bolusTestCase, testWriter)
         testWriter.checkWriteComplete()
     }
 }

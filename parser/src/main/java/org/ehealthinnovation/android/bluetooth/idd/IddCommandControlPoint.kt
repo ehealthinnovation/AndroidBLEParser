@@ -103,6 +103,12 @@ class CancelBolus(val operand: BolusId) : CommandControlCommand(Opcode.CANCEL_BO
 class SetBolus(val operand: BolusConfig) : CommandControlCommand(Opcode.SET_BOLUS)
 
 /**
+ * A command to set a bolus template
+ * @property operand contains the bolus template
+ */
+class SetBolusTemplate(val operand: SetBolusTemplateOperand) : CommandControlCommand(Opcode.SET_BOLUS_TEMPLATE)
+
+/**
  * A command to get Bolus template
  * @property operand contains a bolus template number to query
  */
