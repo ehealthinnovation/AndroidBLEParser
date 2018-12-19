@@ -42,3 +42,15 @@ class TemplateNumber(val number: Int) : CommandControlOperand()
  */
 class BolusId(val id: Int): CommandControlOperand()
 
+/**
+ * The operand containing a list of template number to reset
+ * @property templateNumbers a list of template number to reset
+ */
+class ResetTemplateStatusOperand(val templateNumbers: List<TemplateNumber>): CommandControlOperand(){
+    init {
+        if (templateNumbers.isEmpty() || templateNumbers.size>14){
+            throw IllegalArgumentException("Must provide 1 to 14 template numbers")
+        }
+    }
+}
+

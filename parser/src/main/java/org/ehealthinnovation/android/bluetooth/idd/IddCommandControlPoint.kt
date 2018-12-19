@@ -118,3 +118,8 @@ class GetBolusTemplate(operand: TemplateNumber) : GetTemplate(Opcode.GET_BOLUS_T
  * A command to get template status and details
  */
 class GetTemplateStatusAndDetails : SimpleControlCommand(Opcode.GET_TEMPLATE_STATUS_AND_DETAILS)
+
+/**
+ * A command to reset template slots specified in [ResetTemplateStatusOperand]
+ */
+class ResetTemplateStatus(val operand: ResetTemplateStatusOperand) : CommandControlCommand(Opcode.RESET_TEMPLATE_STATUS)

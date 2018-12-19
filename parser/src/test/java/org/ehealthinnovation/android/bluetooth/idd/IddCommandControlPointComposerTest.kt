@@ -56,6 +56,9 @@ class IddCommandControlPointComposerTest {
         val mockGetTemplateStatusAndDetails = mock<GetTemplateStatusAndDetails>()
         mockComposer.compose(mockGetTemplateStatusAndDetails, mockDataWriter)
 
+        val mockResetTemplateStatus = mock<ResetTemplateStatus>()
+        mockComposer.compose(mockResetTemplateStatus, mockDataWriter)
+
         inOrder(mockComposer) {
             verify(mockComposer, times(1)).composeSnoozeAnnunciation(mockSnoozeRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeWriteProfileTemplate(mockWriteBasalRateProfileTemplate, mockDataWriter)
@@ -71,6 +74,7 @@ class IddCommandControlPointComposerTest {
             verify(mockComposer, times(1)).composeSetBolusTemplate(mockSetBolusTemplate, mockDataWriter)
             verify(mockComposer, times(1)).composeGetTemplate(mockGetBolusTemplate, mockDataWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(mockGetTemplateStatusAndDetails, mockDataWriter)
+            verify(mockComposer, times(1)).composeResetTemplateStatus(mockResetTemplateStatus, mockDataWriter)
         }
     }
 
@@ -150,6 +154,14 @@ class IddCommandControlPointComposerTest {
         val testWriter = StubDataWriter(uint16(Opcode.CANCEL_BOLUS.key), uint16(2))
         val command = CancelBolus(BolusId(2))
         IddCommandControlPointComposer().composeCancelBolus(command, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeResetTemplate() {
+        val testWriter = StubDataWriter(uint16(Opcode.RESET_TEMPLATE_STATUS.key), uint8(2), uint8(3), uint8(4))
+        val command = ResetTemplateStatus(ResetTemplateStatusOperand(listOf(TemplateNumber(3), TemplateNumber(4))))
+        IddCommandControlPointComposer().composeResetTemplateStatus(command, testWriter)
         testWriter.checkWriteComplete()
     }
 }
