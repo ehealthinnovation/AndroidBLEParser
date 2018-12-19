@@ -82,3 +82,10 @@ data class GetAvailableBolusesResponse(
  * @property id the id assigned to the bolus template by the server
  */
 data class SetBolusTemplateResponse(val id: Int): IddCommandControlResponse()
+
+/**
+ * The response to [ResetTemplateStatus] command
+ * @property number the number of template get reset
+ * @property templateNumbers the template numbers of the reset templates
+ */
+data class ResetTemplateStatusResponse(val number: Int, val templateNumbers: List<Int>): IddCommandControlResponse()

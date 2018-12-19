@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 
+import net.bytebuddy.dynamic.ClassFileLocator
 import org.ehealthinnovation.android.bluetooth.idd.TbrType
 import org.ehealthinnovation.android.bluetooth.parser.StubDataReader
 import org.ehealthinnovation.android.bluetooth.parser.sfloat
@@ -69,6 +70,13 @@ class SimpleResponseParserTest {
         val testData = StubDataReader(uint8(3))
         val expected = SetBolusTemplateResponse(3)
         Assert.assertEquals(expected, SimpleResponseParser().readSetBolusTemplateResponse(testData))
+    }
+
+    @Test
+    fun readResetTemplateStatusResponseTest() {
+        val testData = StubDataReader(uint8(3), uint8(1), uint8(2), uint8(4))
+        val expected = ResetTemplateStatusResponse(3, listOf(1,2,4))
+        Assert.assertEquals(expected, SimpleResponseParser().readResetTemplateStatusResponse(testData))
     }
 
 

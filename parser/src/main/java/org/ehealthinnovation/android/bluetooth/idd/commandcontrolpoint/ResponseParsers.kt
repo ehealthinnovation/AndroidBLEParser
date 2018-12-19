@@ -92,5 +92,15 @@ class SimpleResponseParser {
         return SetBolusTemplateResponse(templateNumber)
     }
 
+    /** Parse response from [ResetTemplateStatus] command*/
+    internal fun readResetTemplateStatusResponse(data: DataReader): ResetTemplateStatusResponse {
+        val numberOfTemplate = data.getNextInt(IntFormat.FORMAT_UINT8)
+        val templateNumbers = mutableListOf<Int>()
+        for (i in 1..numberOfTemplate){
+            templateNumbers.add(data.getNextInt(IntFormat.FORMAT_UINT8))
+        }
+        return ResetTemplateStatusResponse(numberOfTemplate, templateNumbers as List<Int>)
+    }
+
 
 }

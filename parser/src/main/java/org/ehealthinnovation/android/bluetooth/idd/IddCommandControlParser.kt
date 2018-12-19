@@ -26,6 +26,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
             Opcode.GET_AVAILABLE_BOLUSES_RESPONSE -> readAvailableBolusesResponse(data)
             Opcode.GET_BOLUS_TEMPLATE_RESPONSE -> readGetBolusTemplateResponse(data)
             Opcode.SET_BOLUS_TEMPLATE_RESPONSE -> readSetBolusTemplateResponse(data)
+            Opcode.RESET_TEMPLATE_STATUS_RESPONSE -> readResetTemplateStatusResponse(data)
             else->throw IllegalArgumentException("response opcode not supported")
         }
     }
@@ -71,4 +72,7 @@ class IddCommandControlParser: CharacteristicParser<IddCommandControlResponse> {
 
     internal fun readSetBolusTemplateResponse(dataReader: DataReader): SetBolusTemplateResponse =
             SimpleResponseParser().readSetBolusTemplateResponse(dataReader)
+
+    internal fun readResetTemplateStatusResponse(dataReader: DataReader): ResetTemplateStatusResponse =
+            SimpleResponseParser().readResetTemplateStatusResponse(dataReader)
 }
