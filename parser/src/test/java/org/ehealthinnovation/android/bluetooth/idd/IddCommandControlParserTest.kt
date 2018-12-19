@@ -53,6 +53,9 @@ class IddCommandControlParserTest {
         val mockPacketCancelBolusResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.CANCEL_BOLUS_RESPONSE.key))
         mockParser.parse(mockPacketCancelBolusResponse)
 
+        val mockPacketGetAvailableBolusesResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.GET_AVAILABLE_BOLUSES_RESPONSE.key))
+        mockParser.parse(mockPacketGetAvailableBolusesResponse)
+
         inOrder(mockParser){
             verify(mockParser,times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
             verify(mockParser, times(1)).readWriteBasalProfileTemplateResponse(mockPacketWriteBasalRateProfileTemplateResponse.readData())
@@ -62,6 +65,7 @@ class IddCommandControlParserTest {
             verify(mockParser, times(1)).readSetBolusResponse(mockPacketSetBolusResponse.readData())
             verify(mockParser, times(1)).readTbrTemplateResponse(mockPacketGetTbrTemplateResponse.readData())
             verify(mockParser, times(1)).readCancelBolusResponse(mockPacketCancelBolusResponse.readData())
+            verify(mockParser, times(1)).readAvailableBolusesResponse(mockPacketGetAvailableBolusesResponse.readData())
         }
     }
 

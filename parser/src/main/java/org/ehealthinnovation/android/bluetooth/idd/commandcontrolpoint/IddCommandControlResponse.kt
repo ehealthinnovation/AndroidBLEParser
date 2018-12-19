@@ -64,3 +64,15 @@ data class GetTbrTemplateResponse (
 data class CancelBolusResponse(
         val id: Int
 ): IddCommandControlResponse()
+
+/**
+ * The response to [GetAvailableBoluses]
+ * @property fastBolusAvailable is true if the remote insulin pump can administer a fast bolus.
+ * @property extendedBolusAvailable is true if the remote insulin pump can administer an extended bolus.
+ * @property multiwaveBolusAvailable is true if the remote insulin pump can administer a multiwave bolus.
+ */
+data class GetAvailableBolusesResponse(
+        val fastBolusAvailable: Boolean,
+        val extendedBolusAvailable: Boolean,
+        val multiwaveBolusAvailable: Boolean
+): IddCommandControlResponse()

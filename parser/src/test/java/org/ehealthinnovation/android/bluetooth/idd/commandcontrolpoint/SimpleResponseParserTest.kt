@@ -18,16 +18,30 @@ class SimpleResponseParserTest {
     }
 
     @Test
+    fun readGetAvailableBolusesResponse() {
+        val testDataReaderAll = StubDataReader(uint8(0b111))
+        val expectedAll = GetAvailableBolusesResponse(true, true, true)
+        Assert.assertEquals(expectedAll, SimpleResponseParser().readGetAvailableBolusesResponse(testDataReaderAll) )
+
+        val testDataReaderNone = StubDataReader(uint8(0b000))
+        val expectedNone = GetAvailableBolusesResponse(false, false, false)
+        Assert.assertEquals(expectedNone, SimpleResponseParser().readGetAvailableBolusesResponse(testDataReaderNone) )
+
+    }
+
+    @Test
     fun readSetTbrTemplateResponse() {
         val testData = StubDataReader(uint8(3))
         val expected = SetTbrTemplateResponse(3)
         Assert.assertEquals(expected, SimpleResponseParser().readSetTbrTemplateResponse(testData))
+    }
 
     @Test
     fun readSetBolusResponse() {
         val testData = StubDataReader(uint16(3))
         val expected = SetBolusResponse(3)
         Assert.assertEquals(expected, SimpleResponseParser().readSetBolusResponse(testData))
+    }
     
     @Test
     fun readGetTbrTemplateResponseTest() {
@@ -49,4 +63,6 @@ class SimpleResponseParserTest {
         val expected = CancelBolusResponse(1)
         Assert.assertEquals(expected, SimpleResponseParser().readCancelBolusResponse(testData))
     }
+
+
 }

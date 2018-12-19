@@ -36,14 +36,16 @@ class SimpleResponseParser {
     }
 
     /** Parse response from [SetTbrTemplate] command */
-    internal fun readSetTbrTemplateResponse(data: DataReader): SetTbrTemplateResponse{
+    internal fun readSetTbrTemplateResponse(data: DataReader): SetTbrTemplateResponse {
         val templateNumber = data.getNextInt(IntFormat.FORMAT_UINT8)
         return SetTbrTemplateResponse(templateNumber)
+    }
 
     /** Parse a [SetBolusResponse] */
     internal fun readSetBolusResponse(data: DataReader): SetBolusResponse {
         val id = data.getNextInt(IntFormat.FORMAT_UINT16)
         return SetBolusResponse(id)
+    }
 
     /** Parse the response of a [GetTbrTemplate] command */
     internal fun readGetTbrTemplateResponse(data: DataReader): GetTbrTemplateResponse {
@@ -58,6 +60,30 @@ class SimpleResponseParser {
     internal fun readCancelBolusResponse(data: DataReader): CancelBolusResponse{
         val id = data.getNextInt(IntFormat.FORMAT_UINT16)
         return CancelBolusResponse(id)
+    }
+
+    /**
+     * Flags used in parsing the [GetAvailableBolusesResponse]
+     */
+    internal enum class GetAvailableBolusesFlag(override val bitOffset: Int):FlagValue{
+        /**If this bit is set, a fast bolus is currently available to be set. */
+        FAST_BOLUS_AVAILABLE(0),
+        /**If this bit is set, an extended bolus is currently available to be set. */
+        EXTENDED_BOLUS_AVAILABLE(1),
+        /**If this bit is set, a multiwave bolus is currently available to be set. */
+        MULTIWAVE_BOLUS_AVAILABLE(2);
+    }
+
+    /**
+     * Parse the response of a [GetAvailableBoluses] command
+     */
+    internal fun readGetAvailableBolusesResponse(data: DataReader): GetAvailableBolusesResponse{
+        val flagRawData = data.getNextInt(IntFormat.FORMAT_UINT8)
+        val flags = parseFlags(flagRawData, GetAvailableBolusesFlag::class.java)
+        val fastBolusAvailable = flags.contains(GetAvailableBolusesFlag.FAST_BOLUS_AVAILABLE)
+        val extendedBolusAvailable = flags.contains(GetAvailableBolusesFlag.EXTENDED_BOLUS_AVAILABLE)
+        val multiwaveBolusAvailable = flags.contains(GetAvailableBolusesFlag.MULTIWAVE_BOLUS_AVAILABLE)
+        return GetAvailableBolusesResponse(fastBolusAvailable, extendedBolusAvailable, multiwaveBolusAvailable)
     }
 
 }
