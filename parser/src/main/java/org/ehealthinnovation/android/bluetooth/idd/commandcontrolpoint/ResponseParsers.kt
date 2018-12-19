@@ -86,4 +86,11 @@ class SimpleResponseParser {
         return GetAvailableBolusesResponse(fastBolusAvailable, extendedBolusAvailable, multiwaveBolusAvailable)
     }
 
+     /** Parse response from [SetTbrTemplate] command */
+    internal fun readSetBolusTemplateResponse(data: DataReader): SetBolusTemplateResponse {
+        val templateNumber = data.getNextInt(IntFormat.FORMAT_UINT8)
+        return SetBolusTemplateResponse(templateNumber)
+    }
+
+
 }

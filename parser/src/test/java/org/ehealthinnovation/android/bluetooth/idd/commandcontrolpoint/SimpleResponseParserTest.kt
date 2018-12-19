@@ -64,5 +64,12 @@ class SimpleResponseParserTest {
         Assert.assertEquals(expected, SimpleResponseParser().readCancelBolusResponse(testData))
     }
 
+    @Test
+    fun readSetBolusTemplateResponse() {
+        val testData = StubDataReader(uint8(3))
+        val expected = SetBolusTemplateResponse(3)
+        Assert.assertEquals(expected, SimpleResponseParser().readSetBolusTemplateResponse(testData))
+    }
+
 
 }

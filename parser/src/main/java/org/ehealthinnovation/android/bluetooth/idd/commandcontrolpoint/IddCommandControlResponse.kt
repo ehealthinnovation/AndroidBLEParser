@@ -76,3 +76,9 @@ data class GetAvailableBolusesResponse(
         val extendedBolusAvailable: Boolean,
         val multiwaveBolusAvailable: Boolean
 ): IddCommandControlResponse()
+
+/**
+ * The response to [SetBolusTemplate] command
+ * @property id the id assigned to the bolus template by the server
+ */
+data class SetBolusTemplateResponse(val id: Int): IddCommandControlResponse()
