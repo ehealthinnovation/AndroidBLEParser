@@ -136,3 +136,8 @@ class ResetTemplatesStatus(operand: TemplatesOperand) : TemplatesOperation(Opcod
  * @property operand a list of profile template numbers to be activated
  */
 class ActivateProfileTemplates(operand: TemplatesOperand) : TemplatesOperation(Opcode.ACTIVATE_PROFILE_TEMPLATES, operand)
+
+/**
+ * A command to get the activated profile templates
+ */
+class GetActivatedProfileTemplates: SimpleControlCommand(Opcode.GET_ACTIVATED_PROFILE_TEMPLATES)

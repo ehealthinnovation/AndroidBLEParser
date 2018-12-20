@@ -24,6 +24,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
             is GetAvailableBolus,
             is GetTemplatesStatusAndDetails,
+            is GetActivatedProfileTemplates,
             is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             is GetBolusTemplate,
@@ -90,4 +91,5 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeTemplatesNumberListOperand(request.operand, dataWriter)
     }
+
 }

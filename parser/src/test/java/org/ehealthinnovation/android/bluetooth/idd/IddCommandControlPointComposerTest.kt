@@ -59,6 +59,9 @@ class IddCommandControlPointComposerTest {
         val mockResetTemplateStatus = mock<ResetTemplatesStatus>()
         mockComposer.compose(mockResetTemplateStatus, mockDataWriter)
 
+        val mocketGetActivatedProfileTemplates = mock<GetActivatedProfileTemplates>()
+        mockComposer.compose(mocketGetActivatedProfileTemplates, mockDataWriter)
+
         inOrder(mockComposer) {
             verify(mockComposer, times(1)).composeSnoozeAnnunciation(mockSnoozeRequest.operand, mockDataWriter)
             verify(mockComposer, times(1)).composeWriteProfileTemplate(mockWriteBasalRateProfileTemplate, mockDataWriter)
@@ -75,6 +78,7 @@ class IddCommandControlPointComposerTest {
             verify(mockComposer, times(1)).composeGetTemplate(mockGetBolusTemplate, mockDataWriter)
             verify(mockComposer, times(1)).composeSimpleCommand(mockGetTemplateStatusAndDetails, mockDataWriter)
             verify(mockComposer, times(1)).composeProfileTemplatesOperation(mockResetTemplateStatus, mockDataWriter)
+            verify(mockComposer, times(1)).composeSimpleCommand(mocketGetActivatedProfileTemplates, mockDataWriter)
         }
     }
 
