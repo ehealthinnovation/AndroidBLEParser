@@ -24,7 +24,7 @@ class CommandControlOperandComposer {
         dataWriter.putInt(operand.id, IntFormat.FORMAT_UINT16)
     }
 
-    internal fun composeResetTemplateStatusOperand(operand: ResetTemplateStatusOperand, dataWriter: DataWriter){
+    internal fun composeTemplatesNumberListOperand(operand: TemplatesOperand, dataWriter: DataWriter){
         dataWriter.putInt(operand.templateNumbers.size, IntFormat.FORMAT_UINT8)
         for (templateNumber in operand.templateNumbers){
             dataWriter.putInt(templateNumber.number, IntFormat.FORMAT_UINT8)

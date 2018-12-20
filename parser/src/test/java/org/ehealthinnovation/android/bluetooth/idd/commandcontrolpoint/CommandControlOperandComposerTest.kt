@@ -17,9 +17,9 @@ class CommandControlOperandComposerTest {
 
     @Test
     fun composeResetTemplateStatusOperandTest() {
-        val testoperand = ResetTemplateStatusOperand(listOf(TemplateNumber(1), TemplateNumber(2), TemplateNumber(3)))
+        val testoperand = TemplatesOperand(listOf(TemplateNumber(1), TemplateNumber(2), TemplateNumber(3)))
         val testWriter = StubDataWriter(uint8(3), uint8(1), uint8(2), uint8(3))
-        CommandControlOperandComposer().composeResetTemplateStatusOperand(testoperand, testWriter)
+        CommandControlOperandComposer().composeTemplatesNumberListOperand(testoperand, testWriter)
         testWriter.checkWriteComplete()
     }
 
@@ -29,12 +29,12 @@ class CommandControlOperandComposerTest {
         for (i  in 0..15){
             listOfNumber.add(TemplateNumber(i))
         }
-        ResetTemplateStatusOperand(listOfNumber)
+        TemplatesOperand(listOfNumber)
     }
 
     @Test(expected = Exception::class)
     fun testResetTemplateStatusIllegalConstructionCase2(){
         val listOfNumber = mutableListOf<TemplateNumber>()
-        ResetTemplateStatusOperand(listOfNumber)
+        TemplatesOperand(listOfNumber)
     }
 }

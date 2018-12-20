@@ -23,7 +23,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is ConfirmAnnunciation -> composeConfirmAnnunciation(request.operand, dataWriter)
             is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
             is GetAvailableBolus,
-            is GetTemplateStatusAndDetails,
+            is GetTemplatesStatusAndDetails,
             is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             is GetBolusTemplate,
@@ -31,7 +31,8 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is CancelBolus -> composeCancelBolus(request, dataWriter)
             is SetBolus -> composeSetBolus(request, dataWriter)
             is SetBolusTemplate -> composeSetBolusTemplate(request, dataWriter)
-            is ResetTemplateStatus -> composeResetTemplateStatus(request, dataWriter)
+            is ResetTemplatesStatus,
+            is ActivateProfileTemplates -> composeProfileTemplatesOperation(request as TemplatesOperation, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -85,9 +86,8 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         SetBolusTemplateComposer().composeOperand(request.operand, dataWriter)
     }
 
-    internal fun composeResetTemplateStatus(request: ResetTemplateStatus, dataWriter: DataWriter){
+    internal fun composeProfileTemplatesOperation(request: TemplatesOperation, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
-        operandComposer.composeResetTemplateStatusOperand(request.operand, dataWriter)
+        operandComposer.composeTemplatesNumberListOperand(request.operand, dataWriter)
     }
-
 }

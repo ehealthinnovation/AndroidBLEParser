@@ -77,7 +77,7 @@ class SetTbrAdjustment(val operand: TbrAdjustmentOperand) : CommandControlComman
  * @param opcode the opcode for getting template
  * @property operand the template number to query
  */
-abstract class GetTemplate(opcode:Opcode, val operand: TemplateNumber): CommandControlCommand(opcode)
+abstract class GetTemplate(opcode: Opcode, val operand: TemplateNumber) : CommandControlCommand(opcode)
 
 /**
  * A command to get TBR template
@@ -117,9 +117,22 @@ class GetBolusTemplate(operand: TemplateNumber) : GetTemplate(Opcode.GET_BOLUS_T
 /**
  * A command to get template status and details
  */
-class GetTemplateStatusAndDetails : SimpleControlCommand(Opcode.GET_TEMPLATE_STATUS_AND_DETAILS)
+class GetTemplatesStatusAndDetails : SimpleControlCommand(Opcode.GET_TEMPLATE_STATUS_AND_DETAILS)
+
+/**
+ * Base class for command that operate on a list of template and requires a list of template number as operand
+ * @param opcode the exact operation to perform
+ * @property operand contains a list of template number to perform operation on
+ */
+abstract class TemplatesOperation(opcode: Opcode, val operand: TemplatesOperand): CommandControlCommand(opcode)
 
 /**
  * A command to reset template slots specified in [ResetTemplateStatusOperand]
  */
-class ResetTemplateStatus(val operand: ResetTemplateStatusOperand) : CommandControlCommand(Opcode.RESET_TEMPLATE_STATUS)
+class ResetTemplatesStatus(operand: TemplatesOperand) : TemplatesOperation(Opcode.RESET_TEMPLATE_STATUS, operand)
+
+/**
+ * A command to activate template specified in [TemplatesOperand]
+ * @property operand a list of profile template numbers to be activated
+ */
+class ActivateProfileTemplates(operand: TemplatesOperand) : TemplatesOperation(Opcode.ACTIVATE_PROFILE_TEMPLATES, operand)
