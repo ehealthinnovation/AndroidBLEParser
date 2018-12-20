@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.*
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ConfirmAnnunciationResponse
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
 import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationResponse
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.WriteTargetGlucoseRangeProfileTemplateResponse
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert
 import org.junit.Test
@@ -105,12 +104,5 @@ class IddCommandControlParserTest {
         val testData = StubDataReader(uint16(1))
         val expected = ConfirmAnnunciationResponse(1)
         Assert.assertEquals(expected, IddCommandControlParser().readConfirmAnnunciationResponse(testData))
-    }
-
-    @Test
-    fun readWriteTargetGlucoseRangeProfileTemplateResponse(){
-        val testData = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.WRITE_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE_RESPONSE.key), uint8(0b01), uint8(2), uint8(3))
-        val expected = WriteTargetGlucoseRangeProfileTemplateResponse(true, 2, 3)
-        Assert.assertEquals(expected, IddCommandControlParser().parse(testData))
     }
 }

@@ -29,15 +29,3 @@ class WriteBasalRateProfileTemplateResponseParser {
 
     }
 }
-
-class WriteTargetGlucoseRangeProfileTemplateResponseParser {
-    internal fun parseWriteTargetGlucoseRangeProfileTemplateResponse(data: DataReader): WriteTargetGlucoseRangeProfileTemplateResponse {
-
-        val isTransactionCompleted = WriteBasalRateProfileTemplateResponseParser().readTransactionCompleted(data)
-        val templateNumber = data.getNextInt(IntFormat.FORMAT_UINT8)
-        val firstTimeBlockNumber = data.getNextInt(IntFormat.FORMAT_UINT8)
-
-        return WriteTargetGlucoseRangeProfileTemplateResponse(isTransactionCompleted, templateNumber, firstTimeBlockNumber)
-    }
-
-}
