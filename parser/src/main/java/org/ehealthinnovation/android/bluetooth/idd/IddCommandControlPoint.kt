@@ -38,6 +38,19 @@ class WriteIsfProfileTemplate(operand: WriteProfileTemplateOperand) : WriteProfi
 class WriteI2CHORatioProfileTemplate(operand: WriteProfileTemplateOperand) : WriteProfileTemplate(Opcode.WRITE_I2CHO_RATIO_PROFILE_TEMPLATE, operand)
 
 /**
+ * A base class for write profile template command. Any command that write a profile template with ranged timeblocks should extend this class.
+ * @property opcode The opcode of the write range profile template command.
+ */
+abstract class WriteRangeProfileTemplate(opcode: Opcode, val operand: WriteRangeProfileTemplateOperand) : CommandControlCommand(opcode)
+
+/**
+ * Write Target Glucose Range profile template command.
+ * @property operand an operand containing [DoubleValueTimeBlock] configuration for a single command transaction.
+ */
+class WriteTargetGlucoseRangeProfileTemplate(operand: WriteRangeProfileTemplateOperand) : WriteRangeProfileTemplate(Opcode.WRITE_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE, operand)
+
+
+/**
  * A command to confirm an annunciation
  * @property operand an operand containing the id of an annunciation to confirm
  */

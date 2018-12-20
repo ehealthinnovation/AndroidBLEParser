@@ -38,6 +38,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is SetBolusTemplate -> composeSetBolusTemplate(request, dataWriter)
             is ResetTemplatesStatus,
             is ActivateProfileTemplates -> composeProfileTemplatesOperation(request as TemplatesOperation, dataWriter)
+            is WriteTargetGlucoseRangeProfileTemplate -> composeWriteRangeProfileTemplate(request, dataWriter)
             is SetInitialReservoirFillLevel ->composeSetInitialReservoirFillLevel(request, dataWriter)
             is StartPriming -> composeStartPriming(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
@@ -96,6 +97,11 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeProfileTemplatesOperation(request: TemplatesOperation, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeTemplatesNumberListOperand(request.operand, dataWriter)
+    }
+
+    internal fun composeWriteRangeProfileTemplate(request: WriteRangeProfileTemplate, dataWriter: DataWriter) {
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        WriteRangeProfileTemplateOperandComposer().composeOperand(request.operand, dataWriter)
     }
 
     internal fun composeSetInitialReservoirFillLevel(request: SetInitialReservoirFillLevel, dataWriter: DataWriter) {

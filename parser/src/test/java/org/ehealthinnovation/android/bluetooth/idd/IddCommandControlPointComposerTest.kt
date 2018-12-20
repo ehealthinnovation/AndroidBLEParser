@@ -156,6 +156,17 @@ class IddCommandControlPointComposerTest {
     }
 
     @Test
+    fun composeWriteTargetGlucoseRangeProfileTemplateTest(){
+        val testWriter = StubDataWriter(
+                uint16(Opcode.WRITE_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE.key),
+                uint8(0b011), uint8(1), uint8(2), uint16(3), sfloate(4.0f, -1), sfloate(4.1f, -1), uint16(4), sfloate(5.0f, -1), sfloate(5.1f, -1))
+        val request = WriteTargetGlucoseRangeProfileTemplate(WriteRangeProfileTemplateOperand(true, 1, 2, RangedTimeBlock(3, 4.0f, 4.1f), RangedTimeBlock(4, 5.0f, 5.1f)))
+        IddCommandControlPointComposer().composeWriteRangeProfileTemplate(request, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+
+    @Test
     fun composeConfirmAnnunciation() {
         val testWriter = StubDataWriter(uint16(Opcode.CONFIRM_ANNUNCIATION.key), uint16(1))
         val operand = ConfirmAnnunciationOperand(1)
