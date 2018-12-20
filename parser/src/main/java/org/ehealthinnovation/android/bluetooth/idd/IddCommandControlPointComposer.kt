@@ -24,6 +24,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
             is GetAvailableBolus,
             is GetTemplatesStatusAndDetails,
+            is StopPriming,
             is GetActivatedProfileTemplates,
             is CancelTbrAdjustment -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
@@ -34,6 +35,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is SetBolusTemplate -> composeSetBolusTemplate(request, dataWriter)
             is ResetTemplatesStatus,
             is ActivateProfileTemplates -> composeProfileTemplatesOperation(request as TemplatesOperation, dataWriter)
+            is StartPriming -> composeStartPriming(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -92,4 +94,9 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         operandComposer.composeTemplatesNumberListOperand(request.operand, dataWriter)
     }
 
+
+    internal fun composeStartPriming(request: StartPriming, dataWriter: DataWriter) {
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        operandComposer.composePrimeAmountOperand(request.operand, dataWriter)
+    }
 }

@@ -54,3 +54,8 @@ class TemplatesOperand(val templateNumbers: List<TemplateNumber>): CommandContro
     }
 }
 
+/**
+ * The operand containing the amount to prime
+ * @property amount the amount to prime
+ */
+class PrimingAmount(val amount: Float): CommandControlOperand()

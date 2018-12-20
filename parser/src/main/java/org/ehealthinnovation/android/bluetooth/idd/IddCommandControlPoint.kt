@@ -124,7 +124,7 @@ class GetTemplatesStatusAndDetails : SimpleControlCommand(Opcode.GET_TEMPLATE_ST
  * @param opcode the exact operation to perform
  * @property operand contains a list of template number to perform operation on
  */
-abstract class TemplatesOperation(opcode: Opcode, val operand: TemplatesOperand): CommandControlCommand(opcode)
+abstract class TemplatesOperation(opcode: Opcode, val operand: TemplatesOperand) : CommandControlCommand(opcode)
 
 /**
  * A command to reset template slots specified in [ResetTemplateStatusOperand]
@@ -138,6 +138,18 @@ class ResetTemplatesStatus(operand: TemplatesOperand) : TemplatesOperation(Opcod
 class ActivateProfileTemplates(operand: TemplatesOperand) : TemplatesOperation(Opcode.ACTIVATE_PROFILE_TEMPLATES, operand)
 
 /**
+ * A Command to start priming the insulin infusion set
+ * @property operand the amount to prime
+ */
+class StartPriming(val operand: PrimingAmount) : CommandControlCommand(Opcode.START_PRIMING)
+
+/**
+ * A command to stop the priming process
+ */
+class StopPriming : SimpleControlCommand(Opcode.STOP_PRIMING)
+ 
+ /**
  * A command to get the activated profile templates
  */
 class GetActivatedProfileTemplates: SimpleControlCommand(Opcode.GET_ACTIVATED_PROFILE_TEMPLATES)
+
