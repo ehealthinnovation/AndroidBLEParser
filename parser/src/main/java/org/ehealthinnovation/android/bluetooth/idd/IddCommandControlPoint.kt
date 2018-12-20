@@ -192,4 +192,9 @@ class GetActivatedProfileTemplates: SimpleControlCommand(Opcode.GET_ACTIVATED_PR
  */
 class GetMaxBolusAmount: SimpleControlCommand(Opcode.GET_MAX_BOLUS_AMOUNT)
 
+/**
+ * A command to set the maximum bolus amount that can be delivered of the insulin device
+ */
+class SetMaxBolusAmount(val operand: MaxBolusAmount): CommandControlCommand(Opcode.SET_MAX_BOLUS_AMOUNT)
+
 

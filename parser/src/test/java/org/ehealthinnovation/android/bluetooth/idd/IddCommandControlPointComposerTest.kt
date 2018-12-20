@@ -233,4 +233,12 @@ class IddCommandControlPointComposerTest {
         IddCommandControlPointComposer().compose(command, testWriter)
         testWriter.checkWriteComplete()
     }
+
+    @Test
+    fun composeSetMaxBolusCommand(){
+        val testWriter = StubDataWriter(uint16(Opcode.SET_MAX_BOLUS_AMOUNT.key), sfloate(4.1f, -1))
+        val command = SetMaxBolusAmount(MaxBolusAmount(4.1f))
+        IddCommandControlPointComposer().compose(command, testWriter)
+        testWriter.checkWriteComplete()
+    }
 }

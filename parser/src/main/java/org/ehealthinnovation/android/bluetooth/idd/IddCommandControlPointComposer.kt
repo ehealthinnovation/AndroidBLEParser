@@ -42,6 +42,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is WriteTargetGlucoseRangeProfileTemplate -> composeWriteRangeProfileTemplate(request, dataWriter)
             is SetInitialReservoirFillLevel ->composeSetInitialReservoirFillLevel(request, dataWriter)
             is StartPriming -> composeStartPriming(request, dataWriter)
+            is SetMaxBolusAmount -> composeMaxBolusAmount(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -114,5 +115,10 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeStartPriming(request: StartPriming, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         operandComposer.composePrimeAmountOperand(request.operand, dataWriter)
+    }
+
+    internal fun composeMaxBolusAmount(request: SetMaxBolusAmount, dataWriter: DataWriter) {
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        operandComposer.composeMaxBolusAmountOperand(request.operand, dataWriter)
     }
 }

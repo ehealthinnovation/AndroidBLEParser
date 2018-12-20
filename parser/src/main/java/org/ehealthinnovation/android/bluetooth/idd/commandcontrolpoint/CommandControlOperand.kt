@@ -65,3 +65,10 @@ class ReservoirFillLevel(val level: Float): CommandControlOperand()
  * @property amount the amount to prime
  */
 class PrimingAmount(val amount: Float): CommandControlOperand()
+
+
+/**
+ * The operand containing the amount of maximum bolus a remote insulin device can deliver
+ * @property amount the amount of the maximum bolus
+ */
+class MaxBolusAmount(val amount: Float): CommandControlOperand()

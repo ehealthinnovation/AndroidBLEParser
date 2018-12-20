@@ -42,4 +42,8 @@ class CommandControlOperandComposer {
         dataWriter.putFloat(operand.amount,-1, FloatFormat.FORMAT_SFLOAT)
     }
 
+    internal fun composeMaxBolusAmountOperand(operand: MaxBolusAmount, dataWriter: DataWriter){
+        dataWriter.putFloat(operand.amount, -1, FloatFormat.FORMAT_SFLOAT)
+    }
+
 }
