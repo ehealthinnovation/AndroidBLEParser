@@ -1,5 +1,6 @@
 package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 
+import org.ehealthinnovation.android.bluetooth.idd.SetInitialReservoirFillLevel
 import org.ehealthinnovation.android.bluetooth.parser.DataWriter
 import org.ehealthinnovation.android.bluetooth.parser.FloatFormat
 import org.ehealthinnovation.android.bluetooth.parser.IntFormat
@@ -30,6 +31,11 @@ class CommandControlOperandComposer {
         for (templateNumber in operand.templateNumbers){
             dataWriter.putInt(templateNumber.number, IntFormat.FORMAT_UINT8)
         }
+    }
+
+
+    internal fun composeSetInitialReservoirFillLevel(operand: ReservoirFillLevel, dataWriter: DataWriter) {
+        dataWriter.putFloat(operand.level, -1, FloatFormat.FORMAT_SFLOAT)
     }
 
     internal fun composePrimeAmountOperand(operand: PrimingAmount, dataWriter: DataWriter){

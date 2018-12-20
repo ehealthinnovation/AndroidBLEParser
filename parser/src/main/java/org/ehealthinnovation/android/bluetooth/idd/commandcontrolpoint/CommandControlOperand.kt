@@ -55,6 +55,12 @@ class TemplatesOperand(val templateNumbers: List<TemplateNumber>): CommandContro
 }
 
 /**
+ * The operand containing an insulin reservoir
+ * @property level the reservoir level
+ */
+class ReservoirFillLevel(val level: Float): CommandControlOperand()
+
+/**
  * The operand containing the amount to prime
  * @property amount the amount to prime
  */

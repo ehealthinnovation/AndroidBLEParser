@@ -138,6 +138,12 @@ class ResetTemplatesStatus(operand: TemplatesOperand) : TemplatesOperation(Opcod
 class ActivateProfileTemplates(operand: TemplatesOperand) : TemplatesOperation(Opcode.ACTIVATE_PROFILE_TEMPLATES, operand)
 
 /**
+ * A command to initial reservoir filled level [SetInitialReservoirFillLevel]
+ * @property operand the fill level it set to
+ */
+class SetInitialReservoirFillLevel(val operand: ReservoirFillLevel) : CommandControlCommand(Opcode.SET_INITIAL_RESERVOIR_FILL_LEVEL)
+
+/**
  * A Command to start priming the insulin infusion set
  * @property operand the amount to prime
  */
@@ -152,4 +158,5 @@ class StopPriming : SimpleControlCommand(Opcode.STOP_PRIMING)
  * A command to get the activated profile templates
  */
 class GetActivatedProfileTemplates: SimpleControlCommand(Opcode.GET_ACTIVATED_PROFILE_TEMPLATES)
+
 

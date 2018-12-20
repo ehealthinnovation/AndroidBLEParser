@@ -175,6 +175,11 @@ class IddCommandControlPointComposerTest {
     }
 
     @Test
+    fun composeSetInitialReservoirFillLevel(){
+        val testWriter = StubDataWriter(uint16(Opcode.SET_INITIAL_RESERVOIR_FILL_LEVEL.key), sfloate(1f,-1))
+        val command = SetInitialReservoirFillLevel(ReservoirFillLevel(1f))
+    }
+    
     fun composeStartPriming(){
         val testWriter = StubDataWriter(uint16(Opcode.START_PRIMING.key), sfloate(3f, -1))
         val command = StartPriming(PrimingAmount(3f))
