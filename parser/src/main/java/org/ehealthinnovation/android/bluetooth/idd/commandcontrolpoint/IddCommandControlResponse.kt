@@ -18,6 +18,12 @@ data class WriteBasalRateProfileTemplateResponse(
         val firstTimeBlockNumber: Int
 ): IddCommandControlResponse()
 
+data class WriteTargetGlucoseRangeProfileTemplateResponse(
+        val isTransactionCompleted: Boolean,
+        val targetGlucoseRangeProfileTemplateNumber: Int,
+        val firstTimeBlockNumber: Int
+): IddCommandControlResponse()
+
 /** Response to the [ConfirmAnnunciation] command, if it was executed successfully.
  * @param id the annunciation id that was confirmed.
  */
