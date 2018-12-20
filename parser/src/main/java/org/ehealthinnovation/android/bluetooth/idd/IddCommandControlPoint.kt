@@ -187,4 +187,9 @@ class StopPriming : SimpleControlCommand(Opcode.STOP_PRIMING)
  */
 class GetActivatedProfileTemplates: SimpleControlCommand(Opcode.GET_ACTIVATED_PROFILE_TEMPLATES)
 
+/**
+ * A command to get the maximum bolus amount that can be delivered by the insulin device
+ */
+class GetMaxBolusAmount: SimpleControlCommand(Opcode.GET_MAX_BOLUS_AMOUNT)
+
 

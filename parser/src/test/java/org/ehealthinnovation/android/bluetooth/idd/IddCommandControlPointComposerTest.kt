@@ -217,10 +217,19 @@ class IddCommandControlPointComposerTest {
         val testWriter = StubDataWriter(uint16(Opcode.SET_INITIAL_RESERVOIR_FILL_LEVEL.key), sfloate(1f,-1))
         val command = SetInitialReservoirFillLevel(ReservoirFillLevel(1f))
     }
-    
+
+    @Test
     fun composeStartPriming(){
         val testWriter = StubDataWriter(uint16(Opcode.START_PRIMING.key), sfloate(3f, -1))
         val command = StartPriming(PrimingAmount(3f))
+        IddCommandControlPointComposer().compose(command, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeGetMaxBolusCommand(){
+        val testWriter = StubDataWriter(uint16(Opcode.GET_MAX_BOLUS_AMOUNT.key))
+        val command = GetMaxBolusAmount()
         IddCommandControlPointComposer().compose(command, testWriter)
         testWriter.checkWriteComplete()
     }
