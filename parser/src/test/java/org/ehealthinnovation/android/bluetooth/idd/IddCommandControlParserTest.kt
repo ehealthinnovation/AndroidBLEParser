@@ -1,10 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd
 
 import com.nhaarman.mockito_kotlin.*
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.ConfirmAnnunciationResponse
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.Opcode
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.SnoozeAnnunciationResponse
-import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.WriteTargetGlucoseRangeProfileTemplateResponse
+import org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint.*
 import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Assert
 import org.junit.Test
@@ -111,6 +108,13 @@ class IddCommandControlParserTest {
     fun readWriteTargetGlucoseRangeProfileTemplateResponse(){
         val testData = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.WRITE_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE_RESPONSE.key), uint8(0b01), uint8(2), uint8(3))
         val expected = WriteTargetGlucoseRangeProfileTemplateResponse(true, 2, 3)
+        Assert.assertEquals(expected, IddCommandControlParser().parse(testData))
+    }
+
+    @Test
+    fun readMaxBolusAmountResponse(){
+        val testData = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.GET_MAX_BOLUS_AMOUNT_RESPONSE.key), sfloat(1.2f))
+        val expected = MaxBolusAmountResponse(1.2f)
         Assert.assertEquals(expected, IddCommandControlParser().parse(testData))
     }
 }

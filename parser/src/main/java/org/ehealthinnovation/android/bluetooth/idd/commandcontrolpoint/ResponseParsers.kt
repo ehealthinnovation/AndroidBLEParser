@@ -111,4 +111,9 @@ class SimpleResponseParser {
         return ActivateTemplatesResponse(readTemplatesOperationResult(data))
     }
 
+    /** Parse response from [GetMaxBolusAmount] command*/
+    internal fun readMaxBolusAmountResponse(data: DataReader): MaxBolusAmountResponse {
+        return MaxBolusAmountResponse(data.getNextFloat(FloatFormat.FORMAT_SFLOAT))
+    }
+
 }
