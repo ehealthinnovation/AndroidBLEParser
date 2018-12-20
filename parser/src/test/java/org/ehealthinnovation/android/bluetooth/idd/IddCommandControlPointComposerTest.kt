@@ -49,7 +49,7 @@ class IddCommandControlPointComposerTest {
 
         val mockSetBolusTemplate = mock<SetBolusTemplate>()
         mockComposer.compose(mockSetBolusTemplate, mockDataWriter)
- 
+
         val mockGetBolusTemplate = mock<GetBolusTemplate>()
         mockComposer.compose(mockGetBolusTemplate, mockDataWriter)
 
@@ -86,6 +86,32 @@ class IddCommandControlPointComposerTest {
             verify(mockComposer, times(1)).composeSimpleCommand(mocketGetActivatedProfileTemplates, mockDataWriter)
         }
     }
+
+    @Test
+    fun composeReadI2CHOProfileTemplateIntegrationTest() {
+        val testWriter = StubDataWriter(uint16(Opcode.READ_I2CHO_RATIO_PROFILE_TEMPLATE.key), uint8(1))
+        val commandToTest = ReadI2CHOProfileTemplate(ProfileTemplateNumber(1))
+        IddCommandControlPointComposer().compose(commandToTest, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeReadTargetRangeProfileTemplateIntegrationTest() {
+        val testWriter = StubDataWriter(uint16(Opcode.READ_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE.key), uint8(1))
+        val commandToTest = ReadTargetGlucoseRangeProfileTemplate(ProfileTemplateNumber(1))
+        IddCommandControlPointComposer().compose(commandToTest, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeReadISFProfileTemplateIntegrationTest() {
+        val testWriter = StubDataWriter(uint16(Opcode.READ_ISF_PROFILE_TEMPLATE.key), uint8(1))
+        val commandToTest = ReadIsfProfileTemplate(ProfileTemplateNumber(1))
+        IddCommandControlPointComposer().compose(commandToTest, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+
 
     @Test
     fun composeSnoozeAnnunciation() {
@@ -152,12 +178,13 @@ class IddCommandControlPointComposerTest {
         testWriter.checkWriteComplete()
     }
 
-    @Test fun composeGetTbrTemplateIntegrationTest(){
+    @Test
+    fun composeGetTbrTemplateIntegrationTest() {
         val testWriter = StubDataWriter(uint16(Opcode.GET_TBR_TEMPLATE.key), uint8(2))
         val command = GetTbrTemplate(TemplateNumber(2))
         IddCommandControlPointComposer().compose(command, testWriter)
     }
-    
+
     @Test
     fun composeCancelBolusTest() {
         val testWriter = StubDataWriter(uint16(Opcode.CANCEL_BOLUS.key), uint16(2))

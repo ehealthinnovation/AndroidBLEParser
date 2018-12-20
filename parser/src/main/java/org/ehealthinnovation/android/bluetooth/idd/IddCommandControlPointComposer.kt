@@ -21,7 +21,10 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is SnoozeAnnunciation -> composeSnoozeAnnunciation(request.operand, dataWriter)
             is WriteProfileTemplate -> composeWriteProfileTemplate(request, dataWriter)
             is ConfirmAnnunciation -> composeConfirmAnnunciation(request.operand, dataWriter)
-            is ReadBasalRateProfileTemplate -> composeReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, request.operand, dataWriter)
+            is ReadBasalRateProfileTemplate,
+            is ReadI2CHOProfileTemplate,
+            is ReadIsfProfileTemplate,
+            is ReadTargetGlucoseRangeProfileTemplate -> composeReadProfileTemplate(request.opcode, (request as ReadProfileTemplate).operand, dataWriter)
             is GetAvailableBolus,
             is GetTemplatesStatusAndDetails,
             is StopPriming,

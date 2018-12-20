@@ -56,6 +56,21 @@ abstract class ReadProfileTemplate(opcode: Opcode, val operand: ProfileTemplateN
 class ReadBasalRateProfileTemplate(operand: ProfileTemplateNumber) : ReadProfileTemplate(Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE, operand)
 
 /**
+ * Read the target Glucose range profile template of number specified in [operand]
+ */
+class ReadTargetGlucoseRangeProfileTemplate(operand: ProfileTemplateNumber) : ReadProfileTemplate(Opcode.READ_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE, operand)
+
+/**
+ * Read the I2CHO profile template of number specified in [operand]
+ */
+class ReadI2CHOProfileTemplate(operand: ProfileTemplateNumber) : ReadProfileTemplate(Opcode.READ_I2CHO_RATIO_PROFILE_TEMPLATE, operand)
+
+/**
+ * Read the ISF profile template of number specified in [operand]
+ */
+class ReadIsfProfileTemplate(operand: ProfileTemplateNumber) : ReadProfileTemplate(Opcode.READ_ISF_PROFILE_TEMPLATE, operand)
+
+/**
  * Base class for commands that don't need an operand
  * @param opcode the opcode of the command
  */
