@@ -84,8 +84,19 @@ data class GetAvailableBolusesResponse(
 data class SetBolusTemplateResponse(val id: Int): IddCommandControlResponse()
 
 /**
+* @property number the number of template get reset
+* @property templateNumbers the template numbers of the reset templates
+*/
+data class TemplatesOperationResults(val number: Int, val templateNumbers: List<Int>)
+
+/**
  * The response to [ResetTemplateStatus] command
- * @property number the number of template get reset
- * @property templateNumbers the template numbers of the reset templates
+ * @property results an object containing the result of resetting template status
  */
-data class ResetTemplateStatusResponse(val number: Int, val templateNumbers: List<Int>): IddCommandControlResponse()
+data class ResetTemplateStatusResponse(val results: TemplatesOperationResults): IddCommandControlResponse()
+
+/**
+ * The response to [ActivateProfileTemplates] command
+ * @property result an object containing the result of activating templates
+ */
+data class ActivateTemplatesResponse(val results: TemplatesOperationResults): IddCommandControlResponse()

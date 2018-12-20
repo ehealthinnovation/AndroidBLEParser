@@ -65,6 +65,9 @@ class IddCommandControlParserTest {
         val mockPacketResetTemplateStatusResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.RESET_TEMPLATE_STATUS_RESPONSE.key))
         mockParser.parse(mockPacketResetTemplateStatusResponse)
 
+        val mockPacketActivateTemplatesResponse = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.ACTIVATE_PROFILE_TEMPLATES_RESPONSE.key))
+        mockParser.parse(mockPacketActivateTemplatesResponse)
+
         inOrder(mockParser){
             verify(mockParser,times(1)).readSnoozeAnnunciationResponse(mockPacketSnoozeResponse.readData())
             verify(mockParser, times(1)).readWriteBasalProfileTemplateResponse(mockPacketWriteBasalRateProfileTemplateResponse.readData())
@@ -78,7 +81,7 @@ class IddCommandControlParserTest {
             verify(mockParser, times(1)).readGetBolusTemplateResponse(mockPacketGetBolusTemplateResponse.readData())
             verify(mockParser, times(1)).readSetBolusTemplateResponse(mockPacketSetBolusTemplateResponse.readData())
             verify(mockParser, times(1)).readResetTemplateStatusResponse(mockPacketResetTemplateStatusResponse.readData())
-
+            verify(mockParser, times(1)).readActivateTemplatesResponse(mockPacketActivateTemplatesResponse.readData())
         }
     }
 

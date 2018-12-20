@@ -75,7 +75,7 @@ class SimpleResponseParserTest {
     @Test
     fun readResetTemplateStatusResponseTest() {
         val testData = StubDataReader(uint8(3), uint8(1), uint8(2), uint8(4))
-        val expected = ResetTemplateStatusResponse(3, listOf(1,2,4))
+        val expected = ResetTemplateStatusResponse(TemplatesOperationResults(3, listOf(1,2,4)))
         Assert.assertEquals(expected, SimpleResponseParser().readResetTemplateStatusResponse(testData))
     }
 
