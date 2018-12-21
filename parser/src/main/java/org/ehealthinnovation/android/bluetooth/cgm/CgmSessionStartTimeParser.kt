@@ -25,12 +25,6 @@ class CgmSessionStartTimeParser : CharacteristicParser<CgmSessionStartTime> {
         )
     }
 
-    internal fun readTimeZone(data: DataReader):BluetoothTimeZone =
-            BluetoothTimeZoneUtility.createTimeZone(data.getNextInt(IntFormat.FORMAT_SINT8))
-
-    internal fun readDst(data: DataReader): DstOffset = readEnumeration(
-            rawValue = data.getNextInt(IntFormat.FORMAT_UINT8),
-            enumType = DstOffset::class.java,
-            defaultValue = DstOffset.RESERVE_FOR_FUTURE_USE)
 
 }
+

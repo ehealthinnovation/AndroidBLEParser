@@ -14,3 +14,6 @@ package org.ehealthinnovation.android.bluetooth.parser
 data class BluetoothTimeZone internal constructor(
     val timeZoneValue: Int
 )
+
+internal fun readTimeZone(data: DataReader): BluetoothTimeZone =
+        BluetoothTimeZoneUtility.createTimeZone(data.getNextInt(IntFormat.FORMAT_SINT8))

@@ -1,10 +1,8 @@
 package org.ehealthinnovation.android.bluetooth.cgm
 
 import org.ehealthinnovation.android.bluetooth.parser.*
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.util.*
 
 class CgmSessionStartTimeParserTest {
 
@@ -53,24 +51,24 @@ class CgmSessionStartTimeParserTest {
         val dataReader = StubDataReader(sint8(-40), sint8(32))
         val expectValue1 = BluetoothTimeZone(-40)
         val expectValue2 = BluetoothTimeZone(32)
-        assertEquals(expectValue1, CgmSessionStartTimeParser().readTimeZone(dataReader))
-        assertEquals(expectValue2, CgmSessionStartTimeParser().readTimeZone(dataReader))
+        assertEquals(expectValue1, readTimeZone(dataReader))
+        assertEquals(expectValue2, readTimeZone(dataReader))
     }
 
     @Test(expected = Exception::class)
     fun readTimeZoneInvalidValid() {
         val dataReader = StubDataReader(sint8(-242))
-        CgmSessionStartTimeParser().readTimeZone(dataReader)
+        readTimeZone(dataReader)
     }
 
 
     @Test
     fun readDst() {
         val dataReader = StubDataReader(uint8(0), uint8(2), uint8(8), uint8(255), uint8(10))
-        assertEquals(DstOffset.STANDARD_TIME, CgmSessionStartTimeParser().readDst(dataReader))
-        assertEquals(DstOffset.HALF_AN_HOUR_DAYLIGHT_TIME, CgmSessionStartTimeParser().readDst(dataReader))
-        assertEquals(DstOffset.DOUBLE_DAYLIGHT_TIME, CgmSessionStartTimeParser().readDst(dataReader))
-        assertEquals(DstOffset.DST_IS_NOT_KNOWN, CgmSessionStartTimeParser().readDst(dataReader))
-        assertEquals(DstOffset.RESERVE_FOR_FUTURE_USE, CgmSessionStartTimeParser().readDst(dataReader))
+        assertEquals(DstOffset.STANDARD_TIME, readDst(dataReader))
+        assertEquals(DstOffset.HALF_AN_HOUR_DAYLIGHT_TIME, readDst(dataReader))
+        assertEquals(DstOffset.DOUBLE_DAYLIGHT_TIME, readDst(dataReader))
+        assertEquals(DstOffset.DST_IS_NOT_KNOWN, readDst(dataReader))
+        assertEquals(DstOffset.RESERVE_FOR_FUTURE_USE, readDst(dataReader))
     }
 }

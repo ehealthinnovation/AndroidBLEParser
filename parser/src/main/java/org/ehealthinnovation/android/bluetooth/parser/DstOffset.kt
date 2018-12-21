@@ -13,3 +13,8 @@ enum class DstOffset(override val key: Int):EnumerationValue {
     DST_IS_NOT_KNOWN(255),
     RESERVE_FOR_FUTURE_USE(-1);
 }
+
+internal fun readDst(data: DataReader): DstOffset = readEnumeration(
+        rawValue = data.getNextInt(IntFormat.FORMAT_UINT8),
+        enumType = DstOffset::class.java,
+        defaultValue = DstOffset.RESERVE_FOR_FUTURE_USE)
