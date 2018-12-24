@@ -15,7 +15,7 @@ class ReferenceTimeBaseOffsetEventParserTest {
                 uint16(2018), uint8(1), uint8(2), uint8(3), uint8(4), uint8(5),
                 sint16(3)
         )
-        val expected = ReferenceTimeBaseOffsetEvent(eventInfo, ReferenceTimeBaseOffsetData(
+        val expected = HistoryEvent(eventInfo, ReferenceTimeBaseOffsetData(
                 RecordingReason.PERIODIC_RECORDING, BluetoothDateTime(2018, 1, 2, 3, 4, 5),
                 3))
 

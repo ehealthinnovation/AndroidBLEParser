@@ -18,7 +18,7 @@ data class ReferenceTimeBaseOffsetData(
  * @property eventInfo the info header of the event
  * @property eventData the data that stores the reference time event
  */
-data class ReferenceTimeBaseOffsetEvent(override val eventInfo: EventInfo, val eventData: ReferenceTimeBaseOffsetData) : HistoryEvent(eventInfo)
+data class ReferenceTimeBaseOffsetEvent(val eventInfo: EventInfo, val eventData: ReferenceTimeBaseOffsetData)
 
 internal class ReferenceTimeBaseOffsetEventParser {
 
@@ -26,9 +26,9 @@ internal class ReferenceTimeBaseOffsetEventParser {
      * Use this method to parse a [ReferenceTimeBaseOffsetEvent] from [DataReader]
      * @param eventInfo the event information
      */
-    internal fun parseEvent(eventInfo: EventInfo, data: DataReader): ReferenceTimeBaseOffsetEvent {
+    internal fun parseEvent(eventInfo: EventInfo, data: DataReader): HistoryEvent<ReferenceTimeBaseOffsetData>{
         val eventData = readEventData(data)
-        return ReferenceTimeBaseOffsetEvent(eventInfo, eventData)
+        return HistoryEvent(eventInfo, eventData)
     }
 
     internal fun readEventData(data: DataReader): ReferenceTimeBaseOffsetData {
