@@ -16,7 +16,8 @@ import org.ehealthinnovation.android.bluetooth.parser.readEnumeration
  * @property templateNumber the number of the TBR template
  * @property type the TBR value type
  * @property value the TBR value. It has unit IU/h if [type] is [TbrType.ABSOLUTE]. It has no unit
- * but should be expressed as a percentage if [type] is [TbrType.RELATIVE]
+ * but should be expressed as a scaling factor if [type] is [TbrType.RELATIVE]; for example, 1.5 means
+ * 1.5 times the current basal rate.
  * @property duration The duration of TBR in effect in minutes
  */
 data class TbrTemplateChanged(
