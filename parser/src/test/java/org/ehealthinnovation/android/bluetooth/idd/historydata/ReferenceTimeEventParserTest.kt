@@ -33,6 +33,6 @@ class ReferenceTimeEventParserTest {
         )
         val expected = ReferenceTimeData(RecordingReason.DATE_TIME_LOSS, BluetoothDateTime(2018, 1, 2, 3, 4, 5),
                 BluetoothTimeZone(-1), DstOffset.HALF_AN_HOUR_DAYLIGHT_TIME)
-        Assert.assertEquals(expected, ReferenceTimeEventParser().readEventData(testData))
+        Assert.assertEquals(expected, ReferenceTimeEventParser().readData(testData))
     }
 }

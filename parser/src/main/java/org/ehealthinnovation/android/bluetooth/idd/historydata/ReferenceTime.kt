@@ -5,7 +5,7 @@ import org.ehealthinnovation.android.bluetooth.parser.readTimeZone
 import org.ehealthinnovation.android.bluetooth.parser.*
 
 
-//todo  docs
+//todo
 data class ReferenceTimeData(
         val recordReason: RecordingReason,
         val timeStamp: BluetoothDateTime,
@@ -14,19 +14,10 @@ data class ReferenceTimeData(
 )
 
 
-//todo  doc
-internal class ReferenceTimeEventParser {
+//todo
+internal class ReferenceTimeEventParser: HistoryEventDataParser<ReferenceTimeData>() {
 
-    /**
-     * Use this method to parse a [ReferenceTimeEvent] from [DataReader]
-     * @param eventInfo the event information
-     */
-    internal fun parseEvent(eventInfo: EventInfo, data: DataReader): HistoryEvent<ReferenceTimeData> {
-        val eventData = readEventData(data)
-        return HistoryEvent(eventInfo, eventData)
-    }
-
-    internal fun readEventData(data: DataReader): ReferenceTimeData {
+    override fun readData(data: DataReader): ReferenceTimeData {
         val recordingReason = readEnumeration(data.getNextInt(IntFormat.FORMAT_UINT8), RecordingReason::class.java, RecordingReason.RESERVED_FOR_FUTURE_USE)
         val dateTime = readDateTime(data)
         val timezone = readTimeZone(data)
@@ -45,6 +36,7 @@ internal fun readEventInfo(data: DataReader): EventInfo {
     return EventInfo(eventType, sequenceNumber, relativeOffset)
 }
 
+//todo
 enum class RecordingReason(override val key: Int) : EnumerationValue {
     RESERVED_FOR_FUTURE_USE(-1),
     /**The reason is undetermined. */
