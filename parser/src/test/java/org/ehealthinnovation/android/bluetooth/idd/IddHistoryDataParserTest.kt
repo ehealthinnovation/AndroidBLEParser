@@ -31,7 +31,7 @@ class IddHistoryDataParserTest {
                 sint8(-1), uint8(2)
         )
         val expected = HistoryEvent(EventInfo(EventType.REFERENCE_TIME, 10, 11),
-                ReferenceTimeData(
+                ReferenceTime(
                         RecordingReason.DATE_TIME_LOSS, BluetoothDateTime(2018, 1, 2, 3, 4, 5),
                         BluetoothTimeZone(-1), DstOffset.HALF_AN_HOUR_DAYLIGHT_TIME)
         )
@@ -47,7 +47,7 @@ class IddHistoryDataParserTest {
                 uint16(2018), uint8(1), uint8(2), uint8(3), uint8(4), uint8(5),
                 sint8(-1), uint8(2)
         )
-        val mockHistoryEventParser = mock<HistoryEventDataParser<ReferenceTimeData>>()
+        val mockHistoryEventParser = mock<HistoryEventDataParser<ReferenceTime>>()
         whenever(mockParser.getEventDataParser(any())).thenReturn(mockHistoryEventParser)
         mockParser.parse(mockReferenceTimeEvent)
         inOrder(mockParser, mockHistoryEventParser) {
