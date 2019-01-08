@@ -10,7 +10,7 @@ import java.util.*
  * @property value the value at this time block. It is a general floating point value, each type of profile template has its
  * unit and range definition for value.
  */
-open class SingleValueTimeBlock(val duration: Int, val value: Float)
+data class SingleValueTimeBlock(val duration: Int, val value: Float)
 
 /**
  * Operand in a write profile template command. Each issue of the command contains less than or equal to three
@@ -105,5 +105,11 @@ class WriteProfileTemplateOperandComposer{
     }
 }
 
-
+internal class SingleValueProfileTemplateTimeBlockParser{
+    fun readData(dataReader: DataReader): SingleValueTimeBlock =
+            SingleValueTimeBlock(
+                    dataReader.getNextInt(IntFormat.FORMAT_UINT16),
+                    dataReader.getNextFloat(FloatFormat.FORMAT_SFLOAT)
+            )
+}
 
