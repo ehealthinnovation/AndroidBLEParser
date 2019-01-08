@@ -18,7 +18,7 @@ class ParsingToolsRangCheckTest {
     @Test
     fun intRangeValidityTest(){
         Assert.assertEquals(true, isIntRangeValid(1,2))
-        Assert.assertEquals(false, isIntRangeValid(1,1))
+        Assert.assertEquals(true, isIntRangeValid(1,1))
         Assert.assertEquals(false, isIntRangeValid(2,1))
     }
 

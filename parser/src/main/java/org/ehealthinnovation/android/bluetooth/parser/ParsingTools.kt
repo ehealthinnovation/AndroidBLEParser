@@ -110,7 +110,7 @@ fun readDateTime(data: DataReader): BluetoothDateTime {
 
 fun isIntWithinRange(input: Long, format: IntFormat): Boolean = ((input >= format.minValue) and (input <= format.maxValue))
 
-fun isIntRangeValid(lower: Int, upper: Int): Boolean = (lower < upper)
+fun isIntRangeValid(lower: Int, upper: Int): Boolean = (lower <= upper)
 
 /**
  * Combine enumsets [setA] and [setB] into one as output

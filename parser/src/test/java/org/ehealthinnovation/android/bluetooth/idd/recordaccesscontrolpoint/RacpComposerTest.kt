@@ -1,45 +1,44 @@
-package org.ehealthinnovation.android.bluetooth.glucose
+package org.ehealthinnovation.android.bluetooth.idd.recordaccesscontrolpoint
 
 import com.nhaarman.mockito_kotlin.*
-import org.ehealthinnovation.android.bluetooth.cgm.CgmRacpOperandComposer
-import org.ehealthinnovation.android.bluetooth.cgm.FilteredByTimeOffset
-import org.ehealthinnovation.android.bluetooth.cgm.FilteredByTimeOffsetRange
-import org.ehealthinnovation.android.bluetooth.common.racp.*
-import org.ehealthinnovation.android.bluetooth.parser.*
+import org.ehealthinnovation.android.bluetooth.common.racp.CommandOperand
+import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
+import org.ehealthinnovation.android.bluetooth.parser.uint32
+import org.ehealthinnovation.android.bluetooth.parser.uint8
 import org.junit.Test
 
 class RacpComposerTest {
 
-
     @Test
     fun composeFunctionTest() {
 
-        val reportNumberOfRecords = ReportNumberOfRecords(FilteredBySequenceNumberRange(12, 34))
+        val reportNumberOfRecords = ReportNumberOfRecords(FilteredBySequenceNumberRange(12, 34, Filter.SEQUENCE_NUMBER_FILTERED_BY_NON_REFERENCE_TIME_EVENT))
         val dataWriter = StubDataWriter(
                 uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
-                uint8(Filter.SEQUENCE_NUMBER.key),
-                uint16(12),
-                uint16(34)
+                uint8(Filter.SEQUENCE_NUMBER_FILTERED_BY_NON_REFERENCE_TIME_EVENT.key),
+                uint32(12),
+                uint32(34)
         )
 
-        GlucoseRacpComposer().compose(reportNumberOfRecords, dataWriter)
+        RacpComposer().compose(reportNumberOfRecords, dataWriter)
         dataWriter.checkWriteComplete()
     }
+
 
     @Test
     fun composeFunctionTestDeleteRecords() {
 
-        val deleteRecordsCommand = DeleteRecords(FilteredBySequenceNumberRange(12, 34))
+        val deleteRecordsCommand = DeleteRecords(FilteredBySequenceNumberRange(12, 34, Filter.SEQUENCE_NUMBER))
         val dataWriter = StubDataWriter(
                 uint8(Opcode.DELETE_STORED_RECORDS.key),
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
                 uint8(Filter.SEQUENCE_NUMBER.key),
-                uint16(12),
-                uint16(34)
+                uint32(12),
+                uint32(34)
         )
 
-        GlucoseRacpComposer().compose(deleteRecordsCommand, dataWriter)
+        RacpComposer().compose(deleteRecordsCommand, dataWriter)
         dataWriter.checkWriteComplete()
     }
 
@@ -48,25 +47,21 @@ class RacpComposerTest {
     fun composeFunctionTestReportRecords() {
 
         val reportRecords = ReportRecords(
-                FilteredByBluetoothDateTime(
-                        BluetoothDateTimeUtility.createBluetoothDateTime(2018, 11, 12, 1, 2, 3),
-                        SingleBoundOperation.GREATER_THAN_OR_EQUAL_TO)
+                FilteredBySequenceNumber(
+                        5,
+                        Filter.SEQUENCE_NUMBER_FILTERED_BY_REFERENCE_TIME_EVENT,
+                        org.ehealthinnovation.android.bluetooth.idd.recordaccesscontrolpoint.SingleBoundOperation.GREATER_THAN_OR_EQUAL_TO)
         )
 
 
         val dataWriter = StubDataWriter(
                 uint8(Opcode.REPORT_STORED_RECORDS.key),
                 uint8(Operator.GREATER_THAN_OR_EQUAL_TO.key),
-                uint8(Filter.USER_FACING_TIME.key),
-                uint16(2018),
-                uint8(11),
-                uint8(12),
-                uint8(1),
-                uint8(2),
-                uint8(3)
+                uint8(Filter.SEQUENCE_NUMBER_FILTERED_BY_REFERENCE_TIME_EVENT.key),
+                uint32(5)
         )
 
-        GlucoseRacpComposer().compose(reportRecords, dataWriter)
+        RacpComposer().compose(reportRecords, dataWriter)
         dataWriter.checkWriteComplete()
     }
 
@@ -80,7 +75,7 @@ class RacpComposerTest {
                 uint8(Operator.NULL.key)
         )
 
-        GlucoseRacpComposer().composeAbortOperation(testWriter)
+        RacpComposer().composeAbortOperation(testWriter)
         testWriter.checkWriteComplete()
     }
 
@@ -108,9 +103,9 @@ class RacpComposerTest {
         mockRacpComposer.compose(mockReportRecords, mock())
 
 
-        inOrder(mockRacpComposer){
+        inOrder(mockRacpComposer) {
             verify(mockRacpComposer, times(1)).composeAbortOperation(any())
-            verify(mockRacpComposer, times(1)).composeReportNumberOfRecords(any(),any())
+            verify(mockRacpComposer, times(1)).composeReportNumberOfRecords(any(), any())
             verify(mockRacpComposer, times(1)).composeDeleteRecords(any(), any())
             verify(mockRacpComposer, times(1)).composeReportRecords(any(), any())
             verifyNoMoreInteractions()
@@ -120,7 +115,7 @@ class RacpComposerTest {
 
     @Test(expected = Exception::class)
     fun unsupportedCommandThrowsException() {
-        val testRacpComposer = GlucoseRacpComposer()
+        val testRacpComposer = RacpComposer()
         testRacpComposer.compose(mock(), mock())
     }
 
@@ -131,11 +126,11 @@ class RacpComposerTest {
                     uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                     uint8(operation.key),
                     uint8(Filter.SEQUENCE_NUMBER.key),
-                    uint16(12)
+                    uint32(12)
             )
 
-            val testRacpComposer = GlucoseRacpComposer()
-            val sequenceCommandOperand = FilteredBySequenceNumber(12, operation)
+            val testRacpComposer = RacpComposer()
+            val sequenceCommandOperand = FilteredBySequenceNumber(12, Filter.SEQUENCE_NUMBER, operation)
 
             testRacpComposer.composeReportNumberOfRecords(sequenceCommandOperand, testWriter)
             testWriter.checkWriteComplete()
@@ -149,50 +144,52 @@ class RacpComposerTest {
                 uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
                 uint8(Filter.SEQUENCE_NUMBER.key),
-                uint16(12),
-                uint16(34)
+                uint32(12),
+                uint32(34)
         )
 
-        val testRacpComposer = GlucoseRacpComposer()
-        val sequenceCommandRange = FilteredBySequenceNumberRange(12, 34)
+        val testRacpComposer = RacpComposer()
+        val sequenceCommandRange = FilteredBySequenceNumberRange(12, 34, Filter.SEQUENCE_NUMBER)
         testRacpComposer.composeReportNumberOfRecords(sequenceCommandRange, testWriter)
         testWriter.checkWriteComplete()
     }
 
 
     @Test
-    fun composeReportNumberOfRecordsUnitSingleBoundFilteringOnBluetoothDateTime() {
+    fun composeReportNumberOfRecordsUnitSingleBoundFilteringOnSequenceNumberReferenceTimeEvent() {
         for (operation in SingleBoundOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                     uint8(operation.key),
-                    uint8(Filter.USER_FACING_TIME.key),
-                    uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(3)
+                    uint8(Filter.SEQUENCE_NUMBER_FILTERED_BY_REFERENCE_TIME_EVENT.key),
+                    uint32(7)
             )
 
-            val testRacpComposer = GlucoseRacpComposer()
-            val dateTimeCommandOperand = FilteredByBluetoothDateTime(BluetoothDateTime(2019, 11, 12, 1, 2, 3), operation)
+            val testRacpComposer = RacpComposer()
+            val commandOperand = FilteredBySequenceNumber(7, Filter.SEQUENCE_NUMBER_FILTERED_BY_REFERENCE_TIME_EVENT, operation)
 
-            testRacpComposer.composeReportNumberOfRecords(dateTimeCommandOperand, testWriter)
+            testRacpComposer.composeReportNumberOfRecords(commandOperand, testWriter)
             testWriter.checkWriteComplete()
         }
     }
 
     @Test
-    fun composeReportNumberOfRecordsUnitDoubleBoundFilteringOnBluetoothDateTime() {
+    fun composeReportNumberOfRecordsUnitDoubleBoundFilteringSequenceNumberReferenceTimeEvent() {
 
         val testWriter = StubDataWriter(
                 uint8(Opcode.REPORT_NUMBER_OF_STORED_RECORDS.key),
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
-                uint8(Filter.USER_FACING_TIME.key),
-                uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(3),
-                uint16(2019), uint8(11), uint8(12), uint8(1), uint8(2), uint8(4)
+                uint8(Filter.SEQUENCE_NUMBER_FILTERED_BY_REFERENCE_TIME_EVENT.key),
+                uint32(45),
+                uint32(48)
         )
 
-        val testRacpComposer = GlucoseRacpComposer()
-        val dateTimeCommandRange = FilteredByBluetoothDateTimeRange(
-                BluetoothDateTimeUtility.createBluetoothDateTime(2019, 11, 12, 1, 2, 3),
-                BluetoothDateTimeUtility.createBluetoothDateTime(2019, 11, 12, 1, 2, 4))
+        val testRacpComposer = RacpComposer()
+        val dateTimeCommandRange = FilteredBySequenceNumberRange(
+                45,
+                48,
+                Filter.SEQUENCE_NUMBER_FILTERED_BY_REFERENCE_TIME_EVENT
+        )
         testRacpComposer.composeReportNumberOfRecords(dateTimeCommandRange, testWriter)
         testWriter.checkWriteComplete()
     }
@@ -205,7 +202,7 @@ class RacpComposerTest {
 
         val dataWriter = StubDataWriter()
 
-        GlucoseRacpOperandComposer().compose(testClass(), dataWriter)
+        RacpOperandComposer().compose(testClass(), dataWriter)
     }
 
     //Sanity check of compose simple operand
@@ -214,13 +211,15 @@ class RacpComposerTest {
 
         for (operation in SimpleOperation.values()) {
             val testWriter = StubDataWriter(
-                    uint8(operation.key)
+                    uint8(operation.key),
+                    uint8(Filter.SEQUENCE_NUMBER.key)
             )
-            GlucoseRacpOperandComposer().composeSimpleOperand(SimpleOperand(operation), testWriter)
+            RacpOperandComposer().composeFilteredSimpleOperand(SimpleOperationWithFilter(operation, Filter.SEQUENCE_NUMBER), testWriter)
             testWriter.checkWriteComplete()
         }
 
     }
+
 
     //Sanity check of compose single bound sequence number filter
     @Test
@@ -230,8 +229,8 @@ class RacpComposerTest {
             val testWriter = StubDataWriter(
                     uint8(operation.key),
                     uint8(Filter.SEQUENCE_NUMBER.key),
-                    uint16(sequenceNumberBound))
-            GlucoseRacpOperandComposer().composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, operation), testWriter)
+                    uint32(sequenceNumberBound))
+            RacpOperandComposer().composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, Filter.SEQUENCE_NUMBER, operation), testWriter)
             testWriter.checkWriteComplete()
         }
     }
@@ -245,11 +244,11 @@ class RacpComposerTest {
         val testWriter = StubDataWriter(
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
                 uint8(Filter.SEQUENCE_NUMBER.key),
-                uint16(lowerSequenceNumber),
-                uint16(higherSequenceNumber)
+                uint32(lowerSequenceNumber),
+                uint32(higherSequenceNumber)
         )
 
-        GlucoseRacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        RacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber, Filter.SEQUENCE_NUMBER), testWriter)
         testWriter.checkWriteComplete()
     }
 
@@ -257,66 +256,84 @@ class RacpComposerTest {
     //Check Invalid Range is caught
     @Test(expected = Exception::class)
     fun composeSequenceNumberRangeOperandTest2() {
-        val lowerSequenceNumber = 257
-        val higherSequenceNumber = 256
+        val lowerSequenceNumber = 256
+        val higherSequenceNumber = 255
 
         val testWriter = StubDataWriter(
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
                 uint8(Filter.SEQUENCE_NUMBER.key),
-                uint16(lowerSequenceNumber),
-                uint16(higherSequenceNumber)
+                uint32(lowerSequenceNumber),
+                uint32(higherSequenceNumber)
         )
 
-        GlucoseRacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber), testWriter)
+        RacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(lowerSequenceNumber, higherSequenceNumber, Filter.SEQUENCE_NUMBER), testWriter)
         testWriter.checkWriteComplete()
     }
 
 
     //Sanity check of compose single bound time offset filter
     @Test
-    fun composeTimeOffsetOperandTest() {
-        val timeOffsetBound = 129
+    fun composeSequenceNumberOperandTest() {
+        val sequenceNumberBound = 129
         for (operation in SingleBoundOperation.values()) {
             val testWriter = StubDataWriter(
                     uint8(operation.key),
-                    uint8(org.ehealthinnovation.android.bluetooth.cgm.Filter.TIME_OFFSET.key),
-                    uint16(timeOffsetBound))
-            CgmRacpOperandComposer().composeTimeOffsetOperand(FilteredByTimeOffset(timeOffsetBound, operation), testWriter)
+                    uint8(org.ehealthinnovation.android.bluetooth.idd.recordaccesscontrolpoint.Filter.SEQUENCE_NUMBER.key),
+                    uint32(sequenceNumberBound))
+            RacpOperandComposer().composeSequenceNumberOperand(FilteredBySequenceNumber(sequenceNumberBound, Filter.SEQUENCE_NUMBER, operation), testWriter)
             testWriter.checkWriteComplete()
         }
     }
 
-    //Sanity check of compose time offset range
+    //Sanity check of compose Sequence Number range
     @Test
-    fun composeTimeOffsetRangeOperandTest() {
-        val startTimeOffset = 5
-        val endTimeOffset = 128
+    fun composeSequenceNumberRangeOperandTest() {
+        val startSequenceNumber = 5
+        val endSequenceNumber = 128
 
         val testWriter = StubDataWriter(
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
-                uint8(org.ehealthinnovation.android.bluetooth.cgm.Filter.TIME_OFFSET.key),
-                uint16(startTimeOffset),
-                uint16(endTimeOffset)
+                uint8(org.ehealthinnovation.android.bluetooth.idd.recordaccesscontrolpoint.Filter.SEQUENCE_NUMBER.key),
+                uint32(startSequenceNumber),
+                uint32(endSequenceNumber)
         )
 
-        CgmRacpOperandComposer().composeTimeOffsetRangeOperand(FilteredByTimeOffsetRange(startTimeOffset, endTimeOffset), testWriter)
+        RacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(startSequenceNumber, endSequenceNumber, Filter.SEQUENCE_NUMBER), testWriter)
         testWriter.checkWriteComplete()
     }
 
-    //Check Invalid Time offset Range is caught
-    @Test(expected = Exception::class)
-    fun composeTimeOffsetRangeOperandWithInvalidOperand() {
-        val startOffset = 257
-        val endOffset = 256
+     //Sanity check of compose Sequence Number range
+    @Test
+    fun composeSequenceNumberRangeOperandSpecifySingleValueTest() {
+        val startSequenceNumber = 128
+        val endSequenceNumber = 128
 
         val testWriter = StubDataWriter(
                 uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
-                uint8(org.ehealthinnovation.android.bluetooth.cgm.Filter.TIME_OFFSET.key),
-                uint16(startOffset),
-                uint16(endOffset)
+                uint8(org.ehealthinnovation.android.bluetooth.idd.recordaccesscontrolpoint.Filter.SEQUENCE_NUMBER.key),
+                uint32(startSequenceNumber),
+                uint32(endSequenceNumber)
         )
 
-        CgmRacpOperandComposer().composeTimeOffsetRangeOperand(FilteredByTimeOffsetRange(startOffset, endOffset), testWriter)
+        RacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(startSequenceNumber, endSequenceNumber, Filter.SEQUENCE_NUMBER), testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+
+    //Check Invalid Sequence Number Range is caught
+    @Test(expected = Exception::class)
+    fun composeSequenceNumberRangeOperandWithInvalidOperand() {
+        val startSequenceNumber = 256
+        val endSequenceNumber = 255
+
+        val testWriter = StubDataWriter(
+                uint8(Operator.WITHIN_RANGE_OF_INCLUSIVE.key),
+                uint8(org.ehealthinnovation.android.bluetooth.idd.recordaccesscontrolpoint.Filter.SEQUENCE_NUMBER.key),
+                uint32(startSequenceNumber),
+                uint32(endSequenceNumber)
+        )
+
+        RacpOperandComposer().composeSequenceNumberRangeOperand(FilteredBySequenceNumberRange(startSequenceNumber, endSequenceNumber, Filter.SEQUENCE_NUMBER), testWriter)
         testWriter.checkWriteComplete()
     }
 
