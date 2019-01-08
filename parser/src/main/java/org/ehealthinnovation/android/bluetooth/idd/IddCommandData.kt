@@ -20,6 +20,7 @@ class IddCommandDataParser : CharacteristicParser<IddCommandDataResponse> {
             Opcode.READ_BASAL_RATE_PROFILE_TEMPLATE_RESPONSE -> readBasalRateProfileTemplateResponse(data)
             Opcode.READ_ISF_PROFILE_TEMPLATE_RESPONSE -> readISFProfileTemplateResponse(data)
             Opcode.READ_I2CHO_RATIO_PROFILE_TEMPLATE_RESPONSE -> readI2CHOProfileTemplateResponse(data)
+            Opcode.READ_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE_RESPONSE -> readTargetGlucoseRangeProfileTemplateResponse(data)
             else -> throw IllegalArgumentException("Opcode not supported")
         }
     }
@@ -56,4 +57,11 @@ class IddCommandDataParser : CharacteristicParser<IddCommandDataResponse> {
     internal fun readI2CHOProfileTemplateResponse(dataReader: DataReader): ReadI2CHOProfileTemplateResponse =
             ReadI2CHOProfileTemplateResponse(ReadSingleValueTimeBlockProfileTemplateResponseParser().parseResponseOperand(dataReader))
 
+
+    /**
+     * Parse the rest data in [DataReader] into a [ReadTargetGlucoseRangeProfileTemplateResponse]. Use this method
+     * when the opcode is [Opcode.READ_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE_RESPONSE]
+     */
+    internal fun readTargetGlucoseRangeProfileTemplateResponse(dataReader: DataReader): ReadTargetGlucoseRangeProfileTemplateResponse =
+            ReadTargetGlucoseRangeProfileTemplateResponse(ReadRangedValueTimeBlockProfileTemplateResponseParser().parseResponseOperand(dataReader))
 }

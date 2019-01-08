@@ -12,7 +12,7 @@ import java.util.*
  * @property higherValue the higher bound of a range defined at this time block. It is a general floating point value, each type of profile template has its
  * unit and range definition for value.
  */
-open class RangedTimeBlock(val duration: Int, val lowerValue: Float, val higherValue: Float)
+data class RangedTimeBlock(val duration: Int, val lowerValue: Float, val higherValue: Float)
 
 /**
  * Operand in a write profile template command. Each issue of the command contains less than or equal to two
@@ -95,6 +95,18 @@ class WriteRangeProfileTemplateOperandComposer{
         /**If this bit is set, the fields Second Duration and Second Rate are present. */
         SECOND_TIME_BLOCK_PRESENT(1);
     }
+}
+
+/**
+ * Use [readData] to parse the data in [DataReader] into a [RangedTimeBlock]
+ */
+internal class RangeValueTimeBlockParser{
+    fun readData(dataReader: DataReader): RangedTimeBlock =
+            RangedTimeBlock(
+                    dataReader.getNextInt(IntFormat.FORMAT_UINT16),
+                    dataReader.getNextFloat(FloatFormat.FORMAT_SFLOAT),
+                    dataReader.getNextFloat(FloatFormat.FORMAT_SFLOAT)
+            )
 }
 
 
