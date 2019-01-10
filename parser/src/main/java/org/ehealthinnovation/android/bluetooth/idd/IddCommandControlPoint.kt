@@ -187,24 +187,28 @@ class StartPriming(val operand: PrimingAmount) : CommandControlCommand(Opcode.ST
  * A command to stop the priming process
  */
 class StopPriming : SimpleControlCommand(Opcode.STOP_PRIMING)
- 
- /**
+
+/**
  * A command to get the activated profile templates
  */
-class GetActivatedProfileTemplates: SimpleControlCommand(Opcode.GET_ACTIVATED_PROFILE_TEMPLATES)
+class GetActivatedProfileTemplates : SimpleControlCommand(Opcode.GET_ACTIVATED_PROFILE_TEMPLATES)
 
 /**
  * A command to get the maximum bolus amount that can be delivered by the insulin device
  */
-class GetMaxBolusAmount: SimpleControlCommand(Opcode.GET_MAX_BOLUS_AMOUNT)
+class GetMaxBolusAmount : SimpleControlCommand(Opcode.GET_MAX_BOLUS_AMOUNT)
 
 /**
  * A command to set the maximum bolus amount that can be delivered of the insulin device
  */
-class SetMaxBolusAmount(val operand: MaxBolusAmount): CommandControlCommand(Opcode.SET_MAX_BOLUS_AMOUNT)
+class SetMaxBolusAmount(val operand: MaxBolusAmount) : CommandControlCommand(Opcode.SET_MAX_BOLUS_AMOUNT)
 
 /**
  * A command to reset the reset reservoir insulin operation time
  */
 class ResetReservoirInsulinOperationTime: SimpleControlCommand(Opcode.RESET_RESERVOIR_INSULIN_OPERATION_TIME)
 
+/**
+ * Activates the flight mode of the Insulin Delivery Device
+ */
+class SetFlightMode : SimpleControlCommand(Opcode.SET_FLIGHT_MODE)

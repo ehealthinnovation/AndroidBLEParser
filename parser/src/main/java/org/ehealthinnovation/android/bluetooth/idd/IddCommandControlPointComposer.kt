@@ -30,6 +30,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is StopPriming,
             is GetActivatedProfileTemplates,
             is CancelTbrAdjustment,
+            is SetFlightMode,
             is ResetReservoirInsulinOperationTime,
             is GetMaxBolusAmount -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
