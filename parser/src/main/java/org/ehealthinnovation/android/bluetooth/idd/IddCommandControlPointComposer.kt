@@ -30,7 +30,8 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is StopPriming,
             is GetActivatedProfileTemplates,
             is CancelTbrAdjustment,
-            is GetMaxBolusAmount-> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
+            is ResetReservoirInsulinOperationTime,
+            is GetMaxBolusAmount -> composeSimpleCommand(request as SimpleControlCommand, dataWriter)
             is SetTbrAdjustment -> composeSetTbrAdjustment(request.operand, dataWriter)
             is GetBolusTemplate,
             is GetTemplate -> composeGetTemplate(request as GetTemplate, dataWriter)
@@ -40,7 +41,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is ResetTemplatesStatus,
             is ActivateProfileTemplates -> composeProfileTemplatesOperation(request as TemplatesOperation, dataWriter)
             is WriteTargetGlucoseRangeProfileTemplate -> composeWriteRangeProfileTemplate(request, dataWriter)
-            is SetInitialReservoirFillLevel ->composeSetInitialReservoirFillLevel(request, dataWriter)
+            is SetInitialReservoirFillLevel -> composeSetInitialReservoirFillLevel(request, dataWriter)
             is StartPriming -> composeStartPriming(request, dataWriter)
             is SetMaxBolusAmount -> composeMaxBolusAmount(request, dataWriter)
             is SetTherapyControlState -> composeTherapyControlState(request, dataWriter)
@@ -123,7 +124,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
         operandComposer.composeMaxBolusAmountOperand(request.operand, dataWriter)
     }
 
-    internal fun composeTherapyControlState(request: SetTherapyControlState, dataWriter: DataWriter){
+    internal fun composeTherapyControlState(request: SetTherapyControlState, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeTherapyControlStateOperand(request.operand, dataWriter)
     }
