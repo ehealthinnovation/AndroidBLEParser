@@ -43,6 +43,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is SetInitialReservoirFillLevel ->composeSetInitialReservoirFillLevel(request, dataWriter)
             is StartPriming -> composeStartPriming(request, dataWriter)
             is SetMaxBolusAmount -> composeMaxBolusAmount(request, dataWriter)
+            is SetTherapyControlState -> composeTherapyControlState(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -120,5 +121,10 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeMaxBolusAmount(request: SetMaxBolusAmount, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeMaxBolusAmountOperand(request.operand, dataWriter)
+    }
+
+    internal fun composeTherapyControlState(request: SetTherapyControlState, dataWriter: DataWriter){
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        operandComposer.composeTherapyControlStateOperand(request.operand, dataWriter)
     }
 }

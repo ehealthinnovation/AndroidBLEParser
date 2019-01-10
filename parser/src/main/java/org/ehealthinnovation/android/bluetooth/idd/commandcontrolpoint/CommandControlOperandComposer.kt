@@ -1,6 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 
 import org.ehealthinnovation.android.bluetooth.idd.SetInitialReservoirFillLevel
+import org.ehealthinnovation.android.bluetooth.idd.TherapyControlState
 import org.ehealthinnovation.android.bluetooth.parser.DataWriter
 import org.ehealthinnovation.android.bluetooth.parser.FloatFormat
 import org.ehealthinnovation.android.bluetooth.parser.IntFormat
@@ -44,6 +45,10 @@ class CommandControlOperandComposer {
 
     internal fun composeMaxBolusAmountOperand(operand: MaxBolusAmount, dataWriter: DataWriter){
         dataWriter.putFloat(operand.amount, -1, FloatFormat.FORMAT_SFLOAT)
+    }
+
+    internal fun composeTherapyControlStateOperand(operand: TherapyControlState, dataWriter: DataWriter){
+        dataWriter.putInt(operand.key, IntFormat.FORMAT_UINT8)
     }
 
 }

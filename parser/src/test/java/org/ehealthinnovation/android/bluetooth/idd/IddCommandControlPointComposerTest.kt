@@ -241,4 +241,12 @@ class IddCommandControlPointComposerTest {
         IddCommandControlPointComposer().compose(command, testWriter)
         testWriter.checkWriteComplete()
     }
+
+    @Test
+    fun composeSetTherapyControlStateCommand(){
+        val testWriter = StubDataWriter(uint16(Opcode.SET_THERAPY_CONTROL_STATE.key), uint8(TherapyControlState.RUN.key))
+        val command = SetTherapyControlState(TherapyControlState.RUN)
+        IddCommandControlPointComposer().compose(command, testWriter)
+        testWriter.checkWriteComplete()
+    }
 }

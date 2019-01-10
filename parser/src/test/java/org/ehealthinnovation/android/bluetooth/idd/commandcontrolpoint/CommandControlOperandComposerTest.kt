@@ -1,5 +1,7 @@
 package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 
+import org.ehealthinnovation.android.bluetooth.idd.SetTherapyControlState
+import org.ehealthinnovation.android.bluetooth.idd.TherapyControlState
 import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
 import org.ehealthinnovation.android.bluetooth.parser.uint8
 import org.junit.Test
@@ -36,5 +38,13 @@ class CommandControlOperandComposerTest {
     fun testResetTemplateStatusIllegalConstructionCase2(){
         val listOfNumber = mutableListOf<TemplateNumber>()
         TemplatesOperand(listOfNumber)
+    }
+
+    @Test
+    fun composeTherapyControlStateOperandTest() {
+        val therapyStateToSet = TherapyControlState.RUN
+        val testWriter = StubDataWriter(uint8(TherapyControlState.RUN.key))
+        CommandControlOperandComposer().composeTherapyControlStateOperand(therapyStateToSet, testWriter)
+        testWriter.checkWriteComplete()
     }
 }

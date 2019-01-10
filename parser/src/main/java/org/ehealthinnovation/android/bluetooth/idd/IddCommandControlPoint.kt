@@ -14,6 +14,12 @@ abstract class CommandControlCommand(val opcode: Opcode)
 class SnoozeAnnunciation(val operand: SnoozeAnnunciationOperand) : CommandControlCommand(Opcode.SNOOZE_ANNUNCIATION)
 
 /**
+ * A command to set therapy control state
+ * @property operand the therapy control state to be set to
+ */
+class SetTherapyControlState(val operand: TherapyControlState) : CommandControlCommand(Opcode.SET_THERAPY_CONTROL_STATE)
+
+/**
  * A base class for write profile template command. Any command that write a profile template should extend this class.
  * @property opcode The opcode of the write profile template command.
  */
