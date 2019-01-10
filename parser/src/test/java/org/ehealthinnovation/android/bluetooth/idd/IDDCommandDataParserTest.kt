@@ -74,8 +74,26 @@ class IDDCommandDataParserTest {
 
         val testData = MockCharacteristicPacket.mockPacketForRead(uint16(Opcode.READ_TARGET_GLUCOSE_RANGE_PROFILE_TEMPLATE_RESPONSE.key),
                 uint8(0b000), uint8(1), uint8(2),
-                uint16(3), sfloat(4f),  sfloat(5f))
+                uint16(3), sfloat(4f), sfloat(5f))
 
         Assert.assertEquals(expectedTargetGlucoseRangeProfileTemplateResponse, IddCommandDataParser().parse(testData))
+    }
+
+    @Test
+    fun parseGetTemplateStatusAndDetailsResponse() {
+        val testData = MockCharacteristicPacket.mockPacketForRead(
+                uint16(Opcode.GET_TEMPLATE_STATUS_AND_DETAILS_RESPONSE.key),
+                uint8(TemplateType.BASAL_RATE_PROFILE_TEMPLATE.key),
+                uint8(1),
+                uint8(2),
+                uint8(3),
+                uint8(0b001001)
+        )
+        val expected = GetTemplateStatusAndDetailsResponse(
+                TemplateType.BASAL_RATE_PROFILE_TEMPLATE,
+                1, 2, 3,
+                listOf(TemplateConfigurationStatus(true, false), TemplateConfigurationStatus(false, true))
+        )
+        Assert.assertEquals(expected, IddCommandDataParser().parse(testData))
     }
 }
