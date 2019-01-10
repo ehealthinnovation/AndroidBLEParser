@@ -108,6 +108,12 @@ data class ResetTemplateStatusResponse(val results: TemplatesOperationResults): 
 data class ActivateTemplatesResponse(val results: TemplatesOperationResults): IddCommandControlResponse()
 
 /**
+ * The response to [GetActivatedProfileTemplates] command
+ * @property result an object containing the result of [GetActivatedProfileTemplates]
+ */
+data class GetActivatedProfileTemplatesResponse(val result: TemplatesOperationResults): IddCommandControlResponse()
+
+/**
  * The reponse to [GetMaxBolusAmount] command
  * @property amount the max bolus amount configured on the remote insulin delivery device
  */
