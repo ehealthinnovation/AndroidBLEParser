@@ -204,6 +204,11 @@ class GetMaxBolusAmount : SimpleControlCommand(Opcode.GET_MAX_BOLUS_AMOUNT)
 class SetMaxBolusAmount(val operand: MaxBolusAmount) : CommandControlCommand(Opcode.SET_MAX_BOLUS_AMOUNT)
 
 /**
+ * A command to set the TBR template
+ */
+class SetTbrTemplate(val operand: SetTbrAdjustmentTemplateOperand): CommandControlCommand(Opcode.SET_TBR_TEMPLATE)
+
+/**
  * A command to reset the reset reservoir insulin operation time
  */
 class ResetReservoirInsulinOperationTime: SimpleControlCommand(Opcode.RESET_RESERVOIR_INSULIN_OPERATION_TIME)

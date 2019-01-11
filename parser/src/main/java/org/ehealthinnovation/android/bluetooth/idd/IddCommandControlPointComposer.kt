@@ -46,6 +46,7 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
             is StartPriming -> composeStartPriming(request, dataWriter)
             is SetMaxBolusAmount -> composeMaxBolusAmount(request, dataWriter)
             is SetTherapyControlState -> composeTherapyControlState(request, dataWriter)
+            is SetTbrTemplate -> composeSetTbrTemplate(request, dataWriter)
             else -> IllegalArgumentException("request not supported")
         }
     }
@@ -128,5 +129,11 @@ class IddCommandControlPointComposer : CharacteristicComposer<CommandControlComm
     internal fun composeTherapyControlState(request: SetTherapyControlState, dataWriter: DataWriter) {
         dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
         operandComposer.composeTherapyControlStateOperand(request.operand, dataWriter)
+    }
+
+
+    internal fun composeSetTbrTemplate(request: SetTbrTemplate, dataWriter: DataWriter){
+        dataWriter.putInt(request.opcode.key, IntFormat.FORMAT_UINT16)
+        operandComposer.composeSetTbrTemplate(request.operand, dataWriter)
     }
 }

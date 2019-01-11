@@ -1,9 +1,9 @@
 package org.ehealthinnovation.android.bluetooth.idd.commandcontrolpoint
 
 import org.ehealthinnovation.android.bluetooth.idd.SetTherapyControlState
+import org.ehealthinnovation.android.bluetooth.idd.TbrType
 import org.ehealthinnovation.android.bluetooth.idd.TherapyControlState
-import org.ehealthinnovation.android.bluetooth.parser.StubDataWriter
-import org.ehealthinnovation.android.bluetooth.parser.uint8
+import org.ehealthinnovation.android.bluetooth.parser.*
 import org.junit.Test
 import java.lang.Exception
 
@@ -45,6 +45,14 @@ class CommandControlOperandComposerTest {
         val therapyStateToSet = TherapyControlState.RUN
         val testWriter = StubDataWriter(uint8(TherapyControlState.RUN.key))
         CommandControlOperandComposer().composeTherapyControlStateOperand(therapyStateToSet, testWriter)
+        testWriter.checkWriteComplete()
+    }
+
+    @Test
+    fun composeTbrTemplateOperandTest(){
+        val setTbrTemplate = SetTbrAdjustmentTemplateOperand(1, TbrType.ABSOLUTE, 3f, 4)
+        val testWriter = StubDataWriter(uint8(1), uint8(TbrType.ABSOLUTE.key), sfloate(3f, -1), uint16(4))
+        CommandControlOperandComposer().composeSetTbrTemplate(setTbrTemplate, testWriter)
         testWriter.checkWriteComplete()
     }
 }

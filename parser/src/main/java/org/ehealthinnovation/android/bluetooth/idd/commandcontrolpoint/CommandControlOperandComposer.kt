@@ -51,4 +51,11 @@ class CommandControlOperandComposer {
         dataWriter.putInt(operand.key, IntFormat.FORMAT_UINT8)
     }
 
+    internal fun composeSetTbrTemplate(operand: SetTbrAdjustmentTemplateOperand, dataWriter: DataWriter){
+        dataWriter.putInt(operand.templateNumber, IntFormat.FORMAT_UINT8)
+        dataWriter.putInt(operand.type.key, IntFormat.FORMAT_UINT8)
+        dataWriter.putFloat(operand.value, -1, FloatFormat.FORMAT_SFLOAT)
+        dataWriter.putInt(operand.duration, IntFormat.FORMAT_UINT16)
+    }
+
 }
