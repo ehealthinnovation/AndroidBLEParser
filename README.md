@@ -118,7 +118,9 @@ The project is under MIT license, and it is free to incorporate into other proje
 
 ## Contact
 For any suggestions or questions please contact
+
 Harry Qiu email: hqiu@ehealthinnovation.org
+
 KuoCheng Tong email: kuochengtong@ehealthinnovation.org
 
 [Bluetooth Specification Website]:https://www.bluetooth.com/specifications/gatt
